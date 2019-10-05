@@ -1,0 +1,102 @@
+version: '3'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+        - 2181:2181
+    logging:
+      driver: none
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    logging:
+      driver: none
+    ports:
+      - 9092:9092
+    links:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CREATE_TOPICS: "site_tracking:1:1"
+  kafkacli:
+    image: taion809/kafka-cli:0.10.2.0
+    command: kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic site_tracking --from-beginning
+    stdin_open: true
+    tty: true
+    links:
+      - zookeeper
+      - kafka
+    depends_on:
+      - zookeeper
+      - kafka
+  edge-aerospikedb:
+    image: aerospike/aerospike-server-enterprise
+    command: --config-file /opt/aerospike/etc/aerospike.conf
+    depends_on:
+    - edge-exporter
+    links:
+    - edge-exporter  
+    ports:  
+    - 3000:3000
+    - 3001:3001
+    - 3002:3002
+    - 3003:3003
+    volumes:
+    - ./aerospike/edge/etc/aerospike:/opt/aerospike/etc
+    - ./aerospike/edge/etc/aerospike-kafka:/etc/aerospike-kafka
+    - ./aerospike/edge/log:/aerospike/log
+    - ./aerospike/edge/data:/aerospike/data
+  core-aerospikedb:
+    image: aerospike/aerospike-server-enterprise
+    command: --config-file /opt/aerospike/etc/aerospike.conf
+    depends_on:
+    - edge-exporter
+    links:
+    - edge-exporter  
+    ports:  
+    - 3000:3000
+    - 3001:3001
+    - 3002:3002
+    - 3003:3003
+    volumes:
+    - ./aerospike/core/etc/aerospike:/opt/aerospike/etc
+    - ./aerospike/core/etc/aerospike-kafka:/etc/aerospike-kafka
+    - ./aerospike/core/log:/aerospike/log
+    - ./aerospike/core/data:/aerospike/data
+  edge-exporter:
+    container_name: edge_exporter
+    build:
+      context: ./edge-exporter
+      args:
+        AEROSPIKE_USER_NAME: "<your user name>"
+        AEROSPIKE_PASSWORD: "<your password>"
+    depends_on:
+    - kafka
+    - zookeeper
+    links:
+      - zookeeper
+      - kafka
+    ports:  
+    - 8080:8080
+    volumes:
+    - ./aerospike/edge/etc/aerospike:/etc/aerospike
+    - ./aerospike/edge/etc/aerospike-kafka:/etc/aerospike-kafka
+    - ./aerospike/edge/log:/aerospike/log
+  traffic-simulator:
+    container_name: traffic_simulator
+    build:
+      context: ./traffic-simulator/
+    links:
+    - aerospikedb
+    depends_on:
+    - edge-aerospikedb
+    - edge-exporter

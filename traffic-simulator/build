@@ -1,0 +1,10 @@
+#!/bin/bash
+
+. resolve
+
+docker build -t traffic_simulator:${VERSION:-latest} .
+
+# Push image
+#if [ $PUSH ] && [ $PUSH -eq 1 ]; then
+#  docker push aerospike/aerospike-server-enterprise:${VERSION:-latest}
+#fi
