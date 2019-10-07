@@ -1,10 +1,11 @@
 package net.helipilot50.aerospike.producer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import jaba.util.UUID;
+import java.util.UUID;
 
 import com.aerospike.client.AerospikeClient;
 import com.aerospike.client.Bin;
@@ -18,16 +19,15 @@ import com.aerospike.client.cdt.MapPolicy;
 import net.helipilot50.aerospike.producer.Constants;
 
 /**
- * Producer 
+ * Producer
  *
  */
 public class ProducerMain extends TimerTask {
-    private static final int tagCount = 1000;
-    private static final int campaignCount = 100;
 
-    private static List<String> tags = new ArrayList<String>();
+    private static List<String> tags = null;
 
-    private static List<String> createData(AerospikeClient client) {
+    private static List<String> createData(AerospikeClient client, int campaignCount, int tagCount) {
+        List<String> tags = new ArrayList<String>();
         // create campaigns
         for (int i = 0; i < campaignCount; i++) {
             HashMap<String, Long> stats = new HashMap<String, Long>();
@@ -37,8 +37,10 @@ public class ProducerMain extends TimerTask {
             String campaignId = java.util.UUID.randomUUID().toString();
             // write campaign
             Key campaignKey = new Key(Constants.NAMESPACE, Constants.CAMPAIGN_SET, campaignId);
-            Bin statsBin = new Bin(STATS_BIN, campaignId);
-            client.put(null, campaignKey, statsBin);
+            Bin idBin = new Bin(Constants.CAMPAIGN_ID_BIN, campaignId);
+            Bin statsBin = new Bin(Constants.STATS_BIN, campaignId);
+            Bin nameBin = new Bin(Constants.CAMPAIGN_NAME_BIN, "Acme campaign "+ 1);
+            client.put(null, campaignKey, idBin, nameBin, statsBin);
             // create tags
             for (int j = 0; j < tagCount; j++) {
                 String tag = java.util.UUID.randomUUID().toString();
@@ -47,11 +49,12 @@ public class ProducerMain extends TimerTask {
                 Bin campaignIdBin = new Bin(Constants.CAMPAIGN_ID_BIN, stats);
                 client.put(null, tagKey, campaignIdBin);
                 // add to list of tags
-                tags.append(tag);
+                tags.add(tag);
             }
         }
+		return tags;
     }
-
+              
     private static String randomTag() {
         int index = (int) (Math.random() * tags.size());
         return tags.get(index);
@@ -66,18 +69,21 @@ public class ProducerMain extends TimerTask {
         return "view";
     }
 
+    static {
+        AerospikeClient client = new AerospikeClient(Constants.CORE_AEROSPIKLE_HOST, 3000);
+        tags = createData(client, 20, 1000);
+        client.close();
+        
+    }
+
     public static void main(String[] args) {
         System.out.println("Traffic simulator");
-        AerospikeClient client = new AerospikeClient(CORE_AEROSPIKLE_HOST, 3000);
-        createData(client);
-        client.close();
-
         ProducerMain producer = new ProducerMain();
         Timer timer = new Timer();
         timer.schedule(producer, 0, 500);
     }
 
-    public AerospikeClient asClient;
+    private AerospikeClient asClient;
 
     public ProducerMain() {
         int attempts = 0;
@@ -86,13 +92,12 @@ public class ProducerMain extends TimerTask {
             attempts += 1;
             try {
                 System.out.println("Connect to edge aerospike, attempt: " + attempts);
-                this.asClient = new AerospikeClient(EDGE_AEROSPIKLE_HOST, 3000);
+                this.asClient = new AerospikeClient(Constants.EDGE_AEROSPIKLE_HOST, 3000);
                 attemptConnection = false;
             } catch (Connection conn) {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 if (attempts > 2) {
@@ -113,7 +118,7 @@ public class ProducerMain extends TimerTask {
     }
 
     public void addEvent(String event, String tag) {
-
+    
         Long now = System.currentTimeMillis();
 
         Key recordKey = new Key(Constants.NAMESPACE, Constants.EVENT_SET, tag+now);

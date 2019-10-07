@@ -96,7 +96,7 @@ services:
     build:
       context: ./traffic-simulator/
     links:
-    - aerospikedb
+    - edge-aerospikedb
     depends_on:
     - edge-aerospikedb
     - edge-exporter
