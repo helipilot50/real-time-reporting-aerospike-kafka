@@ -1,4 +1,4 @@
-package net.helipilot50.aerospike.producer;
+package net.helipilot50.aerospike.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,11 +18,18 @@ import com.aerospike.client.cdt.MapPolicy;
 
 import net.helipilot50.aerospike.producer.Constants;
 
+import org.apache.kafka.clients.consumer.*;
+import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.common.serialization.LongDeserializer;
+import org.apache.kafka.common.serialization.StringDeserializer;
+import java.util.Collections;
+import java.util.Properties;
+
 /**
  * Producer
  *
  */
-public class ProducerMain extends TimerTask {
+public class AggregatorMain {
 
     private static List<String> tags = null;
 
@@ -40,7 +47,7 @@ public class ProducerMain extends TimerTask {
             Key campaignKey = new Key(Constants.NAMESPACE, Constants.CAMPAIGN_SET, campaignId);
             Bin idBin = new Bin(Constants.CAMPAIGN_ID_BIN, campaignId);
             Bin statsBin = new Bin(Constants.STATS_BIN, campaignId);
-            Bin nameBin = new Bin(Constants.CAMPAIGN_NAME_BIN, "Acme campaign "+ 1);
+            Bin nameBin = new Bin(Constants.CAMPAIGN_NAME_BIN, "Acme campaign " + 1);
             client.put(null, campaignKey, idBin, nameBin, statsBin);
             // create tags
             for (int j = 0; j < tagCount; j++) {
@@ -53,9 +60,9 @@ public class ProducerMain extends TimerTask {
                 tags.add(tag);
             }
         }
-		return tags;
+        return tags;
     }
-              
+
     private static String randomTag() {
         int index = (int) (Math.random() * tags.size());
         return tags.get(index);
@@ -70,29 +77,42 @@ public class ProducerMain extends TimerTask {
         return "view";
     }
 
+    private static Consumer<Long, String> createConsumer() {
+        final Properties props = new Properties();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "KafkaExampleConsumer");
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class.getName());
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        // Create the consumer using props.
+        final Consumer<Long, String> consumer = new KafkaConsumer<>(props);
+        // Subscribe to the topic.
+        consumer.subscribe(Collections.singletonList(TOPIC));
+        return consumer;
+    }
+
     static {
         AerospikeClient client = new AerospikeClient(Constants.CORE_AEROSPIKLE_HOST, 3000);
         tags = createData(client, 20, 1000);
         client.close();
-        
+
     }
 
     public static void main(String[] args) {
-        System.out.println("Traffic simulator");
-        ProducerMain producer = new ProducerMain();
+        System.out.println("Aggregator");
+        ProducerMain producer = new AggregatorMain();
         Timer timer = new Timer();
         timer.schedule(producer, 0, 500);
     }
 
     private AerospikeClient asClient;
 
-    public ProducerMain() {
+    public AggregatorMain() {
         int attempts = 0;
         boolean attemptConnection = true;
         while (attemptConnection) {
             attempts += 1;
             try {
-                System.out.println("Connect to edge aerospike, attempt: " + attempts);
+                System.out.println("Connect to core aerospike, attempt: " + attempts);
                 this.asClient = new AerospikeClient(Constants.EDGE_AEROSPIKLE_HOST, 3000);
                 attemptConnection = false;
             } catch (Connection conn) {
@@ -103,32 +123,28 @@ public class ProducerMain extends TimerTask {
                 }
                 if (attempts > 2) {
                     attemptConnection = false;
-                    System.out.println("Cannot connect to edge aerospike, attempted: " + attempts);
+                    System.out.println("Cannot connect to core aerospike, attempted: " + attempts);
                     throw conn;
                 }
             }
         }
     }
 
-    @Override
-    public void run() {
-        String tag = randomTag();
-        String event = eventType();
-        System.out.println(String.format("Event: %s for %s", event, tag));
-        addEvent(event, tag);
-    }
-
-    public void addEvent(String event, String tag) {
+    public void aggregateEvent(String event, String tag) {
+        MapPolicy mp = new MapPolicy();
     
         Long now = System.currentTimeMillis();
 
-        Key recordKey = new Key(Constants.NAMESPACE, Constants.EVENT_SET, tag+now);
+        // fetch campaign for tag
+        Key tagKey = new Key(Constants.NAMESPACE, Constants.TAG_SET, tag);
+        Record tagRecord = asClient.get(null, tagKey);
 
-        Bin typeBin = new Bin(Constants.EVENT_TYPE_BIN, event);
-        Bin tagBin = new Bin(Constants.EVENT_TAG_BIN, tag);
-        Bin tsBin = new Bin(Constants.TIME_STAMP_BIN, now);
-
-        asClient.put(null, recordKey, typeBin, tagBin, tsBin);
+        // update campaign stats
+        Key campaignKey = new Key(Constants.NAMESPACE, Constants.CAMPAIGN_SET, tagRecord.getString(Constants.CAMPAIGN_ID_BIN));
+        // datacube.clicks
+        asClient.operate(null, campaignKey, 
+            MapOperation.increment(mp, Constants.STATS_BIN, Value.get("clicks"), Value.get(1), 
+                    CTX.mapKey(Value.get("dataCube"))));
         return;
     }
 

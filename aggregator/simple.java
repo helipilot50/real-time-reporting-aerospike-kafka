@@ -11,9 +11,9 @@ import com.aerospike.client.cdt.MapPolicy;
 
 public class NestedCdtPlay {
 	public static void main(String[] args) {
-		AerospikeClient client = new AerospikeClient("172.28.128.4", 3000);
+		AerospikeClient client = new AerospikeClient("core-aerospikedb", 3000);
 		
-		Key key = new Key("test", "nestedCdt", "aKey");
+		Key key = new Key("core", "nestedCdt", "aKey");
 		MapPolicy mp = new MapPolicy();
 		String bin = "before3";
 		// Create the data structure
