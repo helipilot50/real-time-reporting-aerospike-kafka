@@ -1,2 +1,2 @@
-# aerospike-spark-real-time-aggregation
+# aerospike-real-time-aggregation
 work in progress
