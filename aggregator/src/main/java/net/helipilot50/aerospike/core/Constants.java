@@ -1,4 +1,4 @@
-package net.helipilot50.aerospike.producer;
+package net.helipilot50.aerospike.core;
 public interface Constants {
     public final String NAMESPACE = "test";
     
@@ -9,4 +9,7 @@ public interface Constants {
     public final String CAMPAIGN_ID_BIN = "c-id";
     
     public final String CORE_AEROSPIKLE_HOST = "core-aerospikedb";
+    
+    public final String EVENT_TOPIC = "ad.events";
+    public final String KAFKA_CLUSTER = "kafka:9092";
 }

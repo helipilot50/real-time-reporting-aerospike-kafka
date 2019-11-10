@@ -1,29 +1,26 @@
 package net.helipilot50.aerospike.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
+
+import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.serialization.LongDeserializer;
+import org.apache.kafka.common.serialization.StringDeserializer;
 
 import com.aerospike.client.AerospikeClient;
+import com.aerospike.client.AerospikeException.Connection;
 import com.aerospike.client.Bin;
 import com.aerospike.client.Key;
 import com.aerospike.client.Record;
 import com.aerospike.client.Value;
-import com.aerospike.client.AerospikeException.Connection;
 import com.aerospike.client.cdt.MapOperation;
 import com.aerospike.client.cdt.MapPolicy;
-
-import net.helipilot50.aerospike.producer.Constants;
-
-import org.apache.kafka.clients.consumer.*;
-import org.apache.kafka.clients.consumer.Consumer;
-import org.apache.kafka.common.serialization.LongDeserializer;
-import org.apache.kafka.common.serialization.StringDeserializer;
-import java.util.Collections;
-import java.util.Properties;
 
 /**
  * Producer
@@ -79,14 +76,13 @@ public class AggregatorMain {
 
     private static Consumer<Long, String> createConsumer() {
         final Properties props = new Properties();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "KafkaExampleConsumer");
-        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class.getName());
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, Constants.KAFKA_CLUSTER);
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         // Create the consumer using props.
         final Consumer<Long, String> consumer = new KafkaConsumer<>(props);
         // Subscribe to the topic.
-        consumer.subscribe(Collections.singletonList(TOPIC));
+        consumer.subscribe(Collections.singletonList(Constants.EVENT_TOPIC));
         return consumer;
     }
 
@@ -99,9 +95,7 @@ public class AggregatorMain {
 
     public static void main(String[] args) {
         System.out.println("Aggregator");
-        ProducerMain producer = new AggregatorMain();
-        Timer timer = new Timer();
-        timer.schedule(producer, 0, 500);
+        AggregatorMain producer = new AggregatorMain();
     }
 
     private AerospikeClient asClient;
@@ -113,7 +107,7 @@ public class AggregatorMain {
             attempts += 1;
             try {
                 System.out.println("Connect to core aerospike, attempt: " + attempts);
-                this.asClient = new AerospikeClient(Constants.EDGE_AEROSPIKLE_HOST, 3000);
+                this.asClient = new AerospikeClient(Constants.CORE_AEROSPIKLE_HOST, 3000);
                 attemptConnection = false;
             } catch (Connection conn) {
                 try {
