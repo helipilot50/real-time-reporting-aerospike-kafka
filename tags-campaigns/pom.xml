@@ -2,10 +2,10 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>helipilot50.net</groupId>
-  <artifactId>tags-campaigns</artifactId>
+  <artifactId>tags-campaigns-data</artifactId>
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>tags-campaigns</name>
+  <name>tags-campaigns-data</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <!-- https://mvnrepository.com/artifact/com.aerospike/aerospike-client -->
