@@ -1,4 +1,4 @@
-package net.helipilot50.aerospike.core;
+package net.helipilot50.aerospike.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,39 +23,49 @@ import com.aerospike.client.cdt.MapOperation;
 import com.aerospike.client.cdt.MapPolicy;
 
 /**
- * Aggregator
+ * Producer
  *
  */
-public class AggregatorMain {
+public class TagCampaignDataMain {
 
     private static List<String> tags = null;
 
     private static List<String> createData(AerospikeClient client, int campaignCount, int tagCount) {
         List<String> tags = new ArrayList<String>();
-        // create campaigns
-        for (int i = 0; i < campaignCount; i++) {
-            HashMap<String, Long> stats = new HashMap<String, Long>();
-            stats.put("clicks", 0L);
-            stats.put("impressions", 0L);
-            stats.put("visits", 0L);
-            stats.put("conversions", 0L);
-            String campaignId = java.util.UUID.randomUUID().toString();
-            // write campaign
-            Key campaignKey = new Key(Constants.NAMESPACE, Constants.CAMPAIGN_SET, campaignId);
-            Bin idBin = new Bin(Constants.CAMPAIGN_ID_BIN, campaignId);
-            Bin statsBin = new Bin(Constants.STATS_BIN, campaignId);
-            Bin nameBin = new Bin(Constants.CAMPAIGN_NAME_BIN, "Acme campaign " + 1);
-            client.put(null, campaignKey, idBin, nameBin, statsBin);
-            // create tags
-            for (int j = 0; j < tagCount; j++) {
-                String tag = java.util.UUID.randomUUID().toString();
-                // write tag-campaign mapping to aerospike
-                Key tagKey = new Key(Constants.NAMESPACE, Constants.TAG_SET, tag);
-                Bin campaignIdBin = new Bin(Constants.CAMPAIGN_ID_BIN, stats);
-                client.put(null, tagKey, campaignIdBin);
-                // add to list of tags
-                tags.add(tag);
+        File f = new File("/tag-data/tags.txt");
+        try
+
+        {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(f, true));
+            // create campaigns
+            for (int i = 0; i < campaignCount; i++) {
+                HashMap<String, Long> stats = new HashMap<String, Long>();
+                stats.put("clicks", 0L);
+                stats.put("impressions", 0L);
+                stats.put("visits", 0L);
+                stats.put("conversions", 0L);
+                String campaignId = java.util.UUID.randomUUID().toString();
+                // write campaign
+                Key campaignKey = new Key(Constants.NAMESPACE, Constants.CAMPAIGN_SET, campaignId);
+                Bin idBin = new Bin(Constants.CAMPAIGN_ID_BIN, campaignId);
+                Bin statsBin = new Bin(Constants.STATS_BIN, campaignId);
+                Bin nameBin = new Bin(Constants.CAMPAIGN_NAME_BIN, "Acme campaign " + 1);
+                client.put(null, campaignKey, idBin, nameBin, statsBin);
+                // create tags
+                for (int j = 0; j < tagCount; j++) {
+                    String tag = java.util.UUID.randomUUID().toString();
+                    // write tag-campaign mapping to aerospike
+                    Key tagKey = new Key(Constants.NAMESPACE, Constants.TAG_SET, tag);
+                    Bin campaignIdBin = new Bin(Constants.CAMPAIGN_ID_BIN, stats);
+                    client.put(null, tagKey, campaignIdBin);
+                    // add to list of tags
+                    tags.add(tag);
+                    bw.append(tag);
+                }
             }
+            bw.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         }
         return tags;
     }
@@ -100,7 +110,7 @@ public class AggregatorMain {
 
     private AerospikeClient asClient;
 
-    public AggregatorMain() {
+    public TagCampaignDataMain() {
         int attempts = 0;
         boolean attemptConnection = true;
         while (attemptConnection) {
