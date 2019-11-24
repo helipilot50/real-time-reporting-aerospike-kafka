@@ -46,9 +46,7 @@
             <configuration>
               <archive>
                 <manifest>
-                  <mainClass>
-                        net.helipilot50.aerospike.data.ProducerMain
-                  </mainClass>
+                  <mainClass>net.helipilot50.aerospike.data.TagCampaignDataMain</mainClass>
                 </manifest>
               </archive>
               <descriptorRefs>
