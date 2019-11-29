@@ -1,0 +1,14 @@
+{
+  "name": "publisher-simulator",
+  "version": "1.0.0",
+  "description": "Simulates Ad events from publishers",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "helipilot50",
+  "license": "ISC",
+  "dependencies": {
+    "request": "^2.88.0"
+  }
+}

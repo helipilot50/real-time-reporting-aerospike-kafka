@@ -1,0 +1,14 @@
+{
+  "name": "event-collector",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "helipilot50",
+  "license": "ISC",
+  "dependencies": {
+    "aerospike": "^3.13.0"
+  }
+}
