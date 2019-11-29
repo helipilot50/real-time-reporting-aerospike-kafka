@@ -1,2 +1,2 @@
-# aerospike-real-time-aggregation
+# real-time-reporting-aerospike-kafka
 work in progress
