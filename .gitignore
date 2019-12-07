@@ -9,3 +9,4 @@ features.conf
 aerospike/core/log
 test.dat
 tags-campaigns/.settings
+docker-compose-peter.yml

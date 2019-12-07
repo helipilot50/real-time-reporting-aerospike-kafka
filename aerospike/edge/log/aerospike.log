@@ -1,0 +1,1083 @@
+Dec 07 2019 16:16:32 GMT: INFO (as): (as.c:316) <><><><><><><><><><>  Aerospike Enterprise Edition build 4.7.0.3  <><><><><><><><><><>
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) # Aerospike database configuration file.
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) # This stanza must come first.
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) service {
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	user root
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	group root
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	paxos-single-replica-limit 1 # Number of nodes where the replica count is automatically reduced to 1.
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	pidfile /var/run/aerospike/asd.pid
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	service-threads 2
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	proto-fd-max 15000
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	feature-key-file /opt/aerospike/etc/features.conf
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) logging {
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	# Log file must be an absolute path.
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	file /aerospike/log/aerospike.log {
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 		context any info
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	# Send log messages to stdout
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	# console {
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	# 	context any info 
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	# }
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) network {
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	service {
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 		address any
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 		port 3000
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 		# Uncomment the following to set the `access-address` parameter to the
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 		# IP address of the Docker host. This will the allow the server to correctly
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 		# publish the address which applications and other nodes in the cluster to
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 		# use when addressing this node.
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 		# access-address <IPADDR>
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	heartbeat {
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110)         address any
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 		# mesh is used for environments that do not support multicast
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 		mode mesh
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 		port 3002
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 		# use asinfo -v 'tip:host=<ADDR>;port=3002' to inform cluster of
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 		# other mesh nodes
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 		interval 150
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 		timeout 10
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	fabric {
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	    address any
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 		port 3001
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	info {
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	    address any
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 		port 3003
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) namespace test {
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	replication-factor 2
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	memory-size 12G
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	default-ttl 0 # use 0 to never expire/evict.
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	enable-xdr true
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	xdr-remote-datacenter outbound-kafka
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	#	storage-engine memory
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	storage-engine device {
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 		file /aerospike/data/test.dat
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 		filesize 26G
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 		data-in-memory true # Store data in memory in addition to file.
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) xdr {
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	enable-xdr true
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	enable-change-notification true
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	xdr-digestlog-path /etc/aerospike/digestlog.log1 100G
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	xdr-compression-threshold 1000
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	xdr-info-port 3004
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	datacenter outbound-kafka {
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 			dc-type http
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 			http-version v2
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 			http-url http://edge-exporter:8080/aerospike/kafka/publish
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:16:32 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:16:32 GMT: FAILED ASSERTION (config): (features_ee.c:135) no feature key (/opt/aerospike/etc/features.conf)
+Dec 07 2019 16:16:32 GMT: WARNING (as): (signal.c:161) SIGINT received, shutting down Aerospike Enterprise Edition build 4.7.0.3 os debian9
+Dec 07 2019 16:16:32 GMT: WARNING (as): (signal.c:164) startup was not complete, exiting immediately
+Dec 07 2019 16:19:14 GMT: INFO (as): (as.c:316) <><><><><><><><><><>  Aerospike Enterprise Edition build 4.7.0.3  <><><><><><><><><><>
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) # Aerospike database configuration file.
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) # This stanza must come first.
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) service {
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	user root
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	group root
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	paxos-single-replica-limit 1 # Number of nodes where the replica count is automatically reduced to 1.
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	pidfile /var/run/aerospike/asd.pid
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	service-threads 2
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	proto-fd-max 15000
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	feature-key-file /opt/aerospike/etc/features.conf
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) logging {
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	# Log file must be an absolute path.
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	file /aerospike/log/aerospike.log {
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 		context any info
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	# Send log messages to stdout
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	# console {
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	# 	context any info 
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	# }
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) network {
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	service {
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 		address any
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 		port 3000
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 		# Uncomment the following to set the `access-address` parameter to the
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 		# IP address of the Docker host. This will the allow the server to correctly
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 		# publish the address which applications and other nodes in the cluster to
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 		# use when addressing this node.
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 		# access-address <IPADDR>
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	heartbeat {
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110)         address any
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 		# mesh is used for environments that do not support multicast
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 		mode mesh
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 		port 3002
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 		# use asinfo -v 'tip:host=<ADDR>;port=3002' to inform cluster of
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 		# other mesh nodes
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 		interval 150
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 		timeout 10
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	fabric {
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	    address any
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 		port 3001
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	info {
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	    address any
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 		port 3003
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) namespace test {
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	replication-factor 2
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	memory-size 12G
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	default-ttl 0 # use 0 to never expire/evict.
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	enable-xdr true
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	xdr-remote-datacenter outbound-kafka
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	#	storage-engine memory
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	storage-engine device {
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 		file /aerospike/data/test.dat
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 		filesize 26G
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 		data-in-memory true # Store data in memory in addition to file.
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) xdr {
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	enable-xdr true
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	enable-change-notification true
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	xdr-digestlog-path /etc/aerospike/digestlog.log1 100G
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	xdr-compression-threshold 1000
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	xdr-info-port 3004
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	datacenter outbound-kafka {
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 			dc-type http
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 			http-version v2
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 			http-url http://edge-exporter:8080/aerospike/kafka/publish
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:19:14 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:19:14 GMT: FAILED ASSERTION (config): (features_ee.c:135) no feature key (/opt/aerospike/etc/features.conf)
+Dec 07 2019 16:19:14 GMT: WARNING (as): (signal.c:161) SIGINT received, shutting down Aerospike Enterprise Edition build 4.7.0.3 os debian9
+Dec 07 2019 16:19:14 GMT: WARNING (as): (signal.c:164) startup was not complete, exiting immediately
+Dec 07 2019 16:21:56 GMT: INFO (as): (as.c:316) <><><><><><><><><><>  Aerospike Enterprise Edition build 4.7.0.3  <><><><><><><><><><>
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) # Aerospike database configuration file.
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) # This stanza must come first.
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) service {
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	user root
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	group root
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	paxos-single-replica-limit 1 # Number of nodes where the replica count is automatically reduced to 1.
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	pidfile /var/run/aerospike/asd.pid
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	service-threads 2
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	proto-fd-max 15000
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	feature-key-file /opt/aerospike/etc/features.conf
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) logging {
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	# Log file must be an absolute path.
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	file /aerospike/log/aerospike.log {
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 		context any info
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	# Send log messages to stdout
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	# console {
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	# 	context any info 
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	# }
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) network {
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	service {
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 		address any
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 		port 3000
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 		# Uncomment the following to set the `access-address` parameter to the
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 		# IP address of the Docker host. This will the allow the server to correctly
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 		# publish the address which applications and other nodes in the cluster to
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 		# use when addressing this node.
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 		# access-address <IPADDR>
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	heartbeat {
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110)         address any
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 		# mesh is used for environments that do not support multicast
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 		mode mesh
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 		port 3002
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 		# use asinfo -v 'tip:host=<ADDR>;port=3002' to inform cluster of
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 		# other mesh nodes
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 		interval 150
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 		timeout 10
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	fabric {
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	    address any
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 		port 3001
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	info {
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	    address any
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 		port 3003
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) namespace test {
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	replication-factor 2
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	memory-size 12G
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	default-ttl 0 # use 0 to never expire/evict.
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	enable-xdr true
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	xdr-remote-datacenter outbound-kafka
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	#	storage-engine memory
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	storage-engine device {
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 		file /aerospike/data/test.dat
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 		filesize 26G
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 		data-in-memory true # Store data in memory in addition to file.
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) xdr {
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	enable-xdr true
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	enable-change-notification true
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	xdr-digestlog-path /etc/aerospike/digestlog.log1 100G
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	xdr-compression-threshold 1000
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	xdr-info-port 3004
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	datacenter outbound-kafka {
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 			dc-type http
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 			http-version v2
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 			http-url http://edge-exporter:8080/aerospike/kafka/publish
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:21:56 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:21:56 GMT: FAILED ASSERTION (config): (features_ee.c:135) no feature key (/opt/aerospike/etc/features.conf)
+Dec 07 2019 16:21:56 GMT: WARNING (as): (signal.c:161) SIGINT received, shutting down Aerospike Enterprise Edition build 4.7.0.3 os debian9
+Dec 07 2019 16:21:56 GMT: WARNING (as): (signal.c:164) startup was not complete, exiting immediately
+Dec 07 2019 16:30:37 GMT: INFO (as): (as.c:316) <><><><><><><><><><>  Aerospike Enterprise Edition build 4.7.0.3  <><><><><><><><><><>
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) # Aerospike database configuration file.
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) # This stanza must come first.
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) service {
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	user root
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	group root
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	paxos-single-replica-limit 1 # Number of nodes where the replica count is automatically reduced to 1.
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	pidfile /var/run/aerospike/asd.pid
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	service-threads 2
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	proto-fd-max 15000
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	feature-key-file /opt/aerospike/etc/features.conf
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) logging {
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	# Log file must be an absolute path.
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	file /aerospike/log/aerospike.log {
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 		context any info
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	# Send log messages to stdout
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	# console {
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	# 	context any info 
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	# }
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) network {
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	service {
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 		address any
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 		port 3000
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 		# Uncomment the following to set the `access-address` parameter to the
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 		# IP address of the Docker host. This will the allow the server to correctly
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 		# publish the address which applications and other nodes in the cluster to
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 		# use when addressing this node.
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 		# access-address <IPADDR>
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	heartbeat {
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110)         address any
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 		# mesh is used for environments that do not support multicast
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 		mode mesh
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 		port 3002
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 		# use asinfo -v 'tip:host=<ADDR>;port=3002' to inform cluster of
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 		# other mesh nodes
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 		interval 150
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 		timeout 10
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	fabric {
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	    address any
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 		port 3001
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	info {
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	    address any
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 		port 3003
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) namespace test {
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	replication-factor 2
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	memory-size 12G
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	default-ttl 0 # use 0 to never expire/evict.
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	enable-xdr true
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	xdr-remote-datacenter outbound-kafka
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	#	storage-engine memory
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	storage-engine device {
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 		file /aerospike/data/test.dat
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 		filesize 26G
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 		data-in-memory true # Store data in memory in addition to file.
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) xdr {
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	enable-xdr true
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	enable-change-notification true
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	xdr-digestlog-path /etc/aerospike/digestlog.log1 100G
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	xdr-compression-threshold 1000
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	xdr-info-port 3004
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	datacenter outbound-kafka {
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 			dc-type http
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 			http-version v2
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 			http-url http://edge-exporter:8080/aerospike/kafka/publish
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:30:37 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:30:37 GMT: FAILED ASSERTION (config): (features_ee.c:135) no feature key (/opt/aerospike/etc/features.conf)
+Dec 07 2019 16:30:37 GMT: WARNING (as): (signal.c:161) SIGINT received, shutting down Aerospike Enterprise Edition build 4.7.0.3 os debian9
+Dec 07 2019 16:30:37 GMT: WARNING (as): (signal.c:164) startup was not complete, exiting immediately
+Dec 07 2019 16:31:16 GMT: INFO (as): (as.c:316) <><><><><><><><><><>  Aerospike Enterprise Edition build 4.7.0.3  <><><><><><><><><><>
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) # Aerospike database configuration file.
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) # This stanza must come first.
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) service {
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	user root
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	group root
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	paxos-single-replica-limit 1 # Number of nodes where the replica count is automatically reduced to 1.
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	pidfile /var/run/aerospike/asd.pid
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	service-threads 2
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	proto-fd-max 15000
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	feature-key-file /opt/aerospike/etc/features.conf
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) logging {
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	# Log file must be an absolute path.
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	file /aerospike/log/aerospike.log {
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 		context any info
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	# Send log messages to stdout
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	# console {
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	# 	context any info 
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	# }
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) network {
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	service {
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 		address any
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 		port 3000
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 		# Uncomment the following to set the `access-address` parameter to the
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 		# IP address of the Docker host. This will the allow the server to correctly
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 		# publish the address which applications and other nodes in the cluster to
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 		# use when addressing this node.
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 		# access-address <IPADDR>
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	heartbeat {
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110)         address any
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 		# mesh is used for environments that do not support multicast
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 		mode mesh
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 		port 3002
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 		# use asinfo -v 'tip:host=<ADDR>;port=3002' to inform cluster of
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 		# other mesh nodes
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 		interval 150
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 		timeout 10
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	fabric {
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	    address any
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 		port 3001
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	info {
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	    address any
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 		port 3003
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) namespace test {
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	replication-factor 2
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	memory-size 12G
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	default-ttl 0 # use 0 to never expire/evict.
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	enable-xdr true
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	xdr-remote-datacenter outbound-kafka
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	#	storage-engine memory
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	storage-engine device {
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 		file /aerospike/data/test.dat
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 		filesize 26G
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 		data-in-memory true # Store data in memory in addition to file.
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) xdr {
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	enable-xdr true
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	enable-change-notification true
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	xdr-digestlog-path /etc/aerospike/digestlog.log1 100G
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	xdr-compression-threshold 1000
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	xdr-info-port 3004
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	datacenter outbound-kafka {
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 			dc-type http
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 			http-version v2
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 			http-url http://edge-exporter:8080/aerospike/kafka/publish
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:31:16 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:31:16 GMT: FAILED ASSERTION (config): (features_ee.c:135) no feature key (/opt/aerospike/etc/features.conf)
+Dec 07 2019 16:31:16 GMT: WARNING (as): (signal.c:161) SIGINT received, shutting down Aerospike Enterprise Edition build 4.7.0.3 os debian9
+Dec 07 2019 16:31:16 GMT: WARNING (as): (signal.c:164) startup was not complete, exiting immediately
+Dec 07 2019 16:33:52 GMT: INFO (as): (as.c:316) <><><><><><><><><><>  Aerospike Enterprise Edition build 4.7.0.3  <><><><><><><><><><>
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) # Aerospike database configuration file.
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) # This stanza must come first.
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) service {
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	user root
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	group root
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	paxos-single-replica-limit 1 # Number of nodes where the replica count is automatically reduced to 1.
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	pidfile /var/run/aerospike/asd.pid
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	service-threads 2
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	proto-fd-max 15000
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	feature-key-file /opt/aerospike/etc/features.conf
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) logging {
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	# Log file must be an absolute path.
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	file /aerospike/log/aerospike.log {
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 		context any info
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	# Send log messages to stdout
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	# console {
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	# 	context any info 
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	# }
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) network {
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	service {
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 		address any
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 		port 3000
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 		# Uncomment the following to set the `access-address` parameter to the
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 		# IP address of the Docker host. This will the allow the server to correctly
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 		# publish the address which applications and other nodes in the cluster to
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 		# use when addressing this node.
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 		# access-address <IPADDR>
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	heartbeat {
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110)         address any
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 		# mesh is used for environments that do not support multicast
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 		mode mesh
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 		port 3002
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 		# use asinfo -v 'tip:host=<ADDR>;port=3002' to inform cluster of
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 		# other mesh nodes
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 		interval 150
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 		timeout 10
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	fabric {
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	    address any
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 		port 3001
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	info {
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	    address any
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 		port 3003
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) namespace test {
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	replication-factor 2
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	memory-size 12G
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	default-ttl 0 # use 0 to never expire/evict.
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	enable-xdr true
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	xdr-remote-datacenter outbound-kafka
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	#	storage-engine memory
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	storage-engine device {
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 		file /aerospike/data/test.dat
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 		filesize 26G
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 		data-in-memory true # Store data in memory in addition to file.
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) xdr {
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	enable-xdr true
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	enable-change-notification true
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	xdr-digestlog-path /etc/aerospike/digestlog.log1 100G
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	xdr-compression-threshold 1000
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	xdr-info-port 3004
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	datacenter outbound-kafka {
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 			dc-type http
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 			http-version v2
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 			http-url http://edge-exporter:8080/aerospike/kafka/publish
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:33:52 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:33:52 GMT: FAILED ASSERTION (config): (features_ee.c:135) no feature key (/opt/aerospike/etc/features.conf)
+Dec 07 2019 16:33:52 GMT: WARNING (as): (signal.c:161) SIGINT received, shutting down Aerospike Enterprise Edition build 4.7.0.3 os debian9
+Dec 07 2019 16:33:52 GMT: WARNING (as): (signal.c:164) startup was not complete, exiting immediately
+Dec 07 2019 16:37:28 GMT: INFO (as): (as.c:316) <><><><><><><><><><>  Aerospike Enterprise Edition build 4.7.0.3  <><><><><><><><><><>
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) # Aerospike database configuration file.
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) # This stanza must come first.
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) service {
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	user root
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	group root
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	paxos-single-replica-limit 1 # Number of nodes where the replica count is automatically reduced to 1.
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	pidfile /var/run/aerospike/asd.pid
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	service-threads 2
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	proto-fd-max 15000
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	feature-key-file /opt/aerospike/etc/features.conf
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) logging {
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	# Log file must be an absolute path.
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	file /aerospike/log/aerospike.log {
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 		context any info
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	# Send log messages to stdout
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	# console {
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	# 	context any info 
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	# }
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) network {
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	service {
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 		address any
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 		port 3000
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 		# Uncomment the following to set the `access-address` parameter to the
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 		# IP address of the Docker host. This will the allow the server to correctly
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 		# publish the address which applications and other nodes in the cluster to
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 		# use when addressing this node.
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 		# access-address <IPADDR>
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	heartbeat {
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110)         address any
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 		# mesh is used for environments that do not support multicast
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 		mode mesh
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 		port 3002
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 		# use asinfo -v 'tip:host=<ADDR>;port=3002' to inform cluster of
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 		# other mesh nodes
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 		interval 150
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 		timeout 10
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	fabric {
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	    address any
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 		port 3001
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	info {
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	    address any
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 		port 3003
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) namespace test {
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	replication-factor 2
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	memory-size 12G
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	default-ttl 0 # use 0 to never expire/evict.
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	enable-xdr true
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	xdr-remote-datacenter outbound-kafka
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	#	storage-engine memory
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	storage-engine device {
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 		file /aerospike/data/test.dat
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 		filesize 26G
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 		data-in-memory true # Store data in memory in addition to file.
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) xdr {
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	enable-xdr true
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	enable-change-notification true
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	xdr-digestlog-path /etc/aerospike/digestlog.log1 100G
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	xdr-compression-threshold 1000
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	xdr-info-port 3004
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	datacenter outbound-kafka {
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 			dc-type http
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 			http-version v2
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 			http-url http://edge-exporter:8080/aerospike/kafka/publish
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:37:28 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:37:28 GMT: FAILED ASSERTION (config): (features_ee.c:135) no feature key (/opt/aerospike/etc/features.conf)
+Dec 07 2019 16:37:28 GMT: WARNING (as): (signal.c:161) SIGINT received, shutting down Aerospike Enterprise Edition build 4.7.0.3 os debian9
+Dec 07 2019 16:37:28 GMT: WARNING (as): (signal.c:164) startup was not complete, exiting immediately
+Dec 07 2019 16:42:43 GMT: INFO (as): (as.c:316) <><><><><><><><><><>  Aerospike Enterprise Edition build 4.7.0.3  <><><><><><><><><><>
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) # Aerospike database configuration file.
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) # This stanza must come first.
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) service {
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	user root
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	group root
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	paxos-single-replica-limit 1 # Number of nodes where the replica count is automatically reduced to 1.
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	pidfile /var/run/aerospike/asd.pid
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	service-threads 2
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	proto-fd-max 15000
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	feature-key-file /opt/aerospike/etc/features.conf
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) logging {
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	# Log file must be an absolute path.
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	file /aerospike/log/aerospike.log {
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 		context any info
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	# Send log messages to stdout
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	# console {
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	# 	context any info 
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	# }
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) network {
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	service {
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 		address any
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 		port 3000
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 		# Uncomment the following to set the `access-address` parameter to the
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 		# IP address of the Docker host. This will the allow the server to correctly
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 		# publish the address which applications and other nodes in the cluster to
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 		# use when addressing this node.
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 		# access-address <IPADDR>
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	heartbeat {
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110)         address any
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 		# mesh is used for environments that do not support multicast
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 		mode mesh
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 		port 3002
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 		# use asinfo -v 'tip:host=<ADDR>;port=3002' to inform cluster of
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 		# other mesh nodes
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 		interval 150
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 		timeout 10
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	fabric {
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	    address any
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 		port 3001
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	info {
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	    address any
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 		port 3003
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) namespace test {
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	replication-factor 2
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	memory-size 12G
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	default-ttl 0 # use 0 to never expire/evict.
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	enable-xdr true
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	xdr-remote-datacenter outbound-kafka
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	#	storage-engine memory
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	storage-engine device {
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 		file /aerospike/data/test.dat
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 		filesize 26G
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 		data-in-memory true # Store data in memory in addition to file.
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) xdr {
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	enable-xdr true
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	enable-change-notification true
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	xdr-digestlog-path /etc/aerospike/digestlog.log1 100G
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	xdr-compression-threshold 1000
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	xdr-info-port 3004
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	datacenter outbound-kafka {
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 			dc-type http
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 			http-version v2
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 			http-url http://edge-exporter:8080/aerospike/kafka/publish
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:42:43 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:42:43 GMT: FAILED ASSERTION (config): (features_ee.c:135) no feature key (/opt/aerospike/etc/features.conf)
+Dec 07 2019 16:42:43 GMT: WARNING (as): (signal.c:161) SIGINT received, shutting down Aerospike Enterprise Edition build 4.7.0.3 os debian9
+Dec 07 2019 16:42:43 GMT: WARNING (as): (signal.c:164) startup was not complete, exiting immediately
+Dec 07 2019 16:44:13 GMT: INFO (as): (as.c:316) <><><><><><><><><><>  Aerospike Enterprise Edition build 4.7.0.3  <><><><><><><><><><>
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) # Aerospike database configuration file.
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) # This stanza must come first.
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) service {
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	user root
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	group root
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	paxos-single-replica-limit 1 # Number of nodes where the replica count is automatically reduced to 1.
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	pidfile /var/run/aerospike/asd.pid
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	service-threads 2
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	proto-fd-max 15000
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	feature-key-file /opt/aerospike/etc/features.conf
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) logging {
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	# Log file must be an absolute path.
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	file /aerospike/log/aerospike.log {
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 		context any info
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	# Send log messages to stdout
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	# console {
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	# 	context any info 
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	# }
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) network {
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	service {
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 		address any
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 		port 3000
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 		# Uncomment the following to set the `access-address` parameter to the
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 		# IP address of the Docker host. This will the allow the server to correctly
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 		# publish the address which applications and other nodes in the cluster to
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 		# use when addressing this node.
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 		# access-address <IPADDR>
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	heartbeat {
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110)         address any
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 		# mesh is used for environments that do not support multicast
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 		mode mesh
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 		port 3002
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 		# use asinfo -v 'tip:host=<ADDR>;port=3002' to inform cluster of
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 		# other mesh nodes
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 		interval 150
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 		timeout 10
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	fabric {
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	    address any
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 		port 3001
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	info {
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	    address any
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 		port 3003
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) namespace test {
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	replication-factor 2
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	memory-size 12G
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	default-ttl 0 # use 0 to never expire/evict.
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	enable-xdr true
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	xdr-remote-datacenter outbound-kafka
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	#	storage-engine memory
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	storage-engine device {
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 		file /aerospike/data/test.dat
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 		filesize 26G
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 		data-in-memory true # Store data in memory in addition to file.
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) xdr {
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	enable-xdr true
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	enable-change-notification true
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	xdr-digestlog-path /etc/aerospike/digestlog.log1 100G
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	xdr-compression-threshold 1000
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	xdr-info-port 3004
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	datacenter outbound-kafka {
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 			dc-type http
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 			http-version v2
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 			http-url http://edge-exporter:8080/aerospike/kafka/publish
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:44:13 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:44:13 GMT: FAILED ASSERTION (config): (features_ee.c:135) no feature key (/opt/aerospike/etc/features.conf)
+Dec 07 2019 16:44:13 GMT: WARNING (as): (signal.c:161) SIGINT received, shutting down Aerospike Enterprise Edition build 4.7.0.3 os debian9
+Dec 07 2019 16:44:13 GMT: WARNING (as): (signal.c:164) startup was not complete, exiting immediately
+Dec 07 2019 16:45:28 GMT: INFO (as): (as.c:316) <><><><><><><><><><>  Aerospike Enterprise Edition build 4.7.0.3  <><><><><><><><><><>
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) # Aerospike database configuration file.
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) # This stanza must come first.
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) service {
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	user root
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	group root
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	paxos-single-replica-limit 1 # Number of nodes where the replica count is automatically reduced to 1.
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	pidfile /var/run/aerospike/asd.pid
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	service-threads 2
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	proto-fd-max 15000
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	feature-key-file /opt/aerospike/etc/features.conf
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) logging {
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	# Log file must be an absolute path.
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	file /aerospike/log/aerospike.log {
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 		context any info
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	# Send log messages to stdout
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	# console {
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	# 	context any info 
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	# }
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) network {
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	service {
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 		address any
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 		port 3000
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 		# Uncomment the following to set the `access-address` parameter to the
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 		# IP address of the Docker host. This will the allow the server to correctly
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 		# publish the address which applications and other nodes in the cluster to
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 		# use when addressing this node.
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 		# access-address <IPADDR>
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	heartbeat {
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110)         address any
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 		# mesh is used for environments that do not support multicast
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 		mode mesh
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 		port 3002
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 		# use asinfo -v 'tip:host=<ADDR>;port=3002' to inform cluster of
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 		# other mesh nodes
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 		interval 150
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 		timeout 10
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	fabric {
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	    address any
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 		port 3001
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	info {
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	    address any
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 		port 3003
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) namespace test {
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	replication-factor 2
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	memory-size 12G
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	default-ttl 0 # use 0 to never expire/evict.
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	enable-xdr true
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	xdr-remote-datacenter outbound-kafka
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	#	storage-engine memory
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	storage-engine device {
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 		file /aerospike/data/test.dat
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 		filesize 26G
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 		data-in-memory true # Store data in memory in addition to file.
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) xdr {
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	enable-xdr true
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	enable-change-notification true
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	xdr-digestlog-path /etc/aerospike/digestlog.log1 100G
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	xdr-compression-threshold 1000
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	xdr-info-port 3004
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	datacenter outbound-kafka {
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 			dc-type http
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 			http-version v2
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 			http-url http://edge-exporter:8080/aerospike/kafka/publish
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) 	}
+Dec 07 2019 16:45:28 GMT: INFO (config): (cfg.c:4110) }
+Dec 07 2019 16:45:29 GMT: INFO (config): (features_ee.c:260) loaded feature key #238096708 (/opt/aerospike/etc/features.conf)
+Dec 07 2019 16:45:29 GMT: INFO (config): (cfg.c:4139) system file descriptor limit: 1048576, proto-fd-max: 15000
+Dec 07 2019 16:45:29 GMT: INFO (hardware): (hardware.c:2025) detected 2 CPU(s), 2 core(s), 1 NUMA node(s)
+Dec 07 2019 16:45:29 GMT: INFO (socket): (socket.c:2879) Node port 3001, node ID bb903001bac4202
+Dec 07 2019 16:45:29 GMT: INFO (config): (cfg.c:4171) node-id bb903001bac4202
+Dec 07 2019 16:45:29 GMT: INFO (xdr): (xdr.c:233) Found total 1 datacenters
+Dec 07 2019 16:45:29 GMT: INFO (xdr): (xdr.c:322) Namespace test is set to replicate to...
+Dec 07 2019 16:45:29 GMT: INFO (xdr): (xdr.c:327) DC: outbound-kafka
+Dec 07 2019 16:45:29 GMT: INFO (smd): (smd.c:2323) no file '/opt/aerospike/smd/evict.smd' - starting empty
+Dec 07 2019 16:45:29 GMT: INFO (drv_ssd): (drv_ssd_ee.c:898) {test} peek couldn't open file /aerospike/data/test.dat: No such file or directory
+Dec 07 2019 16:45:29 GMT: INFO (namespace): (namespace_ee.c:275) {test} found no stored data, will cold start
+Dec 07 2019 16:45:29 GMT: INFO (namespace): (namespace_ee.c:383) {test} beginning cold start
+Dec 07 2019 16:45:29 GMT: INFO (smd): (smd.c:2323) no file '/opt/aerospike/smd/roster.smd' - starting empty
+Dec 07 2019 16:45:29 GMT: INFO (smd): (smd.c:2323) no file '/opt/aerospike/smd/truncate.smd' - starting empty
+Dec 07 2019 16:45:29 GMT: INFO (smd): (smd.c:2323) no file '/opt/aerospike/smd/sindex.smd' - starting empty
+Dec 07 2019 16:45:29 GMT: INFO (drv_ssd): (drv_ssd.c:3331) opened file /aerospike/data/test.dat: usable size 27917287424
+Dec 07 2019 16:45:29 GMT: INFO (drv_ssd): (drv_ssd.c:1060) /aerospike/data/test.dat has 26624 wblocks of size 1048576
+Dec 07 2019 16:45:29 GMT: INFO (drv_ssd): (drv_ssd.c:2955) {test} found all 1 devices fresh, initializing to random 3827040243431720898
+Dec 07 2019 16:45:29 GMT: INFO (drv_ssd): (drv_ssd.c:1027) {test} loading free & defrag queues
+Dec 07 2019 16:45:29 GMT: INFO (drv_ssd): (drv_ssd.c:964) /aerospike/data/test.dat init defrag profile: 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Dec 07 2019 16:45:29 GMT: INFO (drv_ssd): (drv_ssd.c:1049) /aerospike/data/test.dat init wblocks: pristine-id 8 pristine 26616 free-q 0, defrag-q 0
+Dec 07 2019 16:45:29 GMT: INFO (drv_ssd): (drv_ssd.c:2181) {test} starting device maintenance threads
+Dec 07 2019 16:45:29 GMT: INFO (drv_ssd): (drv_ssd.c:1487) {test} starting write threads
+Dec 07 2019 16:45:29 GMT: INFO (drv_ssd): (drv_ssd.c:884) {test} starting defrag threads
+Dec 07 2019 16:45:29 GMT: INFO (as): (as.c:375) initializing services...
+Dec 07 2019 16:45:29 GMT: INFO (smd): (smd.c:2323) no file '/opt/aerospike/smd/security.smd' - starting empty
+Dec 07 2019 16:45:29 GMT: INFO (service): (service.c:155) starting 2 service threads
+Dec 07 2019 16:45:29 GMT: INFO (fabric): (fabric.c:767) updated fabric published address list to {172.27.0.3:3001}
+Dec 07 2019 16:45:29 GMT: INFO (partition): (partition_balance.c:201) {test} 4096 partitions: found 4096 absent, 0 stored
+Dec 07 2019 16:45:29 GMT: INFO (hb): (hb.c:5525) updated heartbeat published address list to {172.27.0.3:3002}
+Dec 07 2019 16:45:29 GMT: INFO (smd): (smd.c:2323) no file '/opt/aerospike/smd/UDF.smd' - starting empty
+Dec 07 2019 16:45:29 GMT: INFO (batch): (batch.c:736) starting 2 batch-index-threads
+Dec 07 2019 16:45:29 GMT: INFO (health): (health.c:319) starting health monitor thread
+Dec 07 2019 16:45:29 GMT: INFO (fabric): (fabric.c:424) starting 8 fabric send threads
+Dec 07 2019 16:45:29 GMT: INFO (fabric): (fabric.c:438) starting 16 fabric rw channel recv threads
+Dec 07 2019 16:45:29 GMT: INFO (fabric): (fabric.c:438) starting 4 fabric ctrl channel recv threads
+Dec 07 2019 16:45:29 GMT: INFO (fabric): (fabric.c:438) starting 4 fabric bulk channel recv threads
+Dec 07 2019 16:45:29 GMT: INFO (fabric): (fabric.c:438) starting 4 fabric meta channel recv threads
+Dec 07 2019 16:45:29 GMT: INFO (fabric): (fabric.c:444) starting fabric accept thread
+Dec 07 2019 16:45:29 GMT: INFO (xdr): (xdr_serverside.c:606) waiting for XDR to start
+Dec 07 2019 16:45:29 GMT: INFO (fabric): (socket.c:847) Started fabric endpoint 0.0.0.0:3001
+Dec 07 2019 16:45:29 GMT: WARNING (xdr-client): (as_pipe.c:202) Failed to open /proc/sys/net/core/wmem_max for reading
+Dec 07 2019 16:45:29 GMT: WARNING (xdr-client): (as_pipe.c:261) Failed to read /proc/sys/net/core/wmem_max; should be at least 5242880. Please verify.
+Dec 07 2019 16:45:29 GMT: WARNING (xdr-client): (as_pipe.c:202) Failed to open /proc/sys/net/core/rmem_max for reading
+Dec 07 2019 16:45:29 GMT: WARNING (xdr-client): (as_pipe.c:261) Failed to read /proc/sys/net/core/rmem_max; should be at least 15728640. Please verify.
+Dec 07 2019 16:45:29 GMT: INFO (rbuffer): (rbuffer.c:1116) Created digest log file /etc/aerospike/digestlog.log1
+Dec 07 2019 16:45:29 GMT: INFO (xdr): (xdr_dlog.c:455) Starting XDR with resume ... to ship 0 outstanding log records ...
+Dec 07 2019 16:45:29 GMT: INFO (rbuffer): (xdr_dlog.c:462) Stats [0:0:0:0:0]
+Dec 07 2019 16:45:29 GMT: INFO (rbuffer): (xdr_dlog.c:462) Current ver [1] sptr [0:0] rptr [0:0] | wptr [0:0] | rctx [1:0:0] | wctx [1:0:0] | maxseg [13415065]
+Dec 07 2019 16:45:29 GMT: INFO (xdr): (xdr_ship.c:713) Connecting to 'outbound-kafka'
+Dec 07 2019 16:45:29 GMT: INFO (xdr-http): (xdr_ship_http.c:224) Inflight limit set to 384 for DC outbound-kafka
+Dec 07 2019 16:45:29 GMT: INFO (xdr): (xdr_ship.c:725) Connected to 'outbound-kafka'
+Dec 07 2019 16:45:29 GMT: INFO (xdr): (xdr.c:829) Waiting for the initial partition balance
+Dec 07 2019 16:45:29 GMT: INFO (xdr-http): (xdr_ship_http.c:1195) XDR HTTP Event loop 2 started
+Dec 07 2019 16:45:29 GMT: INFO (xdr-http): (xdr_ship_http.c:1195) XDR HTTP Event loop 1 started
+Dec 07 2019 16:45:29 GMT: INFO (xdr-http): (xdr_ship_http.c:1195) XDR HTTP Event loop 0 started
+Dec 07 2019 16:45:30 GMT: INFO (hb): (hb.c:7042) initializing mesh heartbeat socket: 0.0.0.0:3002
+Dec 07 2019 16:45:30 GMT: INFO (hb): (hb.c:7071) mtu of the network is 1500
+Dec 07 2019 16:45:30 GMT: INFO (xdr): (xdr.c:829) Waiting for the initial partition balance
+Dec 07 2019 16:45:30 GMT: INFO (hb): (socket.c:847) Started mesh heartbeat endpoint 0.0.0.0:3002
+Dec 07 2019 16:45:30 GMT: INFO (xdr-http): (xdr_ship_http.c:676) Location http://edge-exporter:8080/aerospike/kafka/publish became bad
+Dec 07 2019 16:45:30 GMT: INFO (nsup): (nsup.c:212) starting namespace supervisor threads
+Dec 07 2019 16:45:30 GMT: INFO (service): (service.c:903) starting reaper thread
+Dec 07 2019 16:45:30 GMT: INFO (service): (socket.c:847) Started client endpoint 0.0.0.0:3000
+Dec 07 2019 16:45:30 GMT: INFO (service): (socket.c:847) Started client endpoint 0.0.0.0:3004
+Dec 07 2019 16:45:31 GMT: INFO (service): (service.c:186) starting accept thread
+Dec 07 2019 16:45:31 GMT: INFO (info-port): (thr_info_port.c:298) starting info port thread
+Dec 07 2019 16:45:31 GMT: INFO (info-port): (socket.c:847) Started info endpoint 0.0.0.0:3003
+Dec 07 2019 16:45:31 GMT: INFO (drv_ssd): (drv_ssd_ee.c:1488) {test} starting tomb raider thread
+Dec 07 2019 16:45:31 GMT: INFO (as): (as.c:420) service ready: soon there will be cake!
+Dec 07 2019 16:45:31 GMT: INFO (xdr): (xdr.c:829) Waiting for the initial partition balance
+Dec 07 2019 16:45:32 GMT: INFO (clustering): (clustering.c:6356) principal node - forming new cluster with succession list: bb903001bac4202
+Dec 07 2019 16:45:32 GMT: INFO (clustering): (clustering.c:5795) applied new cluster key 6acb5cecb480
+Dec 07 2019 16:45:32 GMT: INFO (clustering): (clustering.c:5797) applied new succession list bb903001bac4202
+Dec 07 2019 16:45:32 GMT: INFO (clustering): (clustering.c:5799) applied cluster size 1
+Dec 07 2019 16:45:32 GMT: INFO (exchange): (exchange.c:2315) data exchange started with cluster key 6acb5cecb480
+Dec 07 2019 16:45:32 GMT: INFO (exchange): (exchange.c:3191) received commit command from principal node bb903001bac4202
+Dec 07 2019 16:45:32 GMT: INFO (exchange): (exchange.c:3154) data exchange completed with cluster key 6acb5cecb480
+Dec 07 2019 16:45:32 GMT: INFO (partition): (partition_balance.c:993) {test} replication factor is 1
+Dec 07 2019 16:45:32 GMT: INFO (partition): (partition_balance.c:965) {test} rebalanced: expected-migrations (0,0,0) fresh-partitions 4096
+Dec 07 2019 16:45:32 GMT: INFO (xdr): (xdr_handlers.c:195) replication service ready: and now you have icing!
+Dec 07 2019 16:45:39 GMT: INFO (xdr): (xdr.c:586) summary: throughput 0 inflight 0 dlog-outstanding 0 dlog-delta-per-sec 0.0
+Dec 07 2019 16:45:39 GMT: INFO (xdr): (xdr.c:596) detail: sh 0 ul 0 lg 0 rlg 0 rlgi 0 rlgo 0 lproc 0 rproc 0 lkdproc 0 errcl 0 errsrv 0 hkskip 0 hkf 0 flat 0
+Dec 07 2019 16:45:41 GMT: INFO (info): (ticker.c:168) NODE-ID bb903001bac4202 CLUSTER-SIZE 1
+Dec 07 2019 16:45:41 GMT: INFO (info): (ticker.c:251)    cluster-clock: skew-ms 0
+Dec 07 2019 16:45:41 GMT: INFO (info): (ticker.c:274)    system: total-cpu-pct 198 user-cpu-pct 133 kernel-cpu-pct 65 free-mem-kbytes 1479768 free-mem-pct 72
+Dec 07 2019 16:45:41 GMT: INFO (info): (ticker.c:292)    process: cpu-pct 8 heap-kbytes (65572,66384,98304) heap-efficiency-pct 66.7
+Dec 07 2019 16:45:41 GMT: INFO (info): (ticker.c:303)    in-progress: info-q 0 rw-hash 0 proxy-hash 0 tree-gc-q 0
+Dec 07 2019 16:45:41 GMT: INFO (info): (ticker.c:324)    fds: proto (0,0,0) heartbeat (0,0,0) fabric (0,0,0)
+Dec 07 2019 16:45:41 GMT: INFO (info): (ticker.c:332)    heartbeat-received: self 0 foreign 0
+Dec 07 2019 16:45:41 GMT: INFO (info): (ticker.c:362)    fabric-bytes-per-second: bulk (0,0) ctrl (0,0) meta (0,0) rw (0,0)
+Dec 07 2019 16:45:41 GMT: INFO (info): (ticker.c:423) {test} objects: all 0 master 0 prole 0 non-replica 0
+Dec 07 2019 16:45:41 GMT: INFO (info): (ticker.c:481) {test} migrations: complete
+Dec 07 2019 16:45:41 GMT: INFO (info): (ticker.c:499) {test} memory-usage: total-bytes 0 index-bytes 0 sindex-bytes 0 data-bytes 0 used-pct 0.00
+Dec 07 2019 16:45:41 GMT: INFO (info): (ticker.c:551) {test} device-usage: used-bytes 0 avail-pct 99
+Dec 07 2019 16:45:49 GMT: INFO (drv_ssd): (drv_ssd.c:1911) {test} /aerospike/data/test.dat: used-bytes 0 free-wblocks 26616 write-q 0 write (0,0.0) defrag-q 0 defrag-read (0,0.0) defrag-write (0,0.0)
+Dec 07 2019 16:45:49 GMT: INFO (xdr): (xdr.c:586) summary: throughput 0 inflight 0 dlog-outstanding 0 dlog-delta-per-sec 0.0
+Dec 07 2019 16:45:49 GMT: INFO (xdr): (xdr.c:596) detail: sh 0 ul 0 lg 0 rlg 0 rlgi 0 rlgo 0 lproc 0 rproc 0 lkdproc 0 errcl 0 errsrv 0 hkskip 0 hkf 0 flat 0
+Dec 07 2019 16:45:51 GMT: INFO (info): (ticker.c:168) NODE-ID bb903001bac4202 CLUSTER-SIZE 1
+Dec 07 2019 16:45:51 GMT: INFO (info): (ticker.c:251)    cluster-clock: skew-ms 0
+Dec 07 2019 16:45:51 GMT: INFO (info): (ticker.c:274)    system: total-cpu-pct 197 user-cpu-pct 147 kernel-cpu-pct 50 free-mem-kbytes 1175372 free-mem-pct 57
+Dec 07 2019 16:45:51 GMT: INFO (info): (ticker.c:292)    process: cpu-pct 9 heap-kbytes (65572,66384,98304) heap-efficiency-pct 66.7
+Dec 07 2019 16:45:51 GMT: INFO (info): (ticker.c:303)    in-progress: info-q 0 rw-hash 0 proxy-hash 0 tree-gc-q 0
+Dec 07 2019 16:45:51 GMT: INFO (info): (ticker.c:324)    fds: proto (0,0,0) heartbeat (0,0,0) fabric (0,0,0)
+Dec 07 2019 16:45:51 GMT: INFO (info): (ticker.c:332)    heartbeat-received: self 0 foreign 0
+Dec 07 2019 16:45:51 GMT: INFO (info): (ticker.c:362)    fabric-bytes-per-second: bulk (0,0) ctrl (0,0) meta (0,0) rw (0,0)
+Dec 07 2019 16:45:51 GMT: INFO (info): (ticker.c:423) {test} objects: all 0 master 0 prole 0 non-replica 0
+Dec 07 2019 16:45:51 GMT: INFO (info): (ticker.c:481) {test} migrations: complete
+Dec 07 2019 16:45:51 GMT: INFO (info): (ticker.c:499) {test} memory-usage: total-bytes 0 index-bytes 0 sindex-bytes 0 data-bytes 0 used-pct 0.00
+Dec 07 2019 16:45:51 GMT: INFO (info): (ticker.c:551) {test} device-usage: used-bytes 0 avail-pct 99
+Dec 07 2019 16:45:59 GMT: INFO (xdr): (xdr.c:586) summary: throughput 0 inflight 0 dlog-outstanding 0 dlog-delta-per-sec 0.0
+Dec 07 2019 16:45:59 GMT: INFO (xdr): (xdr.c:596) detail: sh 0 ul 0 lg 0 rlg 0 rlgi 0 rlgo 0 lproc 0 rproc 0 lkdproc 0 errcl 0 errsrv 0 hkskip 0 hkf 0 flat 0
+Dec 07 2019 16:46:01 GMT: INFO (info): (ticker.c:168) NODE-ID bb903001bac4202 CLUSTER-SIZE 1
+Dec 07 2019 16:46:01 GMT: INFO (info): (ticker.c:251)    cluster-clock: skew-ms 0
+Dec 07 2019 16:46:01 GMT: INFO (info): (ticker.c:274)    system: total-cpu-pct 197 user-cpu-pct 146 kernel-cpu-pct 51 free-mem-kbytes 881984 free-mem-pct 43
+Dec 07 2019 16:46:01 GMT: INFO (info): (ticker.c:292)    process: cpu-pct 8 heap-kbytes (65572,66384,98304) heap-efficiency-pct 66.7
+Dec 07 2019 16:46:01 GMT: INFO (info): (ticker.c:303)    in-progress: info-q 0 rw-hash 0 proxy-hash 0 tree-gc-q 0
+Dec 07 2019 16:46:01 GMT: INFO (info): (ticker.c:324)    fds: proto (0,0,0) heartbeat (0,0,0) fabric (0,0,0)
+Dec 07 2019 16:46:01 GMT: INFO (info): (ticker.c:332)    heartbeat-received: self 0 foreign 0
+Dec 07 2019 16:46:01 GMT: INFO (info): (ticker.c:362)    fabric-bytes-per-second: bulk (0,0) ctrl (0,0) meta (0,0) rw (0,0)
+Dec 07 2019 16:46:01 GMT: INFO (info): (ticker.c:423) {test} objects: all 0 master 0 prole 0 non-replica 0
+Dec 07 2019 16:46:01 GMT: INFO (info): (ticker.c:481) {test} migrations: complete
+Dec 07 2019 16:46:01 GMT: INFO (info): (ticker.c:499) {test} memory-usage: total-bytes 0 index-bytes 0 sindex-bytes 0 data-bytes 0 used-pct 0.00
+Dec 07 2019 16:46:01 GMT: INFO (info): (ticker.c:551) {test} device-usage: used-bytes 0 avail-pct 99
+Dec 07 2019 16:46:07 GMT: INFO (as): (signal.c:198) SIGTERM received, shutting down Aerospike Enterprise Edition build 4.7.0.3 os debian9
+Dec 07 2019 16:46:07 GMT: INFO (as): (as.c:445) initiating clean shutdown ...
+Dec 07 2019 16:46:07 GMT: INFO (storage): (storage.c:826) {test} partitions shut down
+Dec 07 2019 16:46:07 GMT: INFO (storage): (storage.c:831) {test} storage devices flushed
+Dec 07 2019 16:46:07 GMT: INFO (namespace): (namespace_ee.c:159) {test} persisted arena stages
+Dec 07 2019 16:46:07 GMT: INFO (namespace): (namespace_ee.c:208) {test} persisted tree roots
+Dec 07 2019 16:46:07 GMT: INFO (namespace): (namespace_ee.c:238) {test} persisted trusted base block
+Dec 07 2019 16:46:07 GMT: INFO (xdr): (xdr_dlog.c:535) XDR digestlog flushed
+Dec 07 2019 16:46:07 GMT: INFO (rbuffer): (xdr_dlog.c:541) Stats [0:0:0:0:0]
+Dec 07 2019 16:46:07 GMT: INFO (rbuffer): (xdr_dlog.c:541) Current ver [1] sptr [0:0] rptr [0:0] | wptr [0:0] | rctx [1:0:0] | wctx [1:0:0] | maxseg [13415065]
+Dec 07 2019 16:46:07 GMT: INFO (xdr): (xdr_serverside.c:161) XDR stopped.
+Dec 07 2019 16:46:07 GMT: INFO (as): (as.c:450) finished clean shutdown - exiting

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="Jetty" monitorInterval="30">
+  <Properties>
+    <Property name="logDir">/aerospike/log</Property>
+  </Properties>
+
+  <Appenders>
+    <RollingFile name="file" fileName="${logDir}/application.log"
+      filePattern="${logDir}/application-%d{yyyyMMddHHmmss}.log.gz">
+      <PatternLayout>
+        <Pattern>%d{MMM dd yyyy HH:mm:ss}{GMT+0} UTC: %p: (%c{1}) %m%n%exception</Pattern>
+      </PatternLayout>
+      <CronTriggeringPolicy schedule="0 0 0 * * ?" />
+      <DefaultRolloverStrategy max="90" />
+    </RollingFile>
+  </Appenders>
+
+  <Loggers>
+    <Logger name="com.aerospike.connect" level="info" />
+    <Root level="info">
+      <AppenderRef ref="file"/>
+    </Root>
+  </Loggers>
+</Configuration>
