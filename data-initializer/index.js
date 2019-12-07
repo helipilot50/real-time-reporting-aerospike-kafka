@@ -8,7 +8,7 @@ const client = Aerospike.client({
     { addr: 'core-aerospikedb', port: 3000 }
   ],
   log: {
-    level: aerospike.log.INFO
+    level: Aerospike.log.INFO
   }
 })
 
