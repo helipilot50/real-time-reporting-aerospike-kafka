@@ -7,6 +7,7 @@ publisher-simulator/target
 features-Peter-Milne-Trial-Dec.31.2019.conf
 features.conf
 aerospike/core/log
+aerospile/edge/log
 test.dat
 tags-campaigns/.settings
 docker-compose-peter.yml
