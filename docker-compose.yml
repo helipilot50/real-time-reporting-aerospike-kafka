@@ -54,12 +54,13 @@ services:
     image: aerospike/aerospike-server-enterprise
     command: --config-file /opt/aerospike/etc/aerospike.conf
     ports:
-      - 3000:3000
-      - 3001:3001
-      - 3002:3002
-      - 3003:3003
+      - 3010:3000
+      - 3011:3001
+      - 3012:3002
+      - 3013:3003
     volumes:
       - ./aerospike/edge/etc/aerospike:/opt/aerospike/etc
+      - ./aerospike/edge/etc/aerospike-kafka:/etc/aerospike-kafka
       - ./aerospike/edge/log:/aerospike/log
       - ./aerospike/edge/data:/aerospike/data
   edge-exporter:
@@ -77,25 +78,33 @@ services:
       - 8080:8080
     volumes:
       - ./aerospike/edge/etc/aerospike:/etc/aerospike
-  #     - ./aerospike/edge/log:/aerospike/log
+      - ./aerospike/edge/etc/aerospike-kafka:/etc/aerospike-kafka
+      # - ./aerospike/edge/log:/aerospike/log
   data-initializer:
-    container_name: data_initializer
+    container_name: data-initializer
     build:
       context: ./data-initializer/
+    environment:
+      CORE_HOST: "core-aerospikedb"
+      CORE_PORT: 3000
     links:
       - core-aerospikedb
     depends_on:
       - core-aerospikedb
   event-collector:
-    container_name: event_collector
+    container_name: event-collector
     build:
       context: ./event-collector/
+    environment:
+      EDGE_HOST: "edge-aerospikedb"
+      EDGE_PORT: 3010
+      PORT: 4000
     links:
       - edge-aerospikedb
     depends_on:
       - edge-aerospikedb
   publisher-simulator:
-    container_name: publisher_simulator
+    container_name: publisher-simulator
     build:
       context: ./publisher-simulator/
     links:
