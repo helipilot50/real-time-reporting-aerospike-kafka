@@ -1,3 +1,0 @@
-[submodule "spark"]
-	path = spark
-	url = https://github.com/big-data-europe/docker-spark.git
