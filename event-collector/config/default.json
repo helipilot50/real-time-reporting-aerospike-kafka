@@ -1,0 +1,9 @@
+{
+  "namespace": "test",
+  "eventsSet": "events",
+  "eventIdBin": "event-id",
+  "eventBin": "event-data",
+  "tagBin": "event-tag-id",
+  "typeBin": "event-type",
+  "publisherBin": "event-pub"
+}

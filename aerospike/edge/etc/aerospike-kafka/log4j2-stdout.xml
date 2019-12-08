@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="Jetty" monitorInterval="30">
+  <Appenders>
+    <Console name="stdout" target="SYSTEM_OUT">
+      <PatternLayout>
+        <Pattern>&lt;%level{FATAL=0, ERROR=3, WARN=4, INFO=6, DEBUG=7, TRACE=7}&gt;%level (%c{1}) %m%n%exception</Pattern>
+      </PatternLayout>
+    </Console>
+  </Appenders>
+
+  <Loggers>
+    <Logger name="com.aerospike.connect" level="info" />
+    <Root level="info">
+      <AppenderRef ref="stdout"/>
+    </Root>
+  </Loggers>
+</Configuration>
