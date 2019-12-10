@@ -87,28 +87,28 @@ app.use('/event', EventRouter);
 
 app.listen(PORT, () => {
   console.log(`Event Collector running on port ${PORT}`);
-  console.log('Attempting to connect to Aerospike cluster', asHost, asPort);
+  // console.log('Attempting to connect to Aerospike cluster', asHost, asPort);
 
-  Aerospike.connect({
-    hosts: [
-      { addr: asHost, port: asPort }
-    ],
-    policies: {
-      read: new Aerospike.ReadPolicy({
-        totalTimeout: 500
-      }),
-      write: new Aerospike.WritePolicy({
-        totalTimeout: 500
-      }),
-    },
-    log: {
-      level: Aerospike.log.INFO
-    }
-  }).then(client => {
-    asClient = client;
-    console.log('Connected to aerospike', asHost, asPort);
-  }).catch(error => {
-    console.error('Cannot connect to aerospike', error);
-    throw error;
-  });
+  // Aerospike.connect({
+  //   hosts: [
+  //     { addr: asHost, port: asPort }
+  //   ],
+  //   policies: {
+  //     read: new Aerospike.ReadPolicy({
+  //       totalTimeout: 500
+  //     }),
+  //     write: new Aerospike.WritePolicy({
+  //       totalTimeout: 500
+  //     }),
+  //   },
+  //   log: {
+  //     level: Aerospike.log.INFO
+  //   }
+  // }).then(client => {
+  //   asClient = client;
+  //   console.log('Connected to aerospike', asHost, asPort);
+  // }).catch(error => {
+  //   console.error('Cannot connect to aerospike', error);
+  //   throw error;
+  // });
 });
