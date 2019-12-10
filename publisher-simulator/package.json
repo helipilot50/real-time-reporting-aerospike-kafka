@@ -4,12 +4,14 @@
   "description": "Simulates Ad events from publishers",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "nodemon src/index.js"
   },
   "author": "helipilot50",
   "license": "ISC",
   "dependencies": {
     "aerospike": "^3.13.0",
+    "config": "^3.2.4",
+    "nodemon": "^2.0.1",
     "request": "^2.88.0",
     "uuid": "^3.3.3"
   }

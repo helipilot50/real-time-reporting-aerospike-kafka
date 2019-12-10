@@ -4,39 +4,44 @@ const config = require('config');
 
 const uuidv4 = require('uuid/v4');
 const Aerospike = require('aerospike');
+const sleep = require('sleep');
 
 const asPort = parseInt(process.env.EDGE_PORT);
 const asHost = process.env.EDGE_HOST;
 console.log('Aerospike cluster', asHost, asPort);
 
+const waitFor = parseInt(process.env.SLEEP);
+
+sleep.sleep(waitFor);
+
 let _client;
 
 const asClient = async () => {
+
   if (!_client) {
-    try {
-      const asConfig = {
-        hosts: [
-          { addr: asHost, port: asPort }
-        ],
-        policies: {
-          read: new Aerospike.ReadPolicy({
-            totalTimeout: 500
-          }),
-          write: new Aerospike.WritePolicy({
-            totalTimeout: 500
-          }),
-        },
-        log: {
-          level: Aerospike.log.INFO
-        }
-      };
-      _client = await Aerospike.connect(asConfig);
-    } catch (error) {
+    Aerospike.connect({
+      hosts: [
+        { addr: asHost, port: asPort }
+      ],
+      policies: {
+        read: new Aerospike.ReadPolicy({
+          totalTimeout: 500
+        }),
+        write: new Aerospike.WritePolicy({
+          totalTimeout: 500
+        }),
+      },
+      log: {
+        level: Aerospike.log.INFO
+      }
+    }).then(client => {
+      _client = client;
+    }).catch(error => {
       console.error('Cannot connect to aerospike', error);
       throw error;
-    }
+    });
   }
-  return _client;
+  return _client
 }
 
 const app = express();
@@ -45,6 +50,7 @@ const EventRouter = express.Router();
 
 const writeEvent = async (type, body) => {
   try {
+    client = await asClient()
     const eventId = uuidv4();
     let clickKey = new Aerospike.Key(config.namespace, config.eventsSet, eventId);
     let bins = {};
@@ -53,7 +59,7 @@ const writeEvent = async (type, body) => {
     bins[config.tagBin] = body.tag;
     bins[config.bublisherBin] = body.publisher;
     bins[config.typeBin] = type;
-    await asClient().put(clickKey, bins);
+    await client.put(clickKey, bins);
     console.log(`${type} event`, bins);
   } catch (error) {
     console.error(`${type} event processing error`, error);

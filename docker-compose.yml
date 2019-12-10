@@ -87,6 +87,7 @@ services:
     environment:
       CORE_HOST: "core-aerospikedb"
       CORE_PORT: 3000
+      SLEEP: 5
     links:
       - core-aerospikedb
     depends_on:
@@ -99,6 +100,7 @@ services:
       EDGE_HOST: "edge-aerospikedb"
       EDGE_PORT: 3010
       PORT: 4000
+      SLEEP: 5
     links:
       - edge-aerospikedb
     depends_on:
@@ -111,6 +113,9 @@ services:
       CORE_HOST: "core-aerospikedb"
       CORE_PORT: 3000
       PORT: 4000
+      EVENT_INTERVAL: 1500
+    volumes:
+      - ./publisher-simulator/src:/usr/src/app/src
     links:
       - core-aerospikedb
     depends_on:
