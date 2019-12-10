@@ -9,6 +9,8 @@
   "author": "helipilot50",
   "license": "ISC",
   "dependencies": {
-    "request": "^2.88.0"
+    "aerospike": "^3.13.0",
+    "request": "^2.88.0",
+    "uuid": "^3.3.3"
   }
 }

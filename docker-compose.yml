@@ -107,7 +107,12 @@ services:
     container_name: publisher-simulator
     build:
       context: ./publisher-simulator/
+    environment:
+      CORE_HOST: "core-aerospikedb"
+      CORE_PORT: 3000
+      PORT: 4000
     links:
       - core-aerospikedb
     depends_on:
       - core-aerospikedb
+      - event-collector
