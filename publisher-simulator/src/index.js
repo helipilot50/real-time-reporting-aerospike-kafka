@@ -2,12 +2,17 @@ const request = require('request')
 const uuidv4 = require('uuid/v4');
 const Aerospike = require('aerospike');
 const config = require('config');
+const sleep = require('sleep');
 
 const PORT = process.env.PORT || 4000
 const asPort = parseInt(process.env.CORE_PORT);
 const asHost = process.env.CORE_HOST;
 const INTERVAL = parseInt(process.env.EVENT_INTERVAL);
 console.log('Aerospike cluster', asHost, asPort);
+
+const waitFor = parseInt(process.env.SLEEP);
+
+sleep.sleep(waitFor);
 
 let asClient;
 

@@ -54,10 +54,10 @@ services:
     image: aerospike/aerospike-server-enterprise
     command: --config-file /opt/aerospike/etc/aerospike.conf
     ports:
-      - 3010:3000
-      - 3011:3001
-      - 3012:3002
-      - 3013:3003
+      - 3010:3010
+      - 3011:3011
+      - 3012:3012
+      - 3013:3013
     volumes:
       - ./aerospike/edge/etc/aerospike:/opt/aerospike/etc
       - ./aerospike/edge/etc/aerospike-kafka:/etc/aerospike-kafka
@@ -96,6 +96,8 @@ services:
     container_name: event-collector
     build:
       context: ./event-collector/
+    ports:
+      - 4000:4000
     environment:
       EDGE_HOST: "edge-aerospikedb"
       EDGE_PORT: 3010
@@ -114,6 +116,7 @@ services:
       CORE_PORT: 3000
       PORT: 4000
       EVENT_INTERVAL: 1500
+      SLEEP: 5
     volumes:
       - ./publisher-simulator/src:/usr/src/app/src
     links:
