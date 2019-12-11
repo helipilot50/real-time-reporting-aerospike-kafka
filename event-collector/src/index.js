@@ -20,6 +20,7 @@ const PORT = process.env.PORT || 4000
 const EventRouter = express.Router();
 
 const writeEvent = async (type, body) => {
+  const eventId = uuidv4();
   try {
 
     if (!asClient) {
@@ -49,7 +50,6 @@ const writeEvent = async (type, body) => {
       });
     }
 
-    const eventId = uuidv4();
     let clickKey = new Aerospike.Key(config.namespace, config.eventsSet, eventId);
     let bins = {};
     bins[config.eventIdBin] = eventId;
@@ -58,9 +58,9 @@ const writeEvent = async (type, body) => {
     bins[config.bublisherBin] = body.publisher;
     bins[config.typeBin] = type;
     await asClient.put(clickKey, bins);
-    console.log(`${type} event`, bins);
+    console.log(`Processed ${type} event`, eventId);
   } catch (error) {
-    console.error(`${type} event processing error`, error);
+    console.error(`${type} event processing error`, eventId);
     throw error;
   }
 }
@@ -87,28 +87,4 @@ app.use('/event', EventRouter);
 
 app.listen(PORT, () => {
   console.log(`Event Collector running on port ${PORT}`);
-  // console.log('Attempting to connect to Aerospike cluster', asHost, asPort);
-
-  // Aerospike.connect({
-  //   hosts: [
-  //     { addr: asHost, port: asPort }
-  //   ],
-  //   policies: {
-  //     read: new Aerospike.ReadPolicy({
-  //       totalTimeout: 500
-  //     }),
-  //     write: new Aerospike.WritePolicy({
-  //       totalTimeout: 500
-  //     }),
-  //   },
-  //   log: {
-  //     level: Aerospike.log.INFO
-  //   }
-  // }).then(client => {
-  //   asClient = client;
-  //   console.log('Connected to aerospike', asHost, asPort);
-  // }).catch(error => {
-  //   console.error('Cannot connect to aerospike', error);
-  //   throw error;
-  // });
 });

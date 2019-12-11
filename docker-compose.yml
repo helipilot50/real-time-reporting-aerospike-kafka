@@ -116,7 +116,7 @@ services:
       CORE_PORT: 3000
       PORT: 4000
       EVENT_INTERVAL: 1500
-      SLEEP: 5
+      SLEEP: 10
     volumes:
       - ./publisher-simulator/src:/usr/src/app/src
     links:
