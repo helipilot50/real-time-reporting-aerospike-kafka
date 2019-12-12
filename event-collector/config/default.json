@@ -5,5 +5,5 @@
   "eventBin": "event-data",
   "tagBin": "event-tag-id",
   "typeBin": "event-type",
-  "publisherBin": "event-pub"
+  "sourceBin": "event-source"
 }

@@ -131,7 +131,7 @@ const intervalFunc = async () => {
     let record = await asClient.get(tagKey);
     let tag = record.bins[config.tagIdBin];
 
-    let publisher = uuidv4();
+    let sourceId = uuidv4();
     let options = {
       uri: `http://event-collector:${PORT}/event/${event}`,
       headers: {
@@ -140,12 +140,27 @@ const intervalFunc = async () => {
       json: {
         event: event,
         tag: tag,
-        publisher: publisher,
         geo: randomGeo(),
       }
     };
 
-    console.log(`Event: ${event}, Tag: ${tag}, Publisher: ${publisher}`)
+    switch (event) {
+      case 'click':
+        options.json['publisher'] = sourceId;
+        break;
+      case 'impression':
+        options.json['publisher'] = sourceId;
+        break;
+      case 'visit':
+        options.json['advertiser'] = sourceId;
+        break;
+      case 'conversion':
+        options.json['vendor'] = sourceId;
+        break;
+    }
+
+
+    console.log(`Event: ${options.json}`)
     request.post(options);
   } catch (error) {
     console.error('send event error', error);

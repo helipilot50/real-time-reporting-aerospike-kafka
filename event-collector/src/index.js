@@ -32,10 +32,10 @@ const writeEvent = async (type, body) => {
         ],
         policies: {
           read: new Aerospike.ReadPolicy({
-            totalTimeout: 500
+            totalTimeout: 100
           }),
           write: new Aerospike.WritePolicy({
-            totalTimeout: 500
+            totalTimeout: 100
           }),
         },
         log: {
@@ -55,7 +55,20 @@ const writeEvent = async (type, body) => {
     bins[config.eventIdBin] = eventId;
     bins[config.eventBin] = body;
     bins[config.tagBin] = body.tag;
-    bins[config.bublisherBin] = body.publisher;
+    switch (type) {
+      case 'click':
+        bins[config.sourceBin] = body.publisher;
+        break;
+      case 'impression':
+        bins[config.sourceBin] = body.publisher;
+        break;
+      case 'visit':
+        bins[config.sourceBin] = body.advertiser;
+        break;
+      case 'conversion':
+        bins[config.sourceBin] = body.vendor;
+        break;
+    }
     bins[config.typeBin] = type;
     await asClient.put(clickKey, bins);
     console.log(`Processed ${type} event`, eventId);
@@ -66,18 +79,22 @@ const writeEvent = async (type, body) => {
 }
 
 EventRouter.route('/impression').post(function (req, res) {
+  req.body.userAgent = req.header['User-Agent'];
   writeEvent('impression', req.body);
 });
 
 EventRouter.route('/visit').post(function (req, res) {
+  req.body.userAgent = req.header['User-Agent'];
   writeEvent('visit', req.body);
 });
 
 EventRouter.route('/conversion').post(function (req, res) {
+  req.body.userAgent = req.header['User-Agent'];
   writeEvent('conversion', req.body);
 });
 
 EventRouter.route('/click').post(function (req, res) {
+  req.body.userAgent = req.header['User-Agent'];
   writeEvent('click', req.body);
 });
 

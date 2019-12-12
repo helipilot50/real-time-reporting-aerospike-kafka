@@ -1,0 +1,29 @@
+@startuml
+skinparam componentStyle uml2
+left to right direction
+title Real-time reporting
+actor Publisher
+node "Core" {
+    component "Aggregator/Reducer" as ar
+    component "Campaign service" as campaignService
+    database "Campaign Datastore\nAerospike CP" as coreAS #LightPink
+    coreAS -right- campaignService
+}
+
+queue "Kafka cluster" as Kafka
+
+node "Edge" {
+    component "Event Collector" as eventEUuk
+    database "Event Datastore\nAerospike AP" as edgeEUuk #LightPink
+    component "Kafka connector" as edgeKafkaCon #LightPink
+    eventEUuk -r- edgeEUuk
+    edgeEUuk -d- edgeKafkaCon
+}
+Publisher ..> eventEUuk: impression
+Publisher ..> eventEUuk: click
+Advertiser ..> eventEUuk: visit
+Vendor ..> eventEUuk: conversion
+edgeKafkaCon .d.> Kafka
+Kafka .r.> ar 
+ar -d-> coreAS
+@enduml
