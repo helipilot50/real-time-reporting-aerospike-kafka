@@ -78,23 +78,28 @@ const writeEvent = async (type, body) => {
   }
 }
 
+const applyUserAgent = (req) => {
+  req.body.userAgent = req.headers['user-agent'];
+  console.log('event:', req.body);
+};
+
 EventRouter.route('/impression').post(function (req, res) {
-  req.body.userAgent = req.header['User-Agent'];
+  applyUserAgent(req);
   writeEvent('impression', req.body);
 });
 
 EventRouter.route('/visit').post(function (req, res) {
-  req.body.userAgent = req.header['User-Agent'];
+  applyUserAgent(req);
   writeEvent('visit', req.body);
 });
 
 EventRouter.route('/conversion').post(function (req, res) {
-  req.body.userAgent = req.header['User-Agent'];
+  applyUserAgent(req);
   writeEvent('conversion', req.body);
 });
 
 EventRouter.route('/click').post(function (req, res) {
-  req.body.userAgent = req.header['User-Agent'];
+  applyUserAgent(req);
   writeEvent('click', req.body);
 });
 

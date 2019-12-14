@@ -132,10 +132,11 @@ const intervalFunc = async () => {
     let tag = record.bins[config.tagIdBin];
 
     let sourceId = uuidv4();
+    let userAgent = randomUserAgent();
     let options = {
       uri: `http://event-collector:${PORT}/event/${event}`,
       headers: {
-        'User-Agent': randomUserAgent()
+        'user-agent': userAgent,
       },
       json: {
         event: event,
@@ -160,7 +161,7 @@ const intervalFunc = async () => {
     }
 
 
-    console.log(`Event: ${options.json}`)
+    console.log(`Event:`, options)
     request.post(options);
   } catch (error) {
     console.error('send event error', error);
