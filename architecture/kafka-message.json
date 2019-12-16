@@ -1,0 +1,48 @@
+{
+  "msg": "write",
+  "key": [
+    "test",
+    "events",
+    "AvYAdzrOmm1xwvWZFyGwEvgjwnk=",
+    null
+  ],
+  "gen": 0,
+  "exp": 0,
+  "lut": 0,
+  "bins": [
+    {
+      "name": "event-id",
+      "type": "str",
+      "value": "0d33124c-beca-4b4f-a833-8c9646167e8c"
+    },
+    {
+      "name": "event-data",
+      "type": "map",
+      "value": {
+        "geo": [
+          52.366521,
+          4.894981
+        ],
+        "tag": "0a3ca7c5-b845-49ed-ab3a-129f9eca23d6",
+        "publisher": "e5b08db3-07b5-456b-aaac-1e59f76c4dd6",
+        "event": "impression",
+        "userAgent": "Mozilla/5.0 (X11; CrOS x86_64 8172.45.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.64 Safari/537.36"
+      }
+    },
+    {
+      "name": "event-tag-id",
+      "type": "str",
+      "value": "0a3ca7c5-b845-49ed-ab3a-129f9eca23d6"
+    },
+    {
+      "name": "event-source",
+      "type": "str",
+      "value": "e5b08db3-07b5-456b-aaac-1e59f76c4dd6"
+    },
+    {
+      "name": "event-type",
+      "type": "str",
+      "value": "impression"
+    }
+  ]
+}

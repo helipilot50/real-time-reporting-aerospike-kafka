@@ -5,9 +5,25 @@ const config = require('config');
 
 const asPort = parseInt(process.env.CORE_PORT);
 const asHost = process.env.CORE_HOST;
+const waitFor = parseInt(process.env.SLEEP);
 
-sleep.sleep(5);
+sleep.sleep(waitFor);
 console.log('Aerospike cluster', asHost, asPort);
+
+const nextTagIndex = async (client) => {
+  let tagCountKey = new Aerospike.Key(config.namespace, config.tagSet, 'tag-count');
+  const tagCountOps = [
+    Aerospike.operations.incr('tag-count', 1),
+    Aerospike.operations.read('tag-count')
+  ]
+  try {
+    const tagCountRecord = await client.operate(tagCountKey, tagCountOps);
+    return tagCountRecord.bins['tag-count'];
+  } catch (error) {
+    console.error(`Cannot het next tag index`, error)
+    throw error;
+  }
+};
 
 const createData = async (campaignCount, tagCount) => {
   let asClient;
@@ -47,14 +63,15 @@ const createData = async (campaignCount, tagCount) => {
     /*
     if data exists do nothing
     */
-    let testKey = new Aerospike.Key(config.namespace, config.tagSet, 1);
+    let testKey = new Aerospike.Key(config.namespace, config.tagSet, 25);
     let dataExists = await asClient.exists(testKey);
     if (dataExists) {
       asClient.close();
       console.log('Data already initialized... doing nothing');
       return;
     }
-    let tagIndex = 1;
+
+
     // create campaigns
     for (i = 0; i < campaignCount; i++) {
       let campaignId = uuidv4();
@@ -70,20 +87,25 @@ const createData = async (campaignCount, tagCount) => {
       };
       bins[config.campaignNameBin] = `Acme campaign ${i}`;
 
-      let returnCode = await asClient.put(campaignKey, bins);
+      await asClient.put(campaignKey, bins);
+
+      console.log('created campaign', bins[config.campaignNameBin]);
 
       // create tags for campaign
       for (j = 0; j < tagCount; j++) {
+        let tagIndex = await nextTagIndex(asClient);
         tag = uuidv4();
         // write tag-campaign mapping to aerospike
         let tagKey = new Aerospike.Key(config.namespace, config.tagSet, tag);
         let tagBins = {};
+        tagBins[config.tagIdBin] = tag;
         tagBins[config.campaignIdBin] = campaignId;
         await asClient.put(tagKey, tagBins);
         // add to list of tags
         let tagListKey = new Aerospike.Key(config.namespace, config.tagSet, tagIndex);
+        tagBins = {};
+        tagBins[config.tagIdBin] = tag;
         await asClient.put(tagListKey, tagBins);
-        tagIndex += 1;
       }
     }
     console.log(`Completed creating ${campaignCount} campaigns with ${tagCount} each`)

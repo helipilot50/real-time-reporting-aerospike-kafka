@@ -1,0 +1,21 @@
+@startuml
+skinparam componentStyle uml2
+left to right direction
+title Real-time reporting - Event Collection
+actor Publisher
+
+queue "Kafka cluster" as Kafka
+
+node "Edge" {
+    component "Event Collector" as eventEUuk
+    database "Event Datastore\nAerospike AP" as edgeEUuk #LightPink
+    component "Kafka connector" as edgeKafkaCon #LightPink
+    eventEUuk -r- edgeEUuk
+    edgeEUuk -d- edgeKafkaCon
+}
+Publisher ..> eventEUuk: impression
+Publisher ..> eventEUuk: click
+Advertiser ..> eventEUuk: visit
+Vendor ..> eventEUuk: conversion
+edgeKafkaCon .d.> Kafka
+@enduml
