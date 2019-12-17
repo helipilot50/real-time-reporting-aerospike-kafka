@@ -1,0 +1,18 @@
+@startuml
+
+autonumber
+autoactivate on
+queue "Kafka cluster" as Kafka
+box "Core" #LightBlue
+    participant "Aggregator\nReducer" as aggReduce 
+    database "Aerospike CP\nCampaign Datastore" as campaignStore #LigntPink
+end box
+
+
+aggReduce -> Kafka: fetch message
+activate aggReduce
+aggReduce <-- Kafka: Event message
+aggReduce -> campaignStore: Aerospike CDT Add 
+aggReduce <-- campaignStore
+
+@enduml

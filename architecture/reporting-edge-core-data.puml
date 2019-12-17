@@ -1,7 +1,7 @@
 @startuml
 skinparam componentStyle uml2
 left to right direction
-title Real-time reporting
+
 actor Publisher
 node "Core" {
     component "Aggregator/Reducer" as ar
@@ -19,6 +19,9 @@ node "Edge" {
     eventEUuk -r- edgeEUuk
     edgeEUuk -d- edgeKafkaCon
 }
+
+actor "Campaign UI" as ui
+
 Publisher ..> eventEUuk: impression
 Publisher ..> eventEUuk: click
 Advertiser ..> eventEUuk: visit
@@ -26,4 +29,5 @@ Vendor ..> eventEUuk: conversion
 edgeKafkaCon .d.> Kafka
 Kafka .r.> ar 
 ar -d-> coreAS
+campaignService -- ui
 @enduml

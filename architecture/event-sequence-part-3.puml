@@ -1,0 +1,16 @@
+@startuml
+
+autonumber
+autoactivate on
+box "Core" #LightBlue
+    database "Aerospike CP\nCampaign Datastore" as campaignStore #LigntPink
+    participant "Canpaign service" as campaignService
+end box
+actor "Campaign UI" as campaignUI #D5E8D4
+
+campaignUI -> campaignService: GraphQL query: campaignKPIs
+campaignService -> campaignStore: Aerospike CDT operations
+campaignService <-- campaignStore: CDT (json)
+campaignUI <-- campaignService: GraphQL payload
+
+@enduml

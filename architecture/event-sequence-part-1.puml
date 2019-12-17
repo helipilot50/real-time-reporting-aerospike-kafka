@@ -1,0 +1,23 @@
+@startuml
+
+autonumber
+autoactivate on
+actor "Publisher\nAdvertiser\nVendor" as publisher #D5E8D4
+box "Edge" #LightGoldenRodYellow
+    participant "Event Collector" as eventCollector 
+    database "Aerospike AP\nEvent Datastore" as eventStore #LigntPink
+    participant "Kafka connector" as edgeKafkaCon #LightPink
+end box
+queue "Kafka cluster" as Kafka
+
+publisher -/ eventCollector: impresson event
+eventCollector -> eventStore: Aerospike put
+eventStore -/ edgeKafkaCon
+edgeKafkaCon -/ Kafka
+deactivate edgeKafkaCon
+deactivate Kafka
+eventCollector <-- eventStore
+deactivate eventCollector
+
+
+@enduml

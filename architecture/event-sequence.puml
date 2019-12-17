@@ -1,0 +1,42 @@
+@startuml
+
+autonumber
+autoactivate on
+actor "Publisher\nAdvertiser\nVendor" as publisher #D5E8D4
+box "Edge" #LightGoldenRodYellow
+    participant "Event Collector" as eventCollector 
+    database "Aerospike AP\nEvent Datastore" as eventStore #LigntPink
+    participant "Kafka connector" as edgeKafkaCon #LightPink
+end box
+queue "Kafka cluster" as Kafka
+box "Core" #LightBlue
+    participant "Aggregator\nReducer" as aggReduce 
+    database "Aerospike CP\nCampaign Datastore" as campaignStore #LigntPink
+    participant "Canpaign service" as campaignService
+end box
+actor "Campaign UI" as campaignUI #D5E8D4
+== Part 1 ==
+publisher -/ eventCollector: impresson event
+eventCollector -> eventStore: Aerospike put
+eventStore -/ edgeKafkaCon
+edgeKafkaCon -/ Kafka
+deactivate edgeKafkaCon
+deactivate Kafka
+eventCollector <-- eventStore
+deactivate eventCollector
+... ...
+== Part 2 ==
+aggReduce -> Kafka: fetch message
+activate aggReduce
+aggReduce <-- Kafka: Event message
+aggReduce -> campaignStore: Aerospike CDT Add 
+aggReduce <-- campaignStore
+... ...
+== Part 3 ==
+
+campaignUI -> campaignService: GraphQL query: campaignKPIs
+campaignService -> campaignStore: Aerospike CDT operations
+campaignService <-- campaignStore: CDT (json)
+campaignUI <-- campaignService: GraphQL payload
+
+@enduml
