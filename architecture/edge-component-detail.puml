@@ -7,26 +7,22 @@ together {
   package "data initializer" {
     component "Data Initializer" as dataInit
     component "Aerospike Node client" as asNode1
-    dataInit -(0- asNode1
+    dataInit -r(0- asNode1
   }
 
   package "Simulator" {
     component "publisher-simulator" as simulator
     component "Aerospike Node client" as asNode3
-    simulator -(0- asNode3
-  }
-
-  package "Viewer" {
-          component [Kafka\nCli] as kafCli
+    simulator -r(0- asNode3
   }
 }
 
 package "Event Collector" {
     () "4000" as ecSocket
     component "Event Collector" as eventEUuk
-    ecSocket -- eventEUuk
+    ecSocket - eventEUuk
     component "Aerospike Node client" as asNode2
-    eventEUuk -(0- asNode2
+    eventEUuk -r(0- asNode2
 }
 
 package "Edge Aerospike" {
@@ -34,12 +30,12 @@ package "Edge Aerospike" {
     component "Aerospike\nEnterprise\nEdition\n\nin AP mode" as asEdge
     aseSocket - asEdge
     database "Event Datastore\nAerospike AP" as edgeEUuk #LightPink
-    asEdge -(0- edgeEUuk
+    asEdge -r(0- edgeEUuk
     
     () "8080" as asOutbound
     component [Aerospike\nOutbound Kafka\nConnector] as asKafka
     asOutbound - asKafka
-
+    asEdge ..> asOutbound: HTTP(s)
 }
 
 package "Core Aerospike" {
@@ -47,10 +43,11 @@ package "Core Aerospike" {
     component "Aerospike\nEnterprise\nEdition\n\nin CP mode" as asCore
     ascSocket - asCore
     database "Campaign Datastore\nAerospike CP" as core #LightPink
-    asCore -(0- core
+    asCore -r(0- core
 }
 
 package "Kafka and Zookeeper" {
+    component [Kafka\nCli] as kafCli
     () "9092" as kafClient
     component [Kafka\nCluster] as kafCluster
     kafClient - kafCluster
@@ -61,7 +58,6 @@ package "Kafka and Zookeeper" {
 asNode1 ..> ascSocket: TCP\nbinary\nprotocol
 asNode3 <.. ascSocket: TCP\nbinary\nprotocol
 asNode2 <..> aseSocket: TCP\nbinary\nprotocol
-asEdge .r.> asOutbound: HTTP(s)
 asKafka .r.> kafClient: TCP\nbinary\nprotocol
 zookeeper <..> kafCluster
 simulator ..> ecSocket
