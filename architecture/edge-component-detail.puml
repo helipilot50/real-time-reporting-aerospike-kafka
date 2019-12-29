@@ -35,7 +35,7 @@ package "Edge Aerospike" {
     () "8080" as asOutbound
     component [Aerospike\nOutbound Kafka\nConnector] as asKafka
     asOutbound - asKafka
-
+    asEdge ..> asOutbound: HTTP(s)
 }
 
 package "Core Aerospike" {
@@ -58,7 +58,6 @@ package "Kafka and Zookeeper" {
 asNode1 ..> ascSocket: TCP\nbinary\nprotocol
 asNode3 <.. ascSocket: TCP\nbinary\nprotocol
 asNode2 <..> aseSocket: TCP\nbinary\nprotocol
-asEdge .r.> asOutbound: HTTP(s)
 asKafka .r.> kafClient: TCP\nbinary\nprotocol
 zookeeper <..> kafCluster
 simulator ..> ecSocket
