@@ -1,0 +1,33 @@
+@startuml
+left to right direction
+object "Campaign" as camp1 {
+    id = 897ab8c3-e2d7-449d-967e-c6447d3f0e89
+}
+
+object "Reporting\ndata cube" as cube1 {
+    clicks = 144
+    impressions = 145890
+    conversions = 3
+    ...
+}
+
+object "Tag 1" as tag1 {
+    id = a8ced7fe-958a-4f3c-bf2c-279556992a2f
+}
+
+object "Tag 2" as tag2 {
+    id = 00328816-4755-4551-a2b9-cd499eb464c1
+}
+object "Tag 3" as tag3 {
+    id = 91fc26f4-ceac-4377-9198-0c9ef8179c00
+}
+object "Tag 100" as tag1000 {
+    id = 89e0a8a4-4573-4a27-899d-33bedb05221d
+}
+
+camp1 -- cube1
+camp1 -- tag1
+camp1 -- tag2
+camp1 -- tag3
+camp1 -- tag1000
+@enduml
