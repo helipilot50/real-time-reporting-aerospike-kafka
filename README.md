@@ -1,2 +1,2 @@
-# real-time-reporting-aerospike-kafka
-work in progress
+# Near real-time Campaign reporting
+
