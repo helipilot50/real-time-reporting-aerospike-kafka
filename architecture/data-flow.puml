@@ -1,0 +1,26 @@
+@startuml
+allow_mixing
+left to right direction
+actor "Publisher\nAdvertiser\nVendor" as publisher #D5E8D4
+rectangle "Edge" #LightGoldenRodYellow {
+    object "Event Collector" as eventCollector 
+    database "Aerospike AP\nEvent Datastore" as eventStore #LigntPink
+    object "Kafka connector" as edgeKafkaCon #LightPink
+}
+queue "Kafka cluster" as Kafka
+rectangle "Core" #LightBlue {
+    object "Aggregator\nReducer" as aggReduce 
+    database "Aerospike CP\nCampaign Datastore" as campaignStore #LigntPink
+    object "Canpaign service" as campaignService
+}
+actor "Campaign UI" as campaignUI #D5E8D4
+
+publisher -- eventCollector
+eventCollector -->  eventStore
+eventStore --> edgeKafkaCon
+edgeKafkaCon ..> Kafka
+Kafka ..> aggReduce
+aggReduce --> campaignStore
+campaignStore <--> campaignService
+campaignService -- campaignUI
+@enduml
