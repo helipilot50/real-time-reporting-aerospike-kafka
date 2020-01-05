@@ -2,6 +2,7 @@ const config = require('config');
 const kafka = require('kafka-node');
 const Aerospike = require('aerospike');
 const sleep = require('sleep');
+const { EventReceiver } = require('./event-receiver');
 
 const asPort = parseInt(process.env.CORE_PORT);
 const asHost = process.env.CORE_HOST;
@@ -12,21 +13,14 @@ const waitFor = parseInt(process.env.SLEEP);
 
 sleep.sleep(waitFor);
 
-const Consumer = kafka.Consumer;
-const kafkaClient = new kafka.KafkaClient();
-const kafkaConsumer = new Consumer(
-  kafkaClient,
-  [
-    { topic: eventTopic, partition: 0 }
-  ],
-  {
-    autoCommit: false
-  }
-);
+const kafkaClient = new kafka.KafkaClient({
+  autoConnect: true,
+  kafkaHost: config.kafka_server
+});
 
 let asClient;
 
-const aggregateEvent = async (type, body) => {
+const aerospikeClient = async () => {
   try {
 
     if (!asClient) {
@@ -55,44 +49,14 @@ const aggregateEvent = async (type, body) => {
         throw error;
       });
     }
+    return asClient
 
-    let clickKey = new Aerospike.Key(config.namespace, config.eventsSet, eventId);
-    let bins = {};
-    bins[config.eventIdBin] = eventId;
-    bins[config.eventBin] = body;
-    bins[config.tagBin] = body.tag;
-    switch (type) {
-      case 'click':
-        bins[config.sourceBin] = body.publisher;
-        break;
-      case 'impression':
-        bins[config.sourceBin] = body.publisher;
-        break;
-      case 'visit':
-        bins[config.sourceBin] = body.advertiser;
-        break;
-      case 'conversion':
-        bins[config.sourceBin] = body.vendor;
-        break;
-    }
-    bins[config.typeBin] = type;
-    await asClient.put(clickKey, bins);
-    console.log(`Processed ${type} event`, eventId);
   } catch (error) {
-    console.error(`${type} event processing error`, eventId);
+    console.error(`Aerospike connection error`, error);
     throw error;
   }
+
+
 }
 
-kafkaConsumer.on('message', function (message) {
-  console.log(message);
-  // aggregateEvent() here
-});
-
-kafkaConsumer.on('error', function (err) {
-  console.log(err);
-});
-
-kafkaConsumer.on('offsetOutOfRange', function (err) {
-  console.log(err);
-});
+const eventReceiver = new EventReceiver(kafkaClient, await aerospikeClient());

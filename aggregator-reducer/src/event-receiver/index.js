@@ -114,3 +114,7 @@ class EventReceiver {
   };
 
 }
+
+module.exports = {
+  EventReceiver
+}
