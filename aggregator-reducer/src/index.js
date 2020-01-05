@@ -7,8 +7,6 @@ const { EventReceiver } = require('./event-receiver');
 const asPort = parseInt(process.env.CORE_PORT);
 const asHost = process.env.CORE_HOST;
 
-const eventTopic = process.env.EVENT_TOPIC;
-
 const waitFor = parseInt(process.env.SLEEP);
 
 sleep.sleep(waitFor);

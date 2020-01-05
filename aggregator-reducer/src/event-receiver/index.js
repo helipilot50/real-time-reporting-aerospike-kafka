@@ -3,15 +3,15 @@ const kafka = require('kafka-node');
 const Aerospike = require('aerospike');
 const HighLevelProducer = kafka.HighLevelProducer;
 const Consumer = kafka.Consumer;
-
-
+const eventTopic = process.env.EVENT_TOPIC;
+const subscriptionTopic = process.env.SUBSCRIPTION_TOPIC;
 class EventReceiver {
   constructor(kafkaClient, aerospikeClient) {
     this.kafkaClient = kafkaClient;
     this.aerospikeClient = aerospikeClient;
     this.consumer = new Consumer(kafkaClient,
       [{
-        topic: config.eventTopic,
+        topic: eventTopic,
         partition: 0
       }],
       {
@@ -100,7 +100,7 @@ class EventReceiver {
       dataCube: accumulatedData
     },
     const producerRequest = {
-      topic: config.supscriptionTopic,
+      topic: subscriptionTopic,
       messages: JSON.stringify(subscriptionMessage),
       timestamp: Date.now()
     };
