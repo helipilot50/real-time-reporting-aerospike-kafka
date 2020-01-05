@@ -5,5 +5,7 @@
   "statsBin": "stats",
   "campaignNameBin": "c-name",
   "campaignIdBin": "c-id",
-  "tagIdBin": "t-id"
+  "tagIdBin": "t-id",
+  "eventTopic": "",
+  "supscriptionTopic": ""
 }
