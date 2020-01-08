@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "start": "nodemon -r esm --inspect-brk --inspect=0.0.0.0:9229 src/index.js"
+    "start": "nodemon src/index.js"
   },
   "author": "helipilot50",
   "license": "ISC",

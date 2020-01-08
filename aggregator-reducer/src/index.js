@@ -6,55 +6,47 @@ const { EventReceiver } = require('./event-receiver');
 
 const asPort = parseInt(process.env.CORE_PORT);
 const asHost = process.env.CORE_HOST;
-
+const kafkaCluster = process.env.KAFKA_CLUSTER;
 const waitFor = parseInt(process.env.SLEEP);
 
 sleep.sleep(waitFor);
 
-const kafkaClient = new kafka.KafkaClient({
-  autoConnect: true,
-  kafkaHost: config.kafka_server
-});
-
-let asClient;
-
-const aerospikeClient = async () => {
+const app = async () => {
   try {
 
-    if (!asClient) {
-      console.log('Attempting to connect to Aerospike cluster', asHost, asPort);
+    let asClient = await Aerospike.connect({
+      hosts: [
+        { addr: asHost, port: asPort }
+      ],
+      policies: {
+        read: new Aerospike.ReadPolicy({
+          totalTimeout: 100
+        }),
+        write: new Aerospike.WritePolicy({
+          totalTimeout: 100
+        }),
+      },
+      log: {
+        level: Aerospike.log.INFO
+      }
+    })
 
-      Aerospike.connect({
-        hosts: [
-          { addr: asHost, port: asPort }
-        ],
-        policies: {
-          read: new Aerospike.ReadPolicy({
-            totalTimeout: 100
-          }),
-          write: new Aerospike.WritePolicy({
-            totalTimeout: 100
-          }),
-        },
-        log: {
-          level: Aerospike.log.INFO
-        }
-      }).then(client => {
-        asClient = client;
-        console.log('Connected to aerospike', asHost, asPort);
-      }).catch(error => {
-        console.error('Cannot connect to aerospike', error);
-        throw error;
-      });
-    }
-    return asClient
+    console.log('Connected to aerospike', asHost, asPort);
+    console.log('kafka cluster', kafkaCluster);
+
+    let kafkaClient = new kafka.KafkaClient({
+      autoConnect: true,
+      kafkaHost: kafkaCluster
+    });
+
+    const eventReceiver = new EventReceiver(kafkaClient, asClient);
+
 
   } catch (error) {
-    console.error(`Aerospike connection error`, error);
+    console.error(`Aggregator-Reducer error`, error);
     throw error;
-  }
-
+  };
 
 }
 
-const eventReceiver = new EventReceiver(kafkaClient, await aerospikeClient());
+app();
