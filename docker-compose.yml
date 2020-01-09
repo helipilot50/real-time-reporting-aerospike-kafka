@@ -26,10 +26,10 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_CREATE_TOPICS: "edge-to-core:1:1"
+      KAFKA_CREATE_TOPICS: "edge-to-core:1:1,subscription-events:1:1"
   kafkacli:
     image: taion809/kafka-cli:0.10.2.0
-    command: kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic edge-to-core --from-beginning
+    command: kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic subscription-events --from-beginning
     stdin_open: true
     tty: true
     links:
@@ -79,7 +79,7 @@ services:
     volumes:
       - ./aerospike/edge/etc/aerospike:/etc/aerospike
       - ./aerospike/edge/etc/aerospike-kafka:/etc/aerospike-kafka
-      # - ./aerospike/edge/log:/aerospike/log
+      - ./aerospike/edge/log:/aerospike/log
   data-initializer:
     container_name: data-initializer
     build:
@@ -124,3 +124,21 @@ services:
     depends_on:
       - core-aerospikedb
       - event-collector
+  aggregator-reducer:
+    container_name: aggregator-reducer
+    build:
+      context: ./aggregator-reducer/
+    environment:
+      CORE_HOST: "core-aerospikedb"
+      CORE_PORT: 3000
+      SLEEP: 20
+      EVENT_TOPIC: "edge-to-core"
+      SUBSCRIPTION_TOPIC: "subscription-events"
+      KAFKA_CLUSTER: "kafka:9092"
+    volumes:
+      - ./aggregator-reducer/src:/usr/src/app/src
+    links:
+      - core-aerospikedb
+    depends_on:
+      - core-aerospikedb
+      - kafka
