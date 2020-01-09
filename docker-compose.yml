@@ -142,3 +142,20 @@ services:
     depends_on:
       - core-aerospikedb
       - kafka
+  campaign-service:
+    container_name: campaign-service
+    build:
+      context: ./campaign-service/
+    environment:
+      CORE_HOST: "core-aerospikedb"
+      CORE_PORT: 3000
+      SLEEP: 25
+      SUBSCRIPTION_TOPIC: "subscription-events"
+      KAFKA_CLUSTER: "kafka:9092"
+    volumes:
+      - ./campaign-service/src:/usr/src/app/src
+    links:
+      - core-aerospikedb
+    depends_on:
+      - core-aerospikedb
+      - kafka

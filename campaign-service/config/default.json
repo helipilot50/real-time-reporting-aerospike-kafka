@@ -1,0 +1,7 @@
+{
+  "namespace": "test",
+  "campaignSet": "campaigns",
+  "statsBin": "stats",
+  "campaignNameBin": "c-name",
+  "campaignIdBin": "c-id"
+}
