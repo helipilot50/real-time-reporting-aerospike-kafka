@@ -1,4 +1,4 @@
-const request = require('request')
+const rp = require('request-promise')
 const uuidv4 = require('uuid/v4');
 const Aerospike = require('aerospike');
 const config = require('config');
@@ -134,6 +134,7 @@ const intervalFunc = async () => {
     let sourceId = uuidv4();
     let userAgent = randomUserAgent();
     let options = {
+      method: 'POST',
       uri: `http://event-collector:${PORT}/event/${event}`,
       headers: {
         'user-agent': userAgent,
@@ -162,7 +163,7 @@ const intervalFunc = async () => {
 
 
     console.log(`Event:`, options)
-    request.post(options);
+    rp(options);
   } catch (error) {
     console.error('send event error', error);
   }

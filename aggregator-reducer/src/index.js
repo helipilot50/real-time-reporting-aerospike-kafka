@@ -1,4 +1,3 @@
-const config = require('config');
 const kafka = require('kafka-node');
 const Aerospike = require('aerospike');
 const sleep = require('sleep');
@@ -29,15 +28,16 @@ const app = async () => {
       log: {
         level: Aerospike.log.INFO
       }
-    })
+    });
 
     console.log('Connected to aerospike', asHost, asPort);
-    console.log('kafka cluster', kafkaCluster);
 
     let kafkaClient = new kafka.KafkaClient({
       autoConnect: true,
       kafkaHost: kafkaCluster
     });
+
+    console.log('Connected to Kafka', kafkaCluster);
 
     const eventReceiver = new EventReceiver(kafkaClient, asClient);
 
