@@ -1,8 +1,8 @@
 {
-  "name": "publisher-simulator",
+  "name": "aggregator-reducer",
   "version": "1.0.0",
-  "description": "Simulates Ad events from publishers",
-  "main": "index.js",
+  "description": "",
+  "main": "src/index.js",
   "scripts": {
     "start": "nodemon src/index.js"
   },
@@ -11,10 +11,8 @@
   "dependencies": {
     "aerospike": "^3.13.0",
     "config": "^3.2.4",
+    "kafka-node": "^5.0.0",
     "nodemon": "^2.0.1",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.5",
-    "sleep": "^6.1.0",
-    "uuid": "^3.3.3"
+    "sleep": "^6.1.0"
   }
 }
