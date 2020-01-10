@@ -27,6 +27,9 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_CREATE_TOPICS: "edge-to-core:1:1,subscription-events:1:1"
+      KAFKA_LOG_DIRS: "/kafka/kafka-logs"
+    volumes:
+      - ./kafka/:/kafka
   kafkacli:
     image: taion809/kafka-cli:0.10.2.0
     command: kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic subscription-events --from-beginning
@@ -84,6 +87,8 @@ services:
     container_name: data-initializer
     build:
       context: ./data-initializer/
+    volumes:
+      - ./data-initializer/src:/usr/src/app/src
     environment:
       CORE_HOST: "core-aerospikedb"
       CORE_PORT: 3000
@@ -137,6 +142,25 @@ services:
       KAFKA_CLUSTER: "kafka:9092"
     volumes:
       - ./aggregator-reducer/src:/usr/src/app/src
+    links:
+      - core-aerospikedb
+    depends_on:
+      - core-aerospikedb
+      - kafka
+  campaign-service:
+    container_name: campaign-service
+    build:
+      context: ./campaign-service/
+    environment:
+      CORE_HOST: "core-aerospikedb"
+      CORE_PORT: 3000
+      SLEEP: 25
+      SUBSCRIPTION_TOPIC: "subscription-events"
+      KAFKA_CLUSTER: "kafka:9092"
+    ports:
+      - 4050:4000
+    volumes:
+      - ./campaign-service/src:/usr/src/app/src
     links:
       - core-aerospikedb
     depends_on:

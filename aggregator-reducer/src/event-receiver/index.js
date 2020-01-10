@@ -84,8 +84,6 @@ class EventReceiver {
         // publish kafka for GraphQL subscription
         subscriptionPublisher.publishKPI(campaignId, kpiKey, record.bins.stats)
 
-        // record = await aerospikeClient.get(campaignKey);
-        // console.log('Campaign record', record.bins);
       } catch (error) {
         console.error(error);
       }
@@ -116,9 +114,9 @@ class SubscriptionEventPublisher {
     this.producer = new HighLevelProducer(kafkaClient);
   };
 
-  publishKPI(campaighId, kpi, value) {
+  publishKPI(campaignId, kpi, value) {
     const subscriptionMessage = {
-      campaighId: campaighId,
+      campaignId: campaignId,
       kpi: kpi,
       value: value
     };
@@ -131,8 +129,8 @@ class SubscriptionEventPublisher {
     this.producer.send([producerRequest], function (err, data) {
       if (err)
         console.error('publishKPI error', err);
-      else
-        console.log('Campaign KPI published:', subscriptionMessage);
+      // else
+      // console.log('Campaign KPI published:', subscriptionMessage);
     });
   };
 }

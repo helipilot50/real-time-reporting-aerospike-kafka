@@ -1,6 +1,3 @@
-traffic-simulator/target
-traffic-simulator/.settings/org.eclipse.jdt.apt.core.prefs
-traffic-simulator/.project
 aggregator/.settings
 publisher-simulator/.settings
 publisher-simulator/target
@@ -12,3 +9,5 @@ test.dat
 tags-campaigns/.settings
 docker-compose-peter.yml
 aerospike/edge/log
+kafka/kafka-logs
+

@@ -10,6 +10,20 @@ const waitFor = parseInt(process.env.SLEEP);
 
 sleep.sleep(waitFor);
 
+const connectToKafka = () => {
+  try {
+    let kafkaClient = new kafka.KafkaClient({
+      autoConnect: true,
+      kafkaHost: kafkaCluster
+    });
+    console.log('Connected to Kafka', kafkaCluster);
+    return kafkaClient;
+  } catch (kafkaError) {
+    console.error(`Kafka error - retrying in 5 secs`, error);
+    setTimeout(connectToKafka, 5000);
+  }
+};
+
 const app = async () => {
   try {
 
@@ -22,7 +36,7 @@ const app = async () => {
           totalTimeout: 100
         }),
         write: new Aerospike.WritePolicy({
-          totalTimeout: 100
+          totalTimeout: 500
         }),
       },
       log: {
@@ -32,15 +46,9 @@ const app = async () => {
 
     console.log('Connected to aerospike', asHost, asPort);
 
-    let kafkaClient = new kafka.KafkaClient({
-      autoConnect: true,
-      kafkaHost: kafkaCluster
-    });
-
-    console.log('Connected to Kafka', kafkaCluster);
+    let kafkaClient = connectToKafka();
 
     const eventReceiver = new EventReceiver(kafkaClient, asClient);
-
 
   } catch (error) {
     console.error(`Aggregator-Reducer error`, error);
