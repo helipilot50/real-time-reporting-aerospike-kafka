@@ -1,7 +1,9 @@
-const { ApolloServer, gql, PubSub } = require('apollo-server');
+const { ApolloServer, gql, PubSub, withFilter } = require('apollo-server');
 const { CampaignDataSource } = require('./CampaignDataSource');
+const { KpiEventReceiver } = require('./KpiEventReceiver');
 
 const pubsub = new PubSub();
+const kpiReceiver = new KpiEventReceiver(pubsub);
 
 //
 // Schema
@@ -23,6 +25,7 @@ const typeDefs = gql`
   }
 
   type KPI {
+    campaignId: ID
     name: String
     value: Int
   }
@@ -33,13 +36,13 @@ const typeDefs = gql`
   }
 
   type Subscription {
-    kpiUpdate(campaignId:ID, kpiPath:String):KPI
+    kpiUpdate(campaignIds:[ID!]!):KPI
   }
 `;
+
 //
 // Resolvers
 //
-
 const resolvers = {
   Query: {
     campaign: (_1, args, context, _2) => {
@@ -52,9 +55,21 @@ const resolvers = {
   },
 
   Subscription: {
-    kpiUpdate: (campaignId, kpiPath) => {
-      // pubsub.asyncIterator([POST_ADDED]);
-    }
+    kpiUpdate: {
+      subscribe: withFilter(
+        (parent, args, context, info) => pubsub.asyncIterator(['NEW_KPI']),
+        (payload, variables) => {
+          // console.log(`pay ${JSON.stringify(payload)}, var ${JSON.stringify(variables)}`);
+          return variables.campaignIds.includes(payload.campaignId.toString());
+        }),
+      resolve: (payload) => {
+        return {
+          campaignId: payload.campaignId,
+          name: payload.kpi,
+          value: payload.value
+        };
+      },
+    },
   }
 };
 
