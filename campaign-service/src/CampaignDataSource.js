@@ -7,6 +7,7 @@ let _asClient;
 const asPort = parseInt(process.env.CORE_PORT) || "localhost";
 const asHost = process.env.CORE_HOST || 3000;
 
+
 const asClient = async function () {
   try {
     if (!_asClient) {
@@ -51,8 +52,24 @@ class CampaignDataSource {
   async listCampaigns() {
     try {
       let campaigns = [];
+
       let client = await asClient();
-      let query = client.query(config.aerospike.namespace, config.aerospike.set);
+      let query = client.query(config.namespace, config.campaignSet);
+
+      // filter by campaign date for today -- demo only
+      let startDate = new Date();
+      startDate.setHours(0);
+      startDate.setMinutes(0);
+      startDate.setSeconds(0);
+      startDate.setMilliseconds(0);
+      let endDate = new Date(startDate);
+      endDate.setHours(23);
+      endDate.setMinutes(59);
+      endDate.setSeconds(59);
+      endDate.setMilliseconds(999);
+      console.log('Date range', startDate.getTime(), endDate.getTime());
+
+      query.where(Aerospike.filter.range(config.campaignDate, startDate.getTime(), endDate.getTime()));
 
       let stream = query.foreach();
 
@@ -78,12 +95,16 @@ class CampaignDataSource {
   async fetchCampaign(id) {
     try {
       let client = await asClient();
-      let key = new Aerospike.Key(config.namespace, config.set, id);
+      let key = new Aerospike.Key(config.namespace, config.campaignSet, parseInt(id));
       let record = await client.get(key);
       return campaignFromRecord(record);
     } catch (err) {
-      console.error('Fetch campaign error:', err);
-      throw new ApolloError(`Fetch campaign by ID ${id}:`, err);
+      if (err.code && err.code == 2) {
+        throw new ApolloError(`Campaign ${id} not found`);
+      } else {
+        console.error('Fetch campaign error:', err);
+        throw new ApolloError(`Fetch campaign by ID: ${id}`, err);
+      }
     }
   }
 }

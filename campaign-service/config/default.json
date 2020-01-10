@@ -3,5 +3,6 @@
   "campaignSet": "campaigns",
   "statsBin": "stats",
   "campaignNameBin": "c-name",
-  "campaignIdBin": "c-id"
+  "campaignIdBin": "c-id",
+  "campaignDate": "c-date"
 }

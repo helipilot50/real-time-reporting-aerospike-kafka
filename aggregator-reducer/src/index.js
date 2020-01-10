@@ -22,7 +22,7 @@ const app = async () => {
           totalTimeout: 100
         }),
         write: new Aerospike.WritePolicy({
-          totalTimeout: 100
+          totalTimeout: 500
         }),
       },
       log: {
