@@ -121,6 +121,23 @@ const randomGeo = () => {
   return geo[index];
 };
 
+const publishers = [
+  'Pesudo Random House',
+  'Padock and River',
+  'Stack Underflow',
+  'Weather Overground',
+  'The Redneck Gazette',
+  'The Round Earth Society',
+  'The Strawberry Pi Mag',
+  'Bland Recepies',
+  'Couch Potato Gamer',
+];
+
+const randomPublisher = () => {
+  let index = Math.floor(Math.random() * publishers.length);
+  return publishers[index];
+};
+
 const intervalFunc = async () => {
   try {
 
@@ -131,7 +148,7 @@ const intervalFunc = async () => {
     let record = await asClient.get(tagKey);
     let tag = record.bins[config.tagIdBin];
 
-    let sourceId = uuidv4();
+    let sourceId = randomPublisher();
     let userAgent = randomUserAgent();
     let options = {
       method: 'POST',

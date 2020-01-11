@@ -32,7 +32,8 @@ const typeDefs = gql`
   
   type Query {
     campaign(id:ID):Campaign
-    campaigns: [Campaign]
+    campaigns(ids:[ID!]!): [Campaign]
+    listCampaigns: [Campaign]
   }
 
   type Subscription {
@@ -49,7 +50,11 @@ const resolvers = {
       return context.campaignsDS.fetchCampaign(args.id);
     },
 
-    campaigns: (_1, _2, context, _3) => {
+    campaigns: (_1, args, context, _3) => {
+      return context.campaignsDS.fetchCampaignSet(args.ids);
+    },
+
+    listCampaigns: (_1, _2, context, _3) => {
       return context.campaignsDS.listCampaigns();
     }
   },
