@@ -1,6 +1,7 @@
 import React from 'react';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
+import { WebSocketLink } from 'apollo-link-ws';
 import { gql } from "apollo-boost";
 import './App.css';
 
@@ -26,6 +27,28 @@ const useStyles = makeStyles({
   },
 });
 
+// const httpLink = new HttpLink({
+//   uri: 'http://http://localhost:4050/graphql'
+// });
+// const wsLink = new WebSocketLink({
+//   uri: `ws://http://localhost:4050/`,
+//   options: {
+//     reconnect: true
+//   }
+// });
+
+// const link = split(
+//   // split based on operation type
+//   ({ query }) => {
+//     const definition = getMainDefinition(query);
+//     return (
+//       definition.kind === 'OperationDefinition' &&
+//       definition.operation === 'subscription'
+//     );
+//   },
+//   wsLink,
+//   httpLink,
+// );
 
 const client = new ApolloClient({
   uri: 'http://localhost:4050',
