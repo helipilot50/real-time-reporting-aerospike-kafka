@@ -20,6 +20,8 @@ This article, the code samples, and the example solution are entirely my own wor
 
 A simplified use case for Part 2 consists of reading Ad events from a Kafka topic, aggregating/reducing the events with existing KPI values. In this case the KPIs are simple counters, but in the real-world these would be more complex metrics like averages, gauges, histograms, etc. 
 
+The values are stored in a data cube implemented as a Complex Data Type ([CDT](https://www.aerospike.com/docs/guide/cdt.html)) in Aerospike and the Aerospike cluster is configured to prfioritize consistency over availability. 
+
 ![Impression sequence](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/event-sequence-part-2.puml&fmt=svg)
 
 *Aggregation/reduction sequence*

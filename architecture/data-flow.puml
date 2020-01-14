@@ -11,6 +11,7 @@ queue "Kafka cluster" as Kafka
 rectangle "Core" #LightBlue {
     object "Aggregator\nReducer" as aggReduce 
     database "Aerospike CP\nCampaign Datastore" as campaignStore #LigntPink
+    queue "Kafka GraphQL\nsubscriptions" as KafkaSubscriptions
     object "Canpaign service" as campaignService
 }
 actor "Campaign UI" as campaignUI #D5E8D4
@@ -21,6 +22,8 @@ eventStore --> edgeKafkaCon
 edgeKafkaCon ..> Kafka
 Kafka ..> aggReduce
 aggReduce --> campaignStore
+aggReduce ..> KafkaSubscriptions
+KafkaSubscriptions ..> campaignService
 campaignStore <--> campaignService
 campaignService -- campaignUI
 @enduml
