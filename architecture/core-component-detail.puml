@@ -18,7 +18,6 @@ package "Core Aerospike" {
 }
 
 package "Kafka and Zookeeper" {
-    ' component [Kafka\nCli] as kafCli
     () "9092" as kafClient
     component [Kafka\nCluster] as kafCluster
     kafClient - kafCluster
@@ -30,7 +29,6 @@ asNode4 .r.> kafClient: subscription message
 asNode4 <.r. kafClient: event message
 asNode3 --> ascSocket
 zookeeper <..> kafCluster
-' kafCli <.. kafClient: TCP\nbinary\nprotocol
 
 
 
