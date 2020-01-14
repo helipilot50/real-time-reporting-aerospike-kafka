@@ -20,7 +20,11 @@ This article, the code samples, and the example solution are entirely my own wor
 
 A simplified use case for Part 2 consists of reading Ad events from a Kafka topic, aggregating/reducing the events with existing KPI values. In this case the KPIs are simple counters, but in the real-world these would be more complex metrics like averages, gauges, histograms, etc. 
 
-The values are stored in a data cube implemented as a Complex Data Type ([CDT](https://www.aerospike.com/docs/guide/cdt.html)) in Aerospike and the Aerospike cluster is configured to prfioritize consistency over availability. 
+The values are stored in a data cube implemented as a Complex Data Type ([CDT](https://www.aerospike.com/docs/guide/cdt.html)) or document in Aerospike. Aerospike provide fine-grained operations to read or write one or more parts of a document ([CDT](https://www.aerospike.com/docs/guide/cdt.html)) in a single, atomic, database transaction.
+
+The Core Aerospike cluster is configured to prfioritize consistency over availability to ensure that numbers are accurate and consistent for use with payments and billing. Or in others words: **Money**
+
+In addition to aggregating data, the event message is transformed and sent via another Kafka topic (and possible separate Kafka cluster) to be consumed by the Campaign Service as a GraphQL subscription. Part 3 will cover the Campaign Service and GraphQL in detail. 
 
 ![Impression sequence](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/event-sequence-part-2.puml&fmt=svg)
 
@@ -34,16 +38,8 @@ Javascript and Node.js is used in each service although the same solution is pos
 
 The solution consists of:
 
-* A Publisher Simulator — Node.js
-* An Event Collector service — Node.js
+* All of the service and containers in Part 1.
 * Aggregator/Reducer service - Node.js
-* Aerospike configurations enabling Kafka
-* Docker compose yml
-* Docker containers for:
- * Aerospike Enterprise Edition ([https://dockr.ly/2KZ6EUH](https://dockr.ly/2KZ6EUH))
- * Zookeeper ([https://dockr.ly/2KZgaaw](https://dockr.ly/2KZgaaw))
- * Kafka ([https://dockr.ly/2L4NwVA](https://dockr.ly/2L4NwVA))
- * Kafka CLI ([https://dockr.ly/2KXYEn4](https://dockr.ly/2KXYEn4))
 
 Docker and Docker Compose simplify the setup to allow you to focus on the Aerospike specific code and configuration.
 
@@ -61,34 +57,15 @@ Docker and Docker Compose simplify the setup to allow you to focus on the Aerosp
 
 To set up the solution, follow these steps. Because executable images are built by downloading resources, be aware that the time to download and build the software depends on your internet bandwidth and your computer.
 
-**Step 1.** Clone the [GitHub](https://github.com/helipilot50/real-time-reporting-aerospike-kafka) repository with one of the following options
+Follow the setup steps in Part 1. Then
 
-* To get the **whole repository** use:
+**Step 1.** Checkout the `part-2` branch
 
 ```bash
-$ git clone (https://github.com/helipilot50/real-time-reporting-aerospike-kafka
-$ cd real-time-reporting-aerospike-kafka
 $ git checkout part-2
 ```
-* To get **part-2 only** use:
 
-```bash
-$ git clone --single-branch --branch part-2 https://github.com/helipilot50/real-time-reporting-aerospike-kafka
-```
-
-**Step 2.** Edit the file docker-compose.yml and add you Aerospike customer user name and password
-
-![](https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/username-password.png)
-
-**Step 3.** Copy your Feature Key File to project etc directory for the Edge and Core datastore; and to the edge exporter:
-
-```bash
-$ cp ~/features.conf <project-root>/aerospike/edge/etc/aerospike/features.conf
-$ cp ~/features.conf <project-root>/aerospike/core/etc/aerospike/features.conf
-$ cp ~/features.conf <project-root>/edge-exporter/features.conf
-```
-
-**Step 4.** Then run
+**Step 2.** Then run
 
 ```bash
 $ docker-compose up
@@ -116,7 +93,7 @@ Both the Event Collector and the Publisher Simulator use the Aerospike Node.js c
 
 Each container is deployed using `docker-compose` on your local machine.
 
-![Deployment](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/docker-compose-deployment.puml&fmt=svg)
+![Deployment](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/docker-compose-deployment-part-2.puml&fmt=svg)
 
 *Deployment*
 
