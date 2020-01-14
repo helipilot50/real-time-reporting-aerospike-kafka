@@ -4,13 +4,22 @@ autonumber
 autoactivate on
 box "Core" #LightBlue
     database "Aerospike CP\nCampaign Datastore" as campaignStore #LigntPink
+    queue "Kafka GraphQL\nsubscriptions" as KafkaSubscriptions
     participant "Canpaign service" as campaignService
 end box
 actor "Campaign UI" as campaignUI #D5E8D4
 
 campaignUI -> campaignService: GraphQL query: campaignKPIs
+activate campaignUI
 campaignService -> campaignStore: Aerospike CDT operations
-campaignService <-- campaignStore: CDT (json)
+campaignService <-- campaignStore: record(s)
 campaignUI <-- campaignService: GraphQL payload
-
+deactivate campaignUI
+...
+campaignService -> KafkaSubscriptions: fetch message
+activate campaignService
+campaignService <-- KafkaSubscriptions: subscription\nmessag
+campaignService -/ campaignUI: GraphQL subscription
+deactivate campaignService
+deactivate KafkaSubscriptions
 @enduml
