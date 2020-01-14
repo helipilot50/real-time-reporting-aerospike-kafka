@@ -28,7 +28,7 @@ In addition to aggregating data, the event message is transformed and sent via a
 
 ![Impression sequence](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/event-sequence-part-2.puml&fmt=svg)
 
-*Aggregation/reduction sequence*
+*Aggregation/Reduction sequence*
 
 ## Companion code
 
@@ -45,13 +45,7 @@ Docker and Docker Compose simplify the setup to allow you to focus on the Aerosp
 
 ### What you need for the setup
 
-* Aerospike Enterprise Edition
-* An Aerospike user name and password
-* An Aerospike [Feature Key File](https://www.aerospike.com/docs/reference/configuration/index.html?show-removed=1#feature-key-file) from Aerospike Support containing features:
- * sdb-change-notification
- * asdb-strong-consistency
- * mesg-kafka-connector
-* Docker and Docker Compose
+All the perquisites are described in Part 1
 
 ### Setup steps
 
@@ -122,8 +116,6 @@ Aerospike and Kafka go hand-in-glove. Some of the benefits of Aerospike as a fro
 * Ad Event data is captured in real-time, so Kafka service needs less capacity than otherwise.
 
 * Ad Events are log-level data stored in Aerospike. These data can thus be used for even more analytics with the [Aerospike Spark Connector](https://www.aerospike.com/docs/connectors/enterprise/spark/) or other analytics tools.
-
-The [Aerospike Kafka Connector](https://www.aerospike.com/docs/connectors/enterprise/kafka/) runs in the Jetty web server, and can be “Dockerized” and scaled like any other microservice.
 
 For microservices in Docker containers, [Kubernetes](https://kubernetes.io/) is my favourite way to orchestrate for production with excellent autoscaling and high availability features and several CI/CD tools integrate directly with it.
 
