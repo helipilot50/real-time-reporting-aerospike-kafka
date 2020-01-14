@@ -79,7 +79,7 @@ Once up and running, after the services have stabilized, you will see the output
 
 ## How do the components interact?
 
-![Component Interaction](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/edge-component-detail.puml&fmt=svg)
+![Component Interaction](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/core-component-detail.puml&fmt=svg)
 
 *Component Interaction*
 
@@ -87,11 +87,13 @@ Once up and running, after the services have stabilized, you will see the output
 
  $$$$$$$ See part 1 $$$$$$$$$
  
-Both the Event Collector and the Publisher Simulator use the Aerospike Node.js client. On the first build, both containers download and compile the supporting C library. The `Dockerfile` for both containers uses a multi-stage build that minimises the number of times the C library is compiled.
+Like the Event Collector and the Publisher Simulator, the Aggregator/Reducer uses the Aerospike Node.js client. On the first build, all the service containers that use Aerospike will download and compile the supporting C library. The `Dockerfile` for each container uses multi-stage builds to minimises the number of times the C library is compiled.
 
 ### How is the solution deployed?
 
 Each container is deployed using `docker-compose` on your local machine.
+
+*Note:* The `aggregator-reducer` container is deployed along with **all** the containers from Part 1.
 
 ![Deployment](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/docker-compose-deployment-part-2.puml&fmt=svg)
 
