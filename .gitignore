@@ -12,3 +12,4 @@ test.dat
 tags-campaigns/.settings
 docker-compose-peter.yml
 aerospike/edge/log
+kafka/kafka-logs
