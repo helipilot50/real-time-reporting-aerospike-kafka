@@ -14,17 +14,17 @@ This is the second in a series of articles describing a simplified example of ne
 ![Data flow](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/data-flow.puml&fmt=svg)
 *Data flow*
 
-This article, the code samples, and the example solution are entirely my own work and not endorsed by Aerospike. The code is available to anyone under the MIT License.
+This article, the code samples, and the example solution are entirely my own work and not endorsed by Aerospike. The code is available to anyone under the MIT License. This is PoC code and it is not production strength.
 
 ## The use case — Part 2
 
 A simplified use case for Part 2 consists of reading Ad events from a Kafka topic, aggregating/reducing the events with existing KPI values. In this case the KPIs are simple counters, but in the real-world these would be more complex metrics like averages, gauges, histograms, etc. 
 
-The values are stored in a data cube implemented as a Complex Data Type ([CDT](https://www.aerospike.com/docs/guide/cdt.html)) or document in Aerospike. Aerospike provide fine-grained operations to read or write one or more parts of a document ([CDT](https://www.aerospike.com/docs/guide/cdt.html)) in a single, atomic, database transaction.
+The values are stored in a data cube implemented as a Document or Complex Data Type ([CDT](https://www.aerospike.com/docs/guide/cdt.html)) in Aerospike. Aerospike provide fine-grained operations to read or write one or more parts of a [CDT](https://www.aerospike.com/docs/guide/cdt.html) in a single, atomic, database transaction.
 
-The Core Aerospike cluster is configured to prfioritize consistency over availability to ensure that numbers are accurate and consistent for use with payments and billing. Or in others words: **Money**
+The Core Aerospike cluster is configured to prioritize consistency over availability to ensure that numbers are accurate and consistent for use with payments and billing. Or in others words: **Money**
 
-In addition to aggregating data, the event message is transformed and sent via another Kafka topic (and possible separate Kafka cluster) to be consumed by the Campaign Service as a GraphQL subscription. Part 3 will cover the Campaign Service and GraphQL in detail. 
+In addition to aggregating data, the new value of the KPI is sent via another Kafka topic (and possible separate Kafka cluster) to be consumed by the Campaign Service as a GraphQL subscription and providing a live update in the UI. Part 3 will cover the Campaign Service and GraphQL in detail. 
 
 ![Impression sequence](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/event-sequence-part-2.puml&fmt=svg)
 
