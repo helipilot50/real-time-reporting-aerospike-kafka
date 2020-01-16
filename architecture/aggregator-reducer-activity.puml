@@ -2,7 +2,9 @@
 
 start
 while (do forever)
-:Kafka read event message from **edge-to-core**;
+:Kafka **edge-to-core** topic
+- **consumer.on('message', ...)**
+- parse event message;
 :extract event data;
 :form CDT operations
 - Increment campaign counter
