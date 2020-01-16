@@ -6,6 +6,8 @@ while (do forever)
 - **consumer.on('message', ...)**
 - parse event message;
 :extract event data;
+:lookup Campaign using Tag
+- Aerospike **select()** from **core-aerospikedb**;
 :form CDT operations
 - Increment campaign counter
 - Increment Source counter
