@@ -13,20 +13,12 @@ const waitFor = parseInt(process.env.SLEEP);
 
 sleep.sleep(waitFor);
 
-let asClient;
+let _asClient;
 
-const app = express();
-const PORT = process.env.PORT || 4000
-const EventRouter = express.Router();
-
-const writeEvent = async (type, body) => {
-  const eventId = uuidv4();
+const asClient = async function () {
   try {
-
-    if (!asClient) {
-      console.log('Attempting to connect to Aerospike cluster', asHost, asPort);
-
-      Aerospike.connect({
+    if (!_asClient) {
+      _asClient = await Aerospike.connect({
         hosts: [
           { addr: asHost, port: asPort }
         ],
@@ -41,14 +33,23 @@ const writeEvent = async (type, body) => {
         log: {
           level: Aerospike.log.INFO
         }
-      }).then(client => {
-        asClient = client;
-        console.log('Connected to aerospike', asHost, asPort);
-      }).catch(error => {
-        console.error('Cannot connect to aerospike', error);
-        throw error;
       });
     }
+    console.log('Aerospike client connection OK');
+    return _asClient;
+  } catch (err) {
+    let errorMessage = `Failed to connect to Aerospike - ${err}`;
+    throw new Error(errorMessage);
+  }
+};
+
+const app = express();
+const PORT = process.env.PORT || 4000
+const EventRouter = express.Router();
+
+const writeEvent = async (type, body) => {
+  const eventId = uuidv4();
+  try {
 
     let clickKey = new Aerospike.Key(config.namespace, config.eventsSet, eventId);
     let bins = {};
@@ -70,7 +71,8 @@ const writeEvent = async (type, body) => {
         break;
     }
     bins[config.typeBin] = type;
-    await asClient.put(clickKey, bins);
+    let client = await asClient();
+    await client.put(clickKey, bins);
     console.log(`Processed ${type} event`, eventId);
   } catch (error) {
     console.error(`${type} event processing error`, eventId);
