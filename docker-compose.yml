@@ -166,3 +166,18 @@ services:
     depends_on:
       - core-aerospikedb
       - kafka
+        campaign-ui:
+    container_name: campaign-ui
+    build:
+      context: ./campaign-ui
+    environment:
+      CAMPAIGN_SERVICE: "campaign-service:4050"
+    volumes:
+      - ./aggregator-reducer/src:/usr/src/app/src
+    ports:
+      - 5000:3000
+    links:
+      - campaign-service
+    depends_on:
+      - campaign-service
+      

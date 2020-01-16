@@ -17,6 +17,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
+const campaignServiceUri = process.env.CAMPAIGN_SERVICE;
+
 
 const useStyles = makeStyles({
   root: {
@@ -27,31 +29,9 @@ const useStyles = makeStyles({
   },
 });
 
-// const httpLink = new HttpLink({
-//   uri: 'http://http://localhost:4050/graphql'
-// });
-// const wsLink = new WebSocketLink({
-//   uri: `ws://http://localhost:4050/`,
-//   options: {
-//     reconnect: true
-//   }
-// });
-
-// const link = split(
-//   // split based on operation type
-//   ({ query }) => {
-//     const definition = getMainDefinition(query);
-//     return (
-//       definition.kind === 'OperationDefinition' &&
-//       definition.operation === 'subscription'
-//     );
-//   },
-//   wsLink,
-//   httpLink,
-// );
 
 const client = new ApolloClient({
-  uri: 'http://localhost:4050',
+  uri: campaignServiceUri,
 });
 
 
