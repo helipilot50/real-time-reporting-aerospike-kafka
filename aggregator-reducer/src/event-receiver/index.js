@@ -61,6 +61,8 @@ class EventReceiver {
         let eventValue = bins['event-data'].value;
         // extract the Tag id
         let tagId = eventValue.tag;
+        // extract source e.g. publisher, vendor, advertiser
+        let source = bins['event-source'].value;
         //lookup the Tag id in Aerospike to obtain the Campaign id
         let tagKey = new Aerospike.Key(config.namespace, config.tagSet, tagId);
         let tagRecord = await aerospikeClient.select(tagKey, [config.campaignIdBin]);
@@ -77,6 +79,7 @@ class EventReceiver {
         const ops = [
           kvops.read(config.statsBin),
           maps.increment(config.statsBin, kpiKey, 1),
+          maps.increment(config.statsBin, `${source}.${kpiKey}`, 1),
         ];
         let record = await aerospikeClient.operate(campaignKey, ops);
         console.log('Campaign KPI processed', campaignId, kpiKey, record.bins.stats);

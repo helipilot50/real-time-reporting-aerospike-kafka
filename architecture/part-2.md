@@ -67,7 +67,7 @@ $ docker-compose up
 
 Once up and running, after the services have stabilised, you will see the output in the console similar to this:
 
-![Sample console output](https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/XXX.png)
+![Sample console output](https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/kpi-event-output.png)
 
 *Sample console output*
 
@@ -85,6 +85,8 @@ All of the services and containers in [Part 1](part-1) with the addition of:
  
 Like the Event Collector and the Publisher Simulator, the Aggregator/Reducer uses the Aerospike Node.js client. On the first build, all the service containers that use Aerospike will download and compile the supporting C library. The `Dockerfile` for each container uses multi-stage builds to minimises the number of times the C library is compiled.
 
+**Kafka Cli** `kadkacli` - Displays the KPI events used by GrapgQL in Part 3
+
 ### How is the solution deployed?
 
 Each container is deployed using `docker-compose` on your local machine.
@@ -97,9 +99,43 @@ Each container is deployed using `docker-compose` on your local machine.
 
 ## How does the solution work?
 
-$$$ see part 1 $$$
+The `aggregator-reducer` reads a message from the Kafka topic `edge-to-core`. The message is the whole Aerospike record written to `edge-aerospikedb`.
 
-*Data model*
+The event data is extracted from the message and written to `core-aerospikedb` using multiple CDT operations in one atomic database operation.
+
+![Event processing](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/aggregator-reducer-activity.puml&fmt=svg)
+
+*aggregation flow*
+
+### Extract the event data
+```javascript
+let payload = JSON.parse(eventMessage.value);
+// Morph the array of bins to and object
+let bins = payload.bins.reduce(
+  (acc, item) => {
+    acc[item.name] = item;
+    return acc;
+  },
+  {}
+);
+// extract the event data value
+let eventValue = bins['event-data'].value;
+// extract the Tag id
+let tagId = eventValue.tag;
+// extract source e.g. publisher, vendor, advertiser
+let source = bins['event-source'].value;
+```
+
+### Lookup Campaign Id using Tag
+```javascript
+//lookup the Tag id in Aerospike to obtain the Campaign id
+let tagKey = new Aerospike.Key(config.namespace, config.tagSet, tagId);
+let tagRecord = await aerospikeClient.select(tagKey, [config.campaignIdBin]);
+// get the campaign id
+let campaignId = tagRecord.bins[config.campaignIdBin];
+```
+
+
 
 $$$ see part 1 $$$
 
