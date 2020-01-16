@@ -1,10 +1,8 @@
 {
   "namespace": "test",
   "campaignSet": "campaigns",
-  "tagSet": "tags",
   "statsBin": "stats",
   "campaignNameBin": "c-name",
   "campaignIdBin": "c-id",
-  "tagIdBin": "t-id",
   "campaignDate": "c-date"
 }

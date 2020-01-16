@@ -6,13 +6,14 @@ queue "Kafka cluster" as Kafka
 box "Core" #LightBlue
     participant "Aggregator\nReducer" as aggReduce 
     database "Aerospike CP\nCampaign Datastore" as campaignStore #LigntPink
+    queue "Kafka GraphQL\nsubscriptions" as KafkaSubscriptions
 end box
-
 
 aggReduce -> Kafka: fetch message
 activate aggReduce
 aggReduce <-- Kafka: Event message
 aggReduce -> campaignStore: Aerospike CDT Add 
 aggReduce <-- campaignStore
+aggReduce -/ KafkaSubscriptions: publish event
 
 @enduml

@@ -14,29 +14,34 @@ const waitFor = parseInt(process.env.SLEEP);
 
 sleep.sleep(waitFor);
 
-let asClient;
+let aerospikeClient;
 
-Aerospike.connect({
-  hosts: [
-    { addr: asHost, port: asPort }
-  ],
-  policies: {
-    read: new Aerospike.ReadPolicy({
-      totalTimeout: 500
-    }),
-    write: new Aerospike.WritePolicy({
-      totalTimeout: 500
-    }),
-  },
-  log: {
-    level: Aerospike.log.INFO
+const asClient = async () => {
+  try {
+    if (!aerospikeClient) {
+      aerospikeClient = await Aerospike.connect({
+        hosts: [
+          { addr: asHost, port: asPort }
+        ],
+        policies: {
+          read: new Aerospike.ReadPolicy({
+            totalTimeout: 500
+          }),
+          write: new Aerospike.WritePolicy({
+            totalTimeout: 500
+          }),
+        },
+        log: {
+          level: Aerospike.log.INFO
+        }
+      })
+    }
+    return aerospikeClient;
+  } catch (error) {
+    console.error('Cannot connect to aerospike', error);
+    throw error;
   }
-}).then(client => {
-  asClient = client;
-}).catch(error => {
-  console.error('Cannot connect to aerospike', error);
-  throw error;
-});
+}
 
 const eventTypes = [
   'impression',
@@ -123,12 +128,13 @@ const randomGeo = () => {
 
 const intervalFunc = async () => {
   try {
+    let client = await asClient();
 
     let event = randomEvent();
 
     let index = Math.floor(Math.random() * 100000);
     let tagKey = new Aerospike.Key(config.namespace, config.tagSet, index);
-    let record = await asClient.get(tagKey);
+    let record = await client.get(tagKey);
     let tag = record.bins[config.tagIdBin];
 
     let sourceId = uuidv4();
