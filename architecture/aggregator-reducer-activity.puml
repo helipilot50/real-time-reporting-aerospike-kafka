@@ -1,0 +1,15 @@
+@startuml
+
+start
+while (do forever)
+:Kafka read event message from **edge-to-core**;
+:extract event data;
+:form CDT operations
+- Increment campaign counter
+- Increment Source counter
+- Read results;
+:Aerospike **operate()** to **core-aerospikedb**;
+endwhile
+stop
+
+@enduml
