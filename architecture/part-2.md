@@ -107,6 +107,36 @@ The event data is extracted from the message and written to `core-aerospikedb` u
 
 *aggregation flow*
 
+### Extract the event data
+```javascript
+let payload = JSON.parse(eventMessage.value);
+// Morph the array of bins to and object
+let bins = payload.bins.reduce(
+  (acc, item) => {
+    acc[item.name] = item;
+    return acc;
+  },
+  {}
+);
+// extract the event data value
+let eventValue = bins['event-data'].value;
+// extract the Tag id
+let tagId = eventValue.tag;
+// extract source e.g. publisher, vendor, advertiser
+let source = bins['event-source'].value;
+```
+
+### Lookup Campaign Id using Tag
+```javascript
+//lookup the Tag id in Aerospike to obtain the Campaign id
+let tagKey = new Aerospike.Key(config.namespace, config.tagSet, tagId);
+let tagRecord = await aerospikeClient.select(tagKey, [config.campaignIdBin]);
+// get the campaign id
+let campaignId = tagRecord.bins[config.campaignIdBin];
+```
+
+
+
 $$$ see part 1 $$$
 
 %%%%%% add stuff here %%%%%%%

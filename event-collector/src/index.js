@@ -34,8 +34,8 @@ const asClient = async function () {
           level: Aerospike.log.INFO
         }
       });
+      console.log('Aerospike client connection OK');
     }
-    console.log('Aerospike client connection OK');
     return _asClient;
   } catch (err) {
     let errorMessage = `Failed to connect to Aerospike - ${err}`;
