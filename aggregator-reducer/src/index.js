@@ -33,10 +33,10 @@ const app = async () => {
       ],
       policies: {
         read: new Aerospike.ReadPolicy({
-          totalTimeout: 100
+          totalTimeout: 1000
         }),
         write: new Aerospike.WritePolicy({
-          totalTimeout: 500
+          totalTimeout: 1000
         }),
       },
       log: {
