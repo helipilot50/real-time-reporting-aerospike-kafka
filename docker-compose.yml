@@ -30,17 +30,17 @@ services:
       KAFKA_LOG_DIRS: "/kafka/kafka-logs"
     volumes:
       - ./kafka/:/kafka
-  kafkacli:
-    image: taion809/kafka-cli:0.10.2.0
-    command: kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic subscription-events --from-beginning
-    stdin_open: true
-    tty: true
-    links:
-      - zookeeper
-      - kafka
-    depends_on:
-      - zookeeper
-      - kafka
+  # kafkacli:
+  #   image: taion809/kafka-cli:0.10.2.0
+  #   command: kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic subscription-events --from-beginning
+  #   stdin_open: true
+  #   tty: true
+  #   links:
+  #     - zookeeper
+  #     - kafka
+  #   depends_on:
+  #     - zookeeper
+  #     - kafka
   core-aerospikedb:
     image: aerospike/aerospike-server-enterprise
     command: --config-file /opt/aerospike/etc/aerospike.conf
@@ -166,3 +166,17 @@ services:
   #   depends_on:
   #     - core-aerospikedb
   #     - kafka
+  # campaign-ui:
+  #   container_name: campaign-ui
+  #   build:
+  #     context: ./campaign-ui
+  #   environment:
+  #     CAMPAIGN_SERVICE: "campaign-service:4050"
+  #   volumes:
+  #     - ./aggregator-reducer/src:/usr/src/app/src
+  #   ports:
+  #     - 5000:3000
+  #   links:
+  #     - campaign-service
+  #   depends_on:
+  #     - campaign-service
