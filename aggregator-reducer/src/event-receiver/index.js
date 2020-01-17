@@ -8,25 +8,32 @@ const subscriptionTopic = process.env.SUBSCRIPTION_TOPIC;
 
 
 
-const accumulateInCampaign = async (campaignId, eventData, asClient) => {
+const accumulateInCampaign = async (campaignId, eventSource, eventData, asClient) => {
   try {
     // Aerospike CDT operation returning the new DataCube
     let campaignKey = new Aerospike.Key(config.namespace, config.campaignSet, campaignId);
     const kvops = Aerospike.operations;
     const maps = Aerospike.maps;
+    const kpiKey = eventData.event + 's';
     const ops = [
       kvops.read(config.statsBin),
-      maps.increment(config.statsBin, eventData.event, 1),
+      // kvops.read(config.campaignIdBin),
+      // kvops.read(config.campaignNameBin),
+      maps.increment(config.statsBin, kpiKey, 1),
+      // maps.increment(config.statsBin, [eventSource, kpiKey], 1),  <=== future sub-context evaluation
     ];
     let record = await asClient.operate(campaignKey, ops);
-    return record.bins[config.statsBin];
+    let kpis = record.bins[config.statsBin];
+    console.log(`Campaign ${campaignId} KPI ${kpiKey} processed with result:`, JSON.stringify(record.bins, null, 2));
+    return {
+      key: kpiKey,
+      value: kpis
+    };
   } catch (err) {
     console.error('accumulateInCampain Error:', err);
+    throw err;
   }
 };
-
-
-
 
 class EventReceiver {
   constructor(kafkaClient, aerospikeClient) {
@@ -61,36 +68,25 @@ class EventReceiver {
         let eventValue = bins['event-data'].value;
         // extract the Tag id
         let tagId = eventValue.tag;
+        // extract source e.g. publisher, vendor, advertiser
+        let source = bins['event-source'].value;
         //lookup the Tag id in Aerospike to obtain the Campaign id
         let tagKey = new Aerospike.Key(config.namespace, config.tagSet, tagId);
         let tagRecord = await aerospikeClient.select(tagKey, [config.campaignIdBin]);
         // get the campaign id
         let campaignId = tagRecord.bins[config.campaignIdBin];
-
-        const accumulatedData = await accumulateInCampaign(campaignId, eventValue, aerospikeClient);
-
-        // Aerospike CDT operation returning the new DataCube
-        let campaignKey = new Aerospike.Key(config.namespace, config.campaignSet, campaignId);
-        const kvops = Aerospike.operations;
-        const maps = Aerospike.maps;
-        const kpiKey = eventValue.event + 's';
-        const ops = [
-          kvops.read(config.statsBin),
-          maps.increment(config.statsBin, kpiKey, 1),
-        ];
-        let record = await aerospikeClient.operate(campaignKey, ops);
-        console.log('Campaign KPI processed', campaignId, kpiKey, record.bins.stats);
-
+        // aggregate in campaign 
+        const accumulatedKPI = await accumulateInCampaign(campaignId, source, eventValue, aerospikeClient);
         // publish kafka for GraphQL subscription
-        subscriptionPublisher.publishKPI(campaignId, kpiKey, record.bins.stats)
+        subscriptionPublisher.publishKPI(campaignId, accumulatedKPI)
 
       } catch (error) {
-        console.error(error);
+        console.error('on Message:', error);
       }
     });
 
     this.consumer.on('error', function (err) {
-      console.error('Error:', err);
+      console.error('Kafka Error:', err);
     });
 
 
@@ -114,11 +110,11 @@ class SubscriptionEventPublisher {
     this.producer = new HighLevelProducer(kafkaClient);
   };
 
-  publishKPI(campaignId, kpi, value) {
+  publishKPI(campaignId, accumulatedKpi) {
     const subscriptionMessage = {
       campaignId: campaignId,
-      kpi: kpi,
-      value: value
+      kpi: accumulatedKpi.kpi,
+      value: accumulatedKpi.value
     };
     const producerRequest = {
       topic: subscriptionTopic,

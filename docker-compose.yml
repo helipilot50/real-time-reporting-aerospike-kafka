@@ -166,7 +166,7 @@ services:
     depends_on:
       - core-aerospikedb
       - kafka
-        campaign-ui:
+  campaign-ui:
     container_name: campaign-ui
     build:
       context: ./campaign-ui
@@ -180,4 +180,3 @@ services:
       - campaign-service
     depends_on:
       - campaign-service
-      

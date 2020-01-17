@@ -1,0 +1,35 @@
+@startuml
+skinparam componentStyle uml2
+
+title Aggredation/Reduction - component interaction
+package "Aggregator Reducer" {
+  component "Aerospike Node client" as asNode3
+  component "Kafka Node client" as asNode4
+  component "Aggregator\nReducer" as aggReduce
+  aggReduce -d(0- asNode3
+   aggReduce -r(0- asNode4
+}
+package "Core Aerospike" {
+    () "3000" as ascSocket
+    component "Aerospike\nEnterprise\nEdition\n\nin CP mode" as asCore
+    ascSocket - asCore
+    database "Campaign Datastore\nAerospike CP" as core #LightPink
+    asCore -r(0- core
+}
+
+package "Kafka and Zookeeper" {
+    () "9092" as kafClient
+    component [Kafka\nCluster] as kafCluster
+    kafClient - kafCluster
+
+    component [Zoo\nKeeper] as zookeeper
+}
+
+asNode4 .r.> kafClient: subscription message
+asNode4 <.r. kafClient: event message
+asNode3 --> ascSocket
+zookeeper <..> kafCluster
+
+
+
+@enduml
