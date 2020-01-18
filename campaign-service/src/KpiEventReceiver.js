@@ -47,6 +47,12 @@ class KpiEventReceiver {
 
     this.consumer.on('error', function (err) {
       console.error('Error:', err);
+      if (error.TopicsNotExist) {
+        setTimeout(consumer.addTopics({
+          topic: subscriptionTopic,
+          partition: 0
+        }), 5000);
+      }
     });
 
 

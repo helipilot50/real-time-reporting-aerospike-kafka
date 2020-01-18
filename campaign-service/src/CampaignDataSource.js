@@ -17,10 +17,10 @@ const asClient = async function () {
         ],
         policies: {
           read: new Aerospike.ReadPolicy({
-            totalTimeout: 100
+            totalTimeout: 1000
           }),
           write: new Aerospike.WritePolicy({
-            totalTimeout: 100
+            totalTimeout: 1000
           }),
         },
         log: {
