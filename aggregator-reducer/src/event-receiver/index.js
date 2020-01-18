@@ -35,12 +35,14 @@ const accumulateInCampaign = async (campaignId, eventSource, eventData, asClient
   }
 };
 
-const addTopic = (consumer, topic) => {
-  consumer.addTopics([topic], (error) => {
-    console.error('Add topic error:', error);
-    // setTimeout(
-    //   addTopic(consumer, topic), 
-    //   5000);
+const addTopic = function (consumer, topic) {
+  consumer.addTopics([topic], function (error, thing) {
+    if (error) {
+      console.error('Add topic error - retry in 5 sec', error.message);
+      setTimeout(
+        addTopic,
+        5000, consumer, topic);
+    }
   });
 };
 
