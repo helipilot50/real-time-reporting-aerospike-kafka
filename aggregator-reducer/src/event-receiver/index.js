@@ -35,15 +35,26 @@ const accumulateInCampaign = async (campaignId, eventSource, eventData, asClient
   }
 };
 
+const addTopic = (consumer, topic) => {
+  consumer.addTopics([topic], (error) => {
+    console.error('Add topic error:', error);
+    // setTimeout(
+    //   addTopic(consumer, topic), 
+    //   5000);
+  });
+};
+
 class EventReceiver {
   constructor(kafkaClient, aerospikeClient) {
     this.kafkaClient = kafkaClient;
     this.aerospikeClient = aerospikeClient;
-    this.consumer = new Consumer(kafkaClient,
-      [{
-        topic: eventTopic,
-        partition: 0
-      }],
+    this.topic = {
+      topic: eventTopic,
+      partition: 0
+    };
+    this.consumer = new Consumer(
+      kafkaClient,
+      [],
       {
         autoCommit: true,
         fromOffset: false
@@ -51,6 +62,8 @@ class EventReceiver {
     );
 
     let subscriptionPublisher = new SubscriptionEventPublisher(kafkaClient);
+
+    addTopic(this.consumer, this.topic);
 
     this.consumer.on('message', async function (eventMessage) {
 
