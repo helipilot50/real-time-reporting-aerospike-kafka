@@ -5,6 +5,11 @@ const Consumer = kafka.Consumer;
 const subscriptionTopic = process.env.SUBSCRIPTION_TOPIC;
 const kafkaCluster = process.env.KAFKA_CLUSTER;
 
+const topic = {
+  topic: subscriptionTopic,
+  partition: 0
+};
+
 const connectToKafka = () => {
   try {
     let kafkaClient = new kafka.KafkaClient({
@@ -19,21 +24,30 @@ const connectToKafka = () => {
   }
 };
 
+const addTopic = function (consumer, topic) {
+  consumer.addTopics([topic], function (error, thing) {
+    if (error) {
+      console.error('Add topic error - retry in 5 sec', error.message);
+      setTimeout(
+        addTopic,
+        5000, consumer, topic);
+    }
+  });
+};
 class KpiEventReceiver {
   constructor(pubsub) {
     let kafkaClient = connectToKafka();
     this.pubsub = pubsub;
-    this.consumer = new Consumer(kafkaClient,
-      [{
-        topic: subscriptionTopic,
-        partition: 0
-      }],
+    this.consumer = new Consumer(
+      kafkaClient,
+      [],
       {
         autoCommit: true,
         fromOffset: false
       }
     );
 
+    addTopic(this.consumer, topic);
 
     this.consumer.on('message', async function (eventMessage) {
 
