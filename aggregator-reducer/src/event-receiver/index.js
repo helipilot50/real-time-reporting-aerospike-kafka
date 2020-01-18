@@ -128,7 +128,7 @@ class SubscriptionEventPublisher {
   publishKPI(campaignId, accumulatedKpi) {
     const subscriptionMessage = {
       campaignId: campaignId,
-      kpi: accumulatedKpi.kpi,
+      kpi: accumulatedKpi.key,
       value: accumulatedKpi.value
     };
     const producerRequest = {
