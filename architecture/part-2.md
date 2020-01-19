@@ -107,6 +107,40 @@ The event data is extracted from the message and written to `core-aerospikedb` u
 
 *aggregation flow*
 
+### Connecting to Kafka
+```Javascript
+    this.topic = {
+      topic: eventTopic,
+      partition: 0
+    };
+    this.consumer = new Consumer(
+      kafkaClient,
+      [],
+      {
+        autoCommit: true,
+        fromOffset: false
+      }
+    );
+
+    let subscriptionPublisher = new SubscriptionEventPublisher(kafkaClient);
+
+    addTopic(this.consumer, this.topic);
+
+    this.consumer.on('message', async function (eventMessage) {
+    ...
+    });
+    
+    this.consumer.on('error', function (err) {
+      ...
+    });
+
+
+    this.consumer.on('offsetOutOfRange', function (err) {
+      ...
+    });
+
+```
+
 ### Extract the event data
 ```javascript
 let payload = JSON.parse(eventMessage.value);
@@ -137,9 +171,63 @@ let campaignId = tagRecord.bins[config.campaignIdBin];
 
 
 
-$$$ see part 1 $$$
+### Aggregating the Event 
+```javascript
+const accumulateInCampaign = async (campaignId, eventSource, eventData, asClient) => {
+  try {
+    // Aerospike CDT operation returning the new DataCube
+    let campaignKey = new Aerospike.Key(config.namespace, config.campaignSet, campaignId);
+    const kvops = Aerospike.operations;
+    const maps = Aerospike.maps;
+    const kpiKey = eventData.event + 's';
+    const ops = [
+      kvops.read(config.statsBin),
+      maps.increment(config.statsBin, kpiKey, 1),
+    ];
+    let record = await asClient.operate(campaignKey, ops);
+    let kpis = record.bins[config.statsBin];
+    console.log(`Campaign ${campaignId} KPI ${kpiKey} processed with result:`, JSON.stringify(record.bins, null, 2));
+    return {
+      key: kpiKey,
+      value: kpis
+    };
+  } catch (err) {
+    console.error('accumulateInCampain Error:', err);
+    throw err;
+  }
+};
 
-%%%%%% add stuff here %%%%%%%
+```
+
+### Publishing the new KPI
+```javascript
+class SubscriptionEventPublisher {
+  constructor(kafkaClient) {
+    this.producer = new HighLevelProducer(kafkaClient);
+  };
+
+  publishKPI(campaignId, accumulatedKpi) {
+    const subscriptionMessage = {
+      campaignId: campaignId,
+      kpi: accumulatedKpi.key,
+      value: accumulatedKpi.value
+    };
+    const producerRequest = {
+      topic: subscriptionTopic,
+      messages: JSON.stringify(subscriptionMessage),
+      timestamp: Date.now()
+    };
+
+    this.producer.send([producerRequest], function (err, data) {
+      if (err)
+        console.error('publishKPI error', err);
+      // else
+      // console.log('Campaign KPI published:', subscriptionMessage);
+    });
+  };
+}
+
+```
 
 ## Scaling the solution
 
