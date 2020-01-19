@@ -1,5 +1,5 @@
 
-# Near real-time Campaign Reporting Part 1 - Event Collection
+# Near real-time Campaign Reporting Part 2 - Aggregation/Reduction
 
 ![](https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/aerospike-logo-long.png)
 
