@@ -159,6 +159,15 @@ const addTopic = function (consumer, topic) {
 ```
 
 ### Extract the event data
+The payload of the message is a complete Aerospike record serialised as JSON. 
+These items are extracted:
+
+1. Event value
+2. Tag id
+3. Event source
+
+These values are used in aggregation step.
+
 ```javascript
 let payload = JSON.parse(eventMessage.value);
 // Morph the array of bins to and object
@@ -178,6 +187,8 @@ let source = bins['event-source'].value;
 ```
 
 ### Lookup Campaign Id using Tag
+The Tag Id is used to locate the matching Campaign. During campaign creation, a mapping between Tags and Campaign is created, this example uses an Aerospike record where the key is the Tag id and the value is the Campaign Id, and in this case, Aerospike is used a Dictionary/Map/Associative Array.
+
 ```javascript
 //lookup the Tag id in Aerospike to obtain the Campaign id
 let tagKey = new Aerospike.Key(config.namespace, config.tagSet, tagId);
@@ -186,9 +197,14 @@ let tagRecord = await aerospikeClient.select(tagKey, [config.campaignIdBin]);
 let campaignId = tagRecord.bins[config.campaignIdBin];
 ```
 
-
-
 ### Aggregating the Event 
+
+The Ad event is specific to a Tag and therefore a Campaign. In our model, a Tag is directly related to a Campaign and KPIs are collected at the Campaign level. In the real-world KPIs are more sophisticated and campaigns have many execution plans (line items).
+
+Each event for a KPI increments the value by 1. Our example stores the KPIs in a document structure ([CDT](https://www.aerospike.com/docs/guide/cdt.html)) in a [Bin](https://www.aerospike.com/docs/architecture/data-model.html#bins) in the Campaign [record](https://www.aerospike.com/docs/architecture/data-model.html#records). Aerospike provides operations to atomically [access and/or mutate sub-contexts](https://www.aerospike.com/docs/guide/cdt-context.html) of this structure to ensure the operation latency is ~1ms.
+
+This code increments the value KPI value by 1 using the KPI name as the 'path' to the value:
+
 ```javascript
 const accumulateInCampaign = async (campaignId, eventSource, eventData, asClient) => {
   try {
@@ -216,7 +232,18 @@ const accumulateInCampaign = async (campaignId, eventSource, eventData, asClient
 
 ```
 
+The new KPI value is incremented consistently and efficiently and the new value is returned.
+
+
 ### Publishing the new KPI
+
+We could stop here and allow the Campaign UI and Service (Part 3) to poll the Campaign store `core-aerospikedb` to obtain the latest campaign KPIs - this is a typical pattern.
+
+A more advanced approach is to stimulate the UI when ever a value has changed. While introducing new technology and challenges, this approach offer a very responsive UI presenting up to the second KPI values to the user.
+
+The `SubScriptionEventPublisher` uses Kafka as Pub-Sub to publish the new KPI value for a specific campaign on the topic `subscription-events`. In Part 3 the `campaign-service` receives this event and publishes it as a [GraphQl Subscription](https://www.apollographql.com/docs/apollo-server/data/subscriptions/)
+
+
 ```javascript
 class SubscriptionEventPublisher {
   constructor(kafkaClient) {
@@ -246,15 +273,18 @@ class SubscriptionEventPublisher {
 
 ```
 
-## Scaling the solution
+## Review
 
-How fast will it be? - This depends on the technology and hardware used.
+[Part 1](part-1) of this series describes:
+* creating mock Campaign data
+* a publisher simulator
+* an event receiver
+* an edge database   
+* an edge exporter
 
-Ad Event data is captured in real-time and Campaign KPIs are viewed in "human time" meaning they are viewed on a frequency defined on the whim of the user. Hence the notion of near real-time campaign reporting.
+This article (Part 2) describes the aggregation and reduction of Ad events into Campaign KPIs using Kafka as the messaging system and Aerospike as the consistent data store.
 
-Aerospike scales by adding nodes to the cluster, providing high throughput, low latency and high availability. Likewise, Kafka is also designed to scale easily with a cluster with no single points-of-failure. Both technologies have extensive documentation and guides on scaling for throughput, latency, availability and capacity. Aerospike and Kafka go hand-in-glove.
-
-Microservices in Docker containers use [Kubernetes](https://kubernetes.io/) to orchestrate for production with excellent **autoscaling** and **high availability** features and several CI/CD tools integrate directly with it.
+Part 3 describes the Campaign service and Campaign UI to for a user to view the Campaign KPIs in near real-time.
 
 
 
