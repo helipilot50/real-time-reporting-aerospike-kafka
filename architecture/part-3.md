@@ -23,11 +23,13 @@ This article, the code samples, and the example solution are entirely my own wor
 
 ?????????????????????
 
+![Impression sequence](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/event-sequence-part-3.puml&fmt=svg)
+
 ## Companion code
 
 The companion code is in [GitHub](https://github.com/helipilot50/real-time-reporting-aerospike-kafka). The complete solution is in the `master` branch. The code for this article is in the ‘part-3’ branch. 
 
-Javascript and Node.js is used in each service although the same solution is possible in any language
+Javascript and Node.js is used in each back-end service although the same solution is possible in any language
 
 The solution consists of:
 
@@ -77,7 +79,7 @@ All of the services and containers of [Part 1](part-1.md) and [Part 2](part-2.md
 
 **Campaign Service** `campaign-service` - A node.js service to 
  
-Like the other services the `campaign-service` uses the Aerospike Node.js client. On the first build, all the service containers that use Aerospike will download and compile the supporting C library. The `Dockerfile` for each container uses multi-stage builds to minimises the number of times the C library is compiled.
+Like the other Node services, the `campaign-service` uses the Aerospike Node.js client. On the first build, all the service containers that use Aerospike will download and compile the supporting C library. The `Dockerfile` for each container uses multi-stage builds to minimises the number of times the C library is compiled.
 
 **Campaign UI** `campaign-service` - A React and Material UI single-page web application to display Campaign KPIs 
 
@@ -96,3 +98,7 @@ Each container is deployed using `docker-compose` on your local machine.
 
 ???????????
 
+
+## The whole story
+
+![Impression sequence](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/event-sequence.puml&fmt=svg)
