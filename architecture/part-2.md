@@ -99,7 +99,7 @@ Each container is deployed using `docker-compose` on your local machine.
 
 ## How does the solution work?
 
-The `aggregator-reducer` reads a message from the Kafka topic `edge-to-core`. The message is the whole Aerospike record written to `edge-aerospikedb`.
+The `aggregator-reducer` is a headless service that reads a message from the Kafka topic `edge-to-core`. The message is the whole Aerospike record written to `edge-aerospikedb` and exported by `edge-exporter`.
 
 The event data is extracted from the message and written to `core-aerospikedb` using multiple CDT operations in one atomic database operation.
 
@@ -108,6 +108,9 @@ The event data is extracted from the message and written to `core-aerospikedb` u
 *aggregation flow*
 
 ### Connecting to Kafka
+
+To read from a Kafka topic you need a `Consumer` and this is configured to read from one or more topics and partitions. In this example, we are reading message from one topic `edge-to-core` and this topic has only 1 partition.
+
 ```Javascript
     this.topic = {
       topic: eventTopic,
@@ -139,6 +142,20 @@ The event data is extracted from the message and written to `core-aerospikedb` u
       ...
     });
 
+```
+Note that the `addTopic()` is called after the `Consumer` creation. This function attempts to add a topic to the consumer, if unsuccessful it waits 5 seconds and tries again. Why do this? The `Consumer` will throw an error if the topic is empty and this code overcomes that problem.
+
+```javascript
+const addTopic = function (consumer, topic) {
+  consumer.addTopics([topic], function (error, thing) {
+    if (error) {
+      console.error('Add topic error - retry in 5 sec', error.message);
+      setTimeout(
+        addTopic,
+        5000, consumer, topic);
+    }
+  });
+};
 ```
 
 ### Extract the event data
