@@ -18,13 +18,13 @@ This article, the code samples, and the example solution are entirely my own wor
 
 ## The use case — Part 2
 
-A simplified use case for Part 2 consists of reading Ad events from a Kafka topic, aggregating/reducing the events with existing KPI values. In this case the KPIs are simple counters, but in the real-world these would be more complex metrics like averages, gauges, histograms, etc. 
+The simplified use case for Part 2 consists of reading Ad events from a Kafka topic, aggregating/reducing the events with existing KPI values. In this case the KPIs are simple counters, but in the real-world these would be more complex metrics like averages, gauges, histograms, etc. 
 
 The values are stored in a data cube implemented as a Document or Complex Data Type ([CDT](https://www.aerospike.com/docs/guide/cdt.html)) in Aerospike. Aerospike provide fine-grained operations to read or write one or more parts of a [CDT](https://www.aerospike.com/docs/guide/cdt.html) in a single, atomic, database transaction.
 
 The Core Aerospike cluster is configured to prioritise consistency over availability to ensure that numbers are accurate and consistent for use with payments and billing. Or in others words: **Money**
 
-In addition to aggregating data, the new value of the KPI is sent via another Kafka topic (and possible separate Kafka cluster) to be consumed by the Campaign Service as a GraphQL subscription and providing a live update in the UI. Part 3 will cover the Campaign Service and GraphQL in detail. 
+In addition to aggregating data, the new value of the KPI is sent via another Kafka topic (and possible separate Kafka cluster) to be consumed by the Campaign Service as a GraphQL subscription and providing a live update in the UI. [Part 3](part-3.md) covers the Campaign Service, Campaign UI and GraphQL in detail. 
 
 ![Impression sequence](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/event-sequence-part-2.puml&fmt=svg)
 
@@ -85,7 +85,7 @@ All of the services and containers in [Part 1](part-1.md) with the addition of:
  
 Like the Event Collector and the Publisher Simulator, the Aggregator/Reducer uses the Aerospike Node.js client. On the first build, all the service containers that use Aerospike will download and compile the supporting C library. The `Dockerfile` for each container uses multi-stage builds to minimises the number of times the C library is compiled.
 
-**Kafka Cli** `kadkacli` - Displays the KPI events used by GrapgQL in Part 3
+**Kafka Cli** `kadkacli` - Displays the KPI events used by GrapgQL in [Part 3](part-3.md)
 
 ### How is the solution deployed?
 
@@ -284,7 +284,7 @@ class SubscriptionEventPublisher {
 
 This article (Part 2) describes the aggregation and reduction of Ad events into Campaign KPIs using Kafka as the messaging system and Aerospike as the consistent data store.
 
-Part 3 describes the Campaign service and Campaign UI to for a user to view the Campaign KPIs in near real-time.
+[Part 3](part-3.md) describes the Campaign service and Campaign UI to for a user to view the Campaign KPIs in near real-time.
 
 
 
