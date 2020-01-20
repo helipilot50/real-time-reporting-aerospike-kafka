@@ -5,11 +5,11 @@
 
 This is the second in a series of articles describing a simplified example of near real-time Ad Campaign reporting on a fixed set of campaign dimensions usually displayed for analysis in a user interface. The solution presented in this series relies on [Kafka](https://en.wikipedia.org/wiki/Apache_Kafka), [Aerospike’s edge-to-core](https://www.aerospike.com/blog/edge-computing-what-why-and-how-to-best-do/) data pipeline technology, and [Apollo GraphQL](https://www.apollographql.com/)
 
-* [Part 1](part-1): real-time capture of Ad events via Aerospike edge datastore and Kafka messaging.
+* [Part 1](part-1.md): real-time capture of Ad events via Aerospike edge datastore and Kafka messaging.
 
 * Part 2: aggregation and reduction of Ad events via Aerospike Complex Data Type (CDT) operations into actionable Ad Campaign Key Performance Indicators (KPIs).
 
-* Part 3: describes how an Ad Campaign user interface displays those KPIs using GraphQL retrieve data stored in an Aerospike Cluster.
+* [Part 3](part-3.md): describes how an Ad Campaign user interface displays those KPIs using GraphQL retrieve data stored in an Aerospike Cluster.
 
 ![Data flow](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/data-flow.puml&fmt=svg)
 *Data flow*
@@ -38,20 +38,20 @@ Javascript and Node.js is used in each service although the same solution is pos
 
 The solution consists of:
 
-* All of the service and containers in [Part 1](part-1).
+* All of the service and containers in [Part 1](part-1.md).
 * Aggregator/Reducer service - Node.js
 
 Docker and Docker Compose simplify the setup to allow you to focus on the Aerospike specific code and configuration.
 
 ### What you need for the setup
 
-All the perquisites are described in [Part 1](part-1)
+All the perquisites are described in [Part 1](part-1.md)
 
 ### Setup steps
 
 To set up the solution, follow these steps. Because executable images are built by downloading resources, be aware that the time to download and build the software depends on your internet bandwidth and your computer.
 
-Follow the setup steps in [Part 1](part-1). Then
+Follow the setup steps in [Part 1](part-1.md). Then
 
 **Step 1.** Checkout the `part-2` branch
 
@@ -79,7 +79,7 @@ Once up and running, after the services have stabilised, you will see the output
 
 **Docker Compose** orchestrates the creation of several services in separate containers:
 
-All of the services and containers in [Part 1](part-1) with the addition of:
+All of the services and containers in [Part 1](part-1.md) with the addition of:
 
 **Aggregator/Reducer** `aggregator-reducer` - A node.js service to consume Ad event messages from the Kafka topic `edge-to-core` and aggregates the single event with the existing data cube. The data cube a is a document stored in an Aerospike CDT and multiple discrete increment the counters in the document in one atomic operation. See [CDT Sub-Context Evaluation](https://www.aerospike.com/docs/guide/cdt-context.html) 
  
@@ -91,7 +91,7 @@ Like the Event Collector and the Publisher Simulator, the Aggregator/Reducer use
 
 Each container is deployed using `docker-compose` on your local machine.
 
-*Note:* The `aggregator-reducer` container is deployed along with **all** the containers from [Part 1](part-1).
+*Note:* The `aggregator-reducer` container is deployed along with **all** the containers from [Part 1](part-1.md).
 
 ![Deployment](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/docker-compose-deployment-part-2.puml&fmt=svg)
 
@@ -275,7 +275,7 @@ class SubscriptionEventPublisher {
 
 ## Review
 
-[Part 1](part-1) of this series describes:
+[Part 1](part-1.md) of this series describes:
 * creating mock Campaign data
 * a publisher simulator
 * an event receiver
