@@ -85,7 +85,7 @@ All of the services and containers in [Part 1](part-1.md) with the addition of:
  
 Like the Event Collector and the Publisher Simulator, the Aggregator/Reducer uses the Aerospike Node.js client. On the first build, all the service containers that use Aerospike will download and compile the supporting C library. The `Dockerfile` for each container uses multi-stage builds to minimises the number of times the C library is compiled.
 
-**Kafka Cli** `kadkacli` - Displays the KPI events used by GrapgQL in [Part 3](part-3.md)
+**Kafka Cli** `kadkacli` - Displays the KPI events used by GraphQL in [Part 3](part-3.md)
 
 ### How is the solution deployed?
 
