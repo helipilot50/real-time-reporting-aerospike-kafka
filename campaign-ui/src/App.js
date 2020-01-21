@@ -1,7 +1,10 @@
 import React from 'react';
-import ApolloClient from 'apollo-boost';
+import { ApolloClient } from 'apollo-client';
+import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
+import { HttpLink } from 'apollo-link-http';
+import { gql } from 'apollo-boost';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
-import { gql } from "apollo-boost";
+// import { gql } from "apollo-boost";
 import { SubScription } from "react-apollo";
 import './App.css';
 
@@ -29,9 +32,19 @@ const useStyles = makeStyles({
   },
 });
 
-const client = new ApolloClient({
+const cache = new InMemoryCache();
+const link = new HttpLink({
   uri: campaignServiceUri,
 });
+
+const client = new ApolloClient({
+  cache,
+  link
+});
+
+// const client = new ApolloClient({
+//   uri: campaignServiceUri,
+// });
 
 // const subscribeKpi = gql`
 // `;
