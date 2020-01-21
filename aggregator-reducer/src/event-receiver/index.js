@@ -17,10 +17,7 @@ const accumulateInCampaign = async (campaignId, eventSource, eventData, asClient
     const kpiKey = eventData.event + 's';
     const ops = [
       kvops.read(config.statsBin),
-      // kvops.read(config.campaignIdBin),
-      // kvops.read(config.campaignNameBin),
       maps.increment(config.statsBin, kpiKey, 1),
-      // maps.increment(config.statsBin, [eventSource, kpiKey], 1),  <=== future sub-context evaluation
     ];
     let record = await asClient.operate(campaignKey, ops);
     let kpis = record.bins[config.statsBin];

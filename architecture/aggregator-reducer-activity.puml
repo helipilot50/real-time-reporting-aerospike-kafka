@@ -1,7 +1,7 @@
 @startuml
 
 start
-while (do forever)
+while (do until process termination)
 :Kafka **edge-to-core** topic
 - **consumer.on('message', ...)**
 - parse event message;

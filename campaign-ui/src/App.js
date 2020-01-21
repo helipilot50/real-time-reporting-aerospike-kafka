@@ -1,8 +1,8 @@
 import React from 'react';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
-import { WebSocketLink } from 'apollo-link-ws';
 import { gql } from "apollo-boost";
+import { SubScription } from "react-apollo";
 import './App.css';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -29,15 +29,22 @@ const useStyles = makeStyles({
   },
 });
 
-
 const client = new ApolloClient({
   uri: campaignServiceUri,
 });
 
+// const subscribeKpi = gql`
+// `;
+
+// function Kpi(campaignId, kpiName, kpiValue) {
+//   return (
+//     <TableCell align="right">{kpiValue}</TableCell>
+//   );
+// }
 
 const CAMPAIGN_DETAIL = gql`
   {
-    campaigns(ids: ["67", "91", "56", "60", "45"]) {
+    campaigns(ids: ["6", "9", "56", "60", "45", "52"]) {
       id
       name
       aggregateKPIs {
@@ -110,7 +117,7 @@ function App() {
     <ApolloProvider client={client}>
       <div className="App">
         <CampaignAppBar />
-        <CampaignSet />
+        {/* <CampaignSet /> */}
       </div>
     </ApolloProvider >
   );

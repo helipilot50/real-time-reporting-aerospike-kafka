@@ -108,20 +108,16 @@ class CampaignDataSource {
     }
   }
 
-  async fetchCampaignSet(ids) {
+  async fetchCampaignsById(campaignIds) {
     try {
-      let promiseSet = ids.map((id) => {
+
+      let result = Promise.all(campaignIds.map((id) => {
         return this.fetchCampaign(id);
-      });
-      let campaignSet = await Promise.all(promiseSet);
-      return campaignSet;
+      }));
+      return result;
     } catch (err) {
-      if (err.code && err.code == 2) {
-        throw new ApolloError(`Campaign ${ids} not found`);
-      } else {
-        console.error('Fetch campaign error:', err);
-        throw new ApolloError(`Fetch campaign set: ${ids}`, err);
-      }
+      console.error(`fetchCampaignsById: ${campaignIds}`, err);
+      throw new ApolloError(`fetchCampaignsById: ${campaignIds}`, err);
     }
   }
 }

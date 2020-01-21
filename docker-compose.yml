@@ -173,7 +173,7 @@ services:
     environment:
       CAMPAIGN_SERVICE: "campaign-service:4050"
     volumes:
-      - ./aggregator-reducer/src:/usr/src/app/src
+      - ./campaign-service/src:/usr/src/app/src
     ports:
       - 5000:3000
     links:
