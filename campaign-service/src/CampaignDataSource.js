@@ -107,6 +107,19 @@ class CampaignDataSource {
       }
     }
   }
+
+  async fetchCampaignsById(campaignIds) {
+    try {
+
+      let result = Promise.all(campaignIds.map((id) => {
+        return this.fetchCampaign(id);
+      }));
+      return result;
+    } catch (err) {
+      console.error(`fetchCampaignsById: ${campaignIds}`, err);
+      throw new ApolloError(`fetchCampaignsById: ${campaignIds}`, err);
+    }
+  }
 }
 
 module.exports = {
