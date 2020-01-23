@@ -130,7 +130,7 @@ function App() {
     <ApolloProvider client={client}>
       <div className="App">
         <CampaignAppBar />
-        {/* <CampaignSet /> */}
+        <CampaignSet />
       </div>
     </ApolloProvider >
   );
