@@ -1,11 +1,6 @@
 import React from 'react';
-import { ApolloClient } from 'apollo-client';
-import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
-import { HttpLink } from 'apollo-link-http';
-import { gql } from 'apollo-boost';
-import { ApolloProvider, useQuery } from '@apollo/react-hooks';
-// import { gql } from "apollo-boost";
-import { SubScription } from "react-apollo";
+import gql from 'graphql-tag';
+import { graphql } from '@apollo/react-hoc';
 import './App.css';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -19,45 +14,28 @@ import Paper from '@material-ui/core/Paper';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
-const campaignServiceUri = process.env.CAMPAIGN_SERVICE;
-
-
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
   },
-  table: {
-    minWidth: 650,
+  menuButton: {
+    marginRight: theme.spacing(2),
   },
-});
+  title: {
+    flexGrow: 1,
+  },
+  table: {
+    minWidth: 150,
+  },
+}));
 
-const cache = new InMemoryCache();
-const link = new HttpLink({
-  uri: campaignServiceUri,
-});
+const campaignIds = ["6", "9", "56", "60", "45", "52"];
 
-const client = new ApolloClient({
-  cache,
-  link
-});
-
-// const client = new ApolloClient({
-//   uri: campaignServiceUri,
-// });
-
-// const subscribeKpi = gql`
-// `;
-
-// function Kpi(campaignId, kpiName, kpiValue) {
-//   return (
-//     <TableCell align="right">{kpiValue}</TableCell>
-//   );
-// }
-
-const CAMPAIGN_DETAIL = gql`
-  {
-    campaigns(ids: ["6", "9", "56", "60", "45", "52"]) {
+const CAMPAIGN_LIST = gql`
+  query campaigns($campaignIds: [ID!]!) {
+    campaigns(ids: $campaignIds) {
       id
       name
       aggregateKPIs {
@@ -70,37 +48,41 @@ const CAMPAIGN_DETAIL = gql`
   }
 `;
 
+export const withCampaigns = graphql(CAMPAIGN_LIST, {
+  options: ({ campaignIds }) => ({
+    variables: { campaignIds }
+  }),
+  props: ({ data }) => ({ ...data })
+});
 
-function CampaignSet() {
+export const CampaignsWithoutData = ({ loading, campaigns, error }) => {
   const classes = useStyles();
-  const { loading, error, data } = useQuery(CAMPAIGN_DETAIL);
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :( {error}</p>;
-  console.log(data);
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell>Id</TableCell>
-            <TableCell align="right">Name</TableCell>
-            <TableCell align="right">Impressions</TableCell>
-            <TableCell align="right">Clicks</TableCell>
-            <TableCell align="right">Visits</TableCell>
-            <TableCell align="right">Conversions</TableCell>
+            <TableCell align="left">Name</TableCell>
+            <TableCell align="center">Impressions</TableCell>
+            <TableCell align="center">Clicks</TableCell>
+            <TableCell align="center">Visits</TableCell>
+            <TableCell align="center">Conversions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.campaigns.map(campaign => (
+          {campaigns && campaigns.map(campaign => (
             <TableRow key={campaign.id}>
               <TableCell component="th" scope="campaign">
                 {campaign.id}
               </TableCell>
-              <TableCell align="right">{campaign.name}</TableCell>
-              <TableCell align="right">{campaign.aggregateKPIs.impressions}</TableCell>
-              <TableCell align="right">{campaign.aggregateKPIs.clicks}</TableCell>
-              <TableCell align="right">{campaign.aggregateKPIs.visits}</TableCell>
-              <TableCell align="right">{campaign.aggregateKPIs.conversions}</TableCell>
+              <TableCell align="left">{campaign.name}</TableCell>
+              <TableCell align="center">{campaign.aggregateKPIs.impressions}</TableCell>
+              <TableCell align="center">{campaign.aggregateKPIs.clicks}</TableCell>
+              <TableCell align="center">{campaign.aggregateKPIs.visits}</TableCell>
+              <TableCell align="center">{campaign.aggregateKPIs.conversions}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -109,16 +91,19 @@ function CampaignSet() {
   );
 };
 
-function CampaignAppBar() {
+export const Campaigns = withCampaigns(CampaignsWithoutData);
+
+export const CampaignAppBar = () => {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <AppBar position="static">
-        <Toolbar variant="dense">
+        <Toolbar variant="regular">
           <Typography variant="h6" color="inherit">
-            Campaigns
+            Campaign KPIs - Example
           </Typography>
+          {/* <Button color="inherit">Refresh</Button> */}
         </Toolbar>
       </AppBar>
     </div>
@@ -127,12 +112,10 @@ function CampaignAppBar() {
 
 function App() {
   return (
-    <ApolloProvider client={client}>
-      <div className="App">
-        <CampaignAppBar />
-        <CampaignSet />
-      </div>
-    </ApolloProvider >
+    <div className="App">
+      <CampaignAppBar />
+      <Campaigns campaignIds={campaignIds} />
+    </div>
   );
 }
 

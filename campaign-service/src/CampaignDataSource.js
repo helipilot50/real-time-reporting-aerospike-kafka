@@ -114,6 +114,7 @@ class CampaignDataSource {
       let result = Promise.all(campaignIds.map((id) => {
         return this.fetchCampaign(id);
       }));
+      console.log(`Fetched campaigns ${campaignIds}`);
       return result;
     } catch (err) {
       console.error(`fetchCampaignsById: ${campaignIds}`, err);

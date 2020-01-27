@@ -59,15 +59,17 @@ const resolvers = {
       subscribe: withFilter(
         (parent, args, context, info) => pubsub.asyncIterator(['NEW_KPI']),
         (payload, variables) => {
-          // console.log(`pay ${JSON.stringify(payload)}, var ${JSON.stringify(variables)}`);
+          console.log(`Subscribe: payload ${JSON.stringify(payload)}, variables ${JSON.stringify(variables)}`);
           return variables.campaignIds.includes(payload.campaignId.toString());
         }),
       resolve: (payload) => {
-        return {
+        let event = {
           campaignId: payload.campaignId,
           name: payload.kpi,
           value: payload.value
         };
+        console.log(`kpiUpdate: ${event}`);
+        return event;
       },
     },
   }
