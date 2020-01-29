@@ -40,7 +40,7 @@ export const CampaignAppBar = () => {
           <Typography variant="h6" color="inherit">
             Campaign KPIs - Example
           </Typography>
-          {/* <Button color="inherit">Refresh</Button> */}
+
         </Toolbar>
       </AppBar>
     </div>
