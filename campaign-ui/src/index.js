@@ -15,14 +15,15 @@ const campaignServiceHost = process.env.CAMPAIGN_SERVICE_HOST || 'localhost';
 const campaignServicePort = process.env.CAMPAIGN_SERVICE_PORT || '4050';
 const campaignServiceWsPort = process.env.CAMPAIGN_SERVICE_WS_PORT || '4050';
 
-console.log('service uri', campaignServiceHost);
+console.log('Campaign service host:', campaignServiceHost);
+console.log('Campaign service port:', campaignServicePort);
 
 const httpLink = new HttpLink({
   uri: `http://${campaignServiceHost}:${campaignServicePort}`,
 });
-console.log('httpLink:', httpLink);
+
 const wsLink = new WebSocketLink({
-  uri: `ws://${campaignServiceHost}:${campaignServiceWsPort}/`,
+  uri: `ws://${campaignServiceHost}:${campaignServiceWsPort}/graphql`,
   options: {
     reconnect: true,
     lazy: true,

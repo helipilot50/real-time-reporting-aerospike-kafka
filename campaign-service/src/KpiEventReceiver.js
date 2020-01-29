@@ -24,13 +24,19 @@ const connectToKafka = () => {
   }
 };
 
+let connectAttempts = 0;
+let connectionRetry = 5000;
+
 const addTopic = function (consumer, topic) {
+  connectAttempts += 1;
   consumer.addTopics([topic], function (error, thing) {
     if (error) {
-      console.error('Add topic error - retry in 5 sec', error.message);
+      console.error(`Add topic error - retry in ${connectionRetry / 1000} sec`, error.message);
+
+      if (connectAttempts > 10) connectionRetry = 60000
       setTimeout(
         addTopic,
-        5000, consumer, topic);
+        connectionRetry, consumer, topic);
     }
   });
 };
