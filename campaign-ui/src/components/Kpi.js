@@ -12,9 +12,9 @@ import gql from 'graphql-tag';
 
 const useStyles = makeStyles(theme => ({
   card: {
-    maxWidth: 120,
-    height: 70,
-    width: 120,
+    maxWidth: 80,
+    height: 50,
+    width: 80,
   },
   control: {
     padding: theme.spacing(2),
@@ -37,9 +37,6 @@ export const Kpi = ({ campaignId, kpiName, value }) => {
   return (
     <Card className={classes.card} variant="outlined">
       <CardContent>
-        <Typography>
-          {kpiName}
-        </Typography>
         <Typography>
           {value}
         </Typography>

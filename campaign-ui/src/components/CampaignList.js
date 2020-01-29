@@ -60,7 +60,10 @@ export const CampaignsWithoutData = ({ loading, campaigns, error }) => {
           <TableRow>
             <TableCell>Id</TableCell>
             <TableCell>Name</TableCell>
-            <TableCell>KPIs</TableCell>
+            <TableCell>Impressions</TableCell>
+            <TableCell>Clicks</TableCell>
+            <TableCell>Visits</TableCell>
+            <TableCell>Conversions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -71,20 +74,14 @@ export const CampaignsWithoutData = ({ loading, campaigns, error }) => {
               </TableCell>
               <TableCell>{campaign.name}</TableCell>
               <TableCell>
-                <Grid container className={classes.root} >
-                  <Grid item xs={3}>
-                    <Kpi campaignId={campaign.id} kpiName="Impressions" value={campaign.aggregateKPIs.impressions} />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Kpi campaignId={campaign.id} kpiName="Clicks" value={campaign.aggregateKPIs.clicks} />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Kpi campaignId={campaign.id} kpiName="Visits" value={campaign.aggregateKPIs.visits} />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Kpi campaignId={campaign.id} kpiName="Conversions" value={campaign.aggregateKPIs.conversions} />
-                  </Grid>
-                </Grid>
+                <Kpi campaignId={campaign.id} kpiName="Impressions" value={campaign.aggregateKPIs.impressions} />
+              </TableCell>
+              <TableCell>
+                <Kpi campaignId={campaign.id} kpiName="Clicks" value={campaign.aggregateKPIs.clicks} />
+              </TableCell>
+              <TableCell><Kpi campaignId={campaign.id} kpiName="Visits" value={campaign.aggregateKPIs.visits} />
+              </TableCell>
+              <TableCell><Kpi campaignId={campaign.id} kpiName="Conversions" value={campaign.aggregateKPIs.conversions} />
               </TableCell>
             </TableRow>
           ))}
