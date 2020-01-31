@@ -6,7 +6,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { Campaigns } from './components/CampaignList';
-import { Kpi } from './components/Kpi';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -42,12 +41,6 @@ function App() {
     <div className="App">
       <CampaignAppBar />
       <Campaigns campaignIds={campaignIds} />
-      <Kpi campaignId={1} kpiName="impressions" initialValue={0} />
-      <Kpi campaignId={3} kpiName="impressions" initialValue={0} />
-      <Kpi campaignId={5} kpiName="impressions" initialValue={0} />
-      <Kpi campaignId={7} kpiName="impressions" initialValue={0} />
-      <Kpi campaignId={9} kpiName="impressions" initialValue={0} />
-
     </div>
   );
 }

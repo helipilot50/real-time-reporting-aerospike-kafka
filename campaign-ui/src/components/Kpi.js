@@ -11,13 +11,12 @@ import gql from 'graphql-tag';
 
 const useStyles = makeStyles(theme => ({
   card: {
-    maxWidth: 80,
-    height: 50,
-    width: 80,
+    height: 45,
+    width: 70,
   },
-  control: {
-    padding: theme.spacing(2),
-  },
+  // control: {
+  //   padding: theme.spacing(2),
+  // },
 }));
 
 
@@ -54,6 +53,3 @@ export const Kpi = ({ campaignId, kpiName, initialValue }) => {
     </Card >
   )
 };
-
-
-// console.log(`id: ${data.kpiUpdate.campaignId} kpi: ${data.kpiUpdate.name} data: ${data.kpiUpdate.value}`);

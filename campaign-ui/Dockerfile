@@ -14,6 +14,6 @@ RUN yarn build
 
 EXPOSE 3000
 
-ENTRYPOINT ["serve"]
+ENTRYPOINT ["yarn"]
 
-CMD ["-s build"]
+CMD ["start"]
