@@ -1,6 +1,6 @@
 # Near real-time Campaign reporting
 How to acheive new real-time campaign reporting using [Aerospike](www.aerospike.com) and [Kafka](https://kafka.apache.org/)
-Read the full article at [Medium](https://link.medium.com/)
+Read the articles at [Medium](https://link.medium.com/)
 
 ![Component Diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/complete-component-detail.puml&fmt=svg)
 
