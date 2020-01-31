@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -31,7 +31,7 @@ subscription kpiUpdate($campaignId: ID!, $kpiName:String!){
 }
 `;
 
-export const Kpi = ({ campaignId, kpiName, value }) => {
+export const Kpi = ({ campaignId, kpiName, initialValue }) => {
   const classes = useStyles();
   return (
     <Card className={classes.card} variant="outlined">
@@ -41,10 +41,10 @@ export const Kpi = ({ campaignId, kpiName, value }) => {
             {
               ({ data, loading }) => {
                 if (data) {
-                  console.log(`data: ${data}`);
+
                   return (data.kpiUpdate.value);
                 }
-                return (value);
+                return (initialValue);
               }
             }
           </Subscription >
@@ -54,3 +54,6 @@ export const Kpi = ({ campaignId, kpiName, value }) => {
     </Card >
   )
 };
+
+
+// console.log(`id: ${data.kpiUpdate.campaignId} kpi: ${data.kpiUpdate.name} data: ${data.kpiUpdate.value}`);

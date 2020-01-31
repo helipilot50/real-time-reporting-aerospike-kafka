@@ -153,7 +153,7 @@ const intervalFunc = async () => {
 
     let event = randomEvent();
 
-    let index = Math.floor(Math.random() * tagCount);
+    let index = Math.floor(Math.random() * 10000); //tagCount);
     let tagKey = new Aerospike.Key(config.namespace, config.tagSet, index);
     let record = await client.get(tagKey);
     let tag = record.bins[config.tagIdBin];
