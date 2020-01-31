@@ -305,7 +305,7 @@ const accumulateInCampaign = async (campaignId, eventSource, eventData, asClient
 
 ```
 
-The new KPI value is incremented consistently and efficiently and the new value is returned.
+The new KPI value is incremented and the new value is returned. The magic of Aerospike ensures that the operation is Atomic and Consistent across the cluster with a latency of about 1 ms.
 
 
 ### Publishing the new KPI
@@ -314,7 +314,7 @@ We could stop here and allow the Campaign UI and Service (Part 3) to poll the Ca
 
 A more advanced approach is to stimulate the UI whenever a value has changed or at a specified frequency. While introducing new technology and challenges, this approach offers a very responsive UI presenting up to the second KPI values to the user.
 
-The `SubScriptionEventPublisher` uses Kafka as Pub-Sub to publish the new KPI value for a specific campaign on the topic `subscription-events`. In Part 3 the `campaign-service` receives this event and publishes it as a [GraphQl Subscription](https://www.apollographql.com/docs/apollo-server/data/subscriptions/)
+The `SubScriptionEventPublisher` uses Kafka as Pub-Sub to publish the new KPI value for a specific campaign on the topic `subscription-events`. In Part 3 the `campaign-service` receives this event and publishes it as a [GraphQL Subscription](https://www.apollographql.com/docs/apollo-server/data/subscriptions/)
 
 
 ```javascript
