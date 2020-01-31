@@ -7,7 +7,7 @@ This is the second in a series of articles describing a simplified example of ne
 
 * [Part 1](part-1.md): real-time capture of Ad events via Aerospike edge datastore and Kafka messaging.
 
-* Part 2: aggregation and reduction of Ad events via Aerospike Complex Data Type (CDT) operations into actionable Ad Campaign Key Performance Indicators (KPIs).
+* Part 2: aggregation and reduction of Ad events leveraging Aerospike Complex Data Types (CDTs) for aggregation and reduction of Ad events into actionable Ad Campaign Key Performance Indicators (KPIs).
 
 * [Part 3](part-3.md): describes how an Ad Campaign user interface displays those KPIs using GraphQL retrieve data stored in an Aerospike Cluster.
 

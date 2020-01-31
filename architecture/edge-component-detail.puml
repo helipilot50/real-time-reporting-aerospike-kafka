@@ -6,14 +6,14 @@ title Event Collection - component interaction
 together {
   package "data initializer" {
     component "Data Initializer" as dataInit
-    component "Aerospike Node client" as asNode1
-    dataInit -r(0- asNode1
+    component "Aerospike Node client" as asNodeInit
+    dataInit -r(0- asNodeInit
   }
 
   package "Simulator" {
     component "publisher-simulator" as simulator
-    component "Aerospike Node client" as asNode3
-    simulator -r(0- asNode3
+    component "Aerospike Node client" as asNodeSim
+    simulator -r(0- asNodeSim
   }
 }
 
@@ -21,8 +21,8 @@ package "Event Collector" {
     () "4000" as ecSocket
     component "Event Collector" as eventEUuk
     ecSocket - eventEUuk
-    component "Aerospike Node client" as asNode2
-    eventEUuk -r(0- asNode2
+    component "Aerospike Node client" as asNodeCollector
+    eventEUuk -r(0- asNodeCollector
 }
 
 package "Edge Aerospike" {
@@ -55,9 +55,9 @@ package "Kafka and Zookeeper" {
     component [Zoo\nKeeper] as zookeeper
 }
 
-asNode1 ..> ascSocket: TCP\nbinary\nprotocol
-asNode3 <.. ascSocket: TCP\nbinary\nprotocol
-asNode2 <..> aseSocket: TCP\nbinary\nprotocol
+asNodeInit ..> ascSocket: TCP\nbinary\nprotocol
+asNodeSim <.. ascSocket: TCP\nbinary\nprotocol
+asNodeCollector <..> aseSocket: TCP\nbinary\nprotocol
 asKafka .r.> kafClient: TCP\nbinary\nprotocol
 zookeeper <..> kafCluster
 simulator ..> ecSocket
