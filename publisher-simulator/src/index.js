@@ -11,6 +11,7 @@ const INTERVAL = parseInt(process.env.EVENT_INTERVAL);
 console.log('Aerospike cluster', asHost, asPort);
 
 const waitFor = parseInt(process.env.SLEEP);
+const tagRange = parseInt(process.env.TAG_RANGE || 10000);
 
 sleep.sleep(waitFor);
 
@@ -153,7 +154,7 @@ const intervalFunc = async () => {
 
     let event = randomEvent();
 
-    let index = Math.floor(Math.random() * 10000); //tagCount);
+    let index = Math.floor(Math.random() * Math.min(tagRange, tagCount));
     let tagKey = new Aerospike.Key(config.namespace, config.tagSet, index);
     let record = await client.get(tagKey);
     let tag = record.bins[config.tagIdBin];

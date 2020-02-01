@@ -12,8 +12,8 @@ COPY . .
 
 RUN yarn build
 
-EXPOSE 3000
+EXPOSE 5000
 
-ENTRYPOINT ["yarn"]
+ENTRYPOINT ["nodemon"]
 
-CMD ["start"]
+CMD ["server.js"]
