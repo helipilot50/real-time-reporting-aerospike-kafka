@@ -47,15 +47,15 @@ export class Kpi extends Component {
       campaignId: props.campaignId,
       kpiName: props.kpiName,
       initialValue: props.initialValue,
-      startShake: false
+      startAttention: false
     }
-    this.wiggle = this.wiggle.bind(this);
+    this.attention = this.attention.bind(this);
   }
 
-  wiggle(something) {
-    this.setState({ startShake: true })
-    console.log('wiggle', something);
-    setTimeout(() => this.setState({ startShake: false }), 1000);
+  attention(something) {
+    this.setState({ startAttention: true })
+    console.log('attention', something);
+    setTimeout(() => this.setState({ startAttention: false }), 1000);
   }
 
   render() {
@@ -66,7 +66,7 @@ export class Kpi extends Component {
           <Typography >
             <Subscription subscription={KPI_SUBSCRIPTION}
               variables={{ campaignId: this.state.campaignId, kpiName: this.state.kpiName }}
-              shouldResubscribe={true} onSubscriptionData={this.wiggle}>
+              shouldResubscribe={true} onSubscriptionData={this.attention}>
               {
                 ({ data, loading }) => {
                   if (data) {
