@@ -41,7 +41,8 @@ const app = async () => {
       },
       log: {
         level: Aerospike.log.INFO
-      }
+      },
+      maxConnsPerNode: 1000
     });
 
     console.log('Connected to aerospike', asHost, asPort);

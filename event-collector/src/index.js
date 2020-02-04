@@ -24,15 +24,16 @@ const asClient = async function () {
         ],
         policies: {
           read: new Aerospike.ReadPolicy({
-            totalTimeout: 100
+            totalTimeout: 500
           }),
           write: new Aerospike.WritePolicy({
-            totalTimeout: 100
+            totalTimeout: 500
           }),
         },
         log: {
           level: Aerospike.log.INFO
-        }
+        },
+        maxConnsPerNode: 1000
       });
       console.log('Aerospike client connection OK');
     }

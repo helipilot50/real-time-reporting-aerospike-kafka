@@ -11,6 +11,7 @@ const INTERVAL = parseInt(process.env.EVENT_INTERVAL);
 console.log('Aerospike cluster', asHost, asPort);
 
 const waitFor = parseInt(process.env.SLEEP);
+const tagRange = parseInt(process.env.TAG_RANGE || 10000);
 
 sleep.sleep(waitFor);
 
@@ -126,6 +127,23 @@ const randomGeo = () => {
   return geo[index];
 };
 
+const publishers = [
+  'Pesudo Random House',
+  'Padock and River',
+  'Stack Underflow',
+  'Weather Overground',
+  'The Redneck Gazette',
+  'The Round Earth Society',
+  'The Strawberry Pi Mag',
+  'Bland Recepies',
+  'Couch Potato Gamer',
+];
+
+const randomPublisher = () => {
+  let index = Math.floor(Math.random() * publishers.length);
+  return publishers[index];
+};
+
 const intervalFunc = async () => {
   try {
     let client = await asClient();
@@ -136,12 +154,12 @@ const intervalFunc = async () => {
 
     let event = randomEvent();
 
-    let index = Math.floor(Math.random() * tagCount);
+    let index = Math.floor(Math.random() * Math.min(tagRange, tagCount));
     let tagKey = new Aerospike.Key(config.namespace, config.tagSet, index);
     let record = await client.get(tagKey);
     let tag = record.bins[config.tagIdBin];
 
-    let sourceId = uuidv4();
+    let sourceId = randomPublisher();
     let userAgent = randomUserAgent();
     let options = {
       method: 'POST',

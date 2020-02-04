@@ -17,10 +17,10 @@ const asClient = async function () {
         ],
         policies: {
           read: new Aerospike.ReadPolicy({
-            totalTimeout: 100
+            totalTimeout: 1000
           }),
           write: new Aerospike.WritePolicy({
-            totalTimeout: 100
+            totalTimeout: 1000
           }),
         },
         log: {
@@ -105,6 +105,20 @@ class CampaignDataSource {
         console.error('Fetch campaign error:', err);
         throw new ApolloError(`Fetch campaign by ID: ${id}`, err);
       }
+    }
+  }
+
+  async fetchCampaignsById(campaignIds) {
+    try {
+
+      let result = Promise.all(campaignIds.map((id) => {
+        return this.fetchCampaign(id);
+      }));
+      console.log(`Fetched campaigns ${campaignIds}`);
+      return result;
+    } catch (err) {
+      console.error(`fetchCampaignsById: ${campaignIds}`, err);
+      throw new ApolloError(`fetchCampaignsById: ${campaignIds}`, err);
     }
   }
 }

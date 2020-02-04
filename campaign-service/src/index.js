@@ -32,11 +32,11 @@ const typeDefs = gql`
   
   type Query {
     campaign(id:ID):Campaign
-    campaigns: [Campaign]
+    campaigns(ids: [ID!]!): [Campaign]
   }
 
   type Subscription {
-    kpiUpdate(campaignIds:[ID!]!):KPI
+    kpiUpdate(campaignId:ID!, kpiName:String):KPI
   }
 `;
 
@@ -49,8 +49,8 @@ const resolvers = {
       return context.campaignsDS.fetchCampaign(args.id);
     },
 
-    campaigns: (_1, _2, context, _3) => {
-      return context.campaignsDS.listCampaigns();
+    campaigns: (_1, args, context, _3) => {
+      return context.campaignsDS.fetchCampaignsById(args.ids);
     }
   },
 
@@ -59,21 +59,24 @@ const resolvers = {
       subscribe: withFilter(
         (parent, args, context, info) => pubsub.asyncIterator(['NEW_KPI']),
         (payload, variables) => {
-          // console.log(`pay ${JSON.stringify(payload)}, var ${JSON.stringify(variables)}`);
-          return variables.campaignIds.includes(payload.campaignId.toString());
+          let isFiltered = (variables.campaignId == payload.campaignId.toString() &&
+            variables.kpiName == payload.kpi);
+          if (isFiltered)
+            console.log(`Subscribe: payload ${JSON.stringify(payload)}, variables ${JSON.stringify(variables)}`);
+          return isFiltered;
         }),
       resolve: (payload) => {
-        return {
+        let event = {
           campaignId: payload.campaignId,
           name: payload.kpi,
           value: payload.value
         };
+        console.log(`kpiUpdate:`, event);
+        return event;
       },
     },
   }
 };
-
-
 
 const server = new ApolloServer(
   {
@@ -85,6 +88,7 @@ const server = new ApolloServer(
   }
 );
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Campaign Server ready at ${url}`);
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`);
 });
