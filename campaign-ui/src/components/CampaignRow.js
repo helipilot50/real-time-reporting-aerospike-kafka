@@ -9,7 +9,7 @@ export default function CampaignRow({ campaign }) {
   return (
     <TableRow key={campaign.id}>
       <TableCell component="th" scope="row">{campaign.id}</TableCell>
-      <TableCell align="left" minwidth={200}>{campaign.name}</TableCell>
+      <TableCell align="left" >{campaign.name}</TableCell>
       <TableCell align="right"><Kpi campaignId={campaign.id} kpiName="impressions" initialValue={campaign.aggregateKPIs.impressions} /></TableCell>
       <TableCell align="right"><Kpi campaignId={campaign.id} kpiName="clicks" initialValue={campaign.aggregateKPIs.clicks} /></TableCell>
       <TableCell align="right"><Kpi campaignId={campaign.id} kpiName="visits" initialValue={campaign.aggregateKPIs.visits} /></TableCell>
