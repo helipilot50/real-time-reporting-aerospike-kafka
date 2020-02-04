@@ -1,0 +1,87 @@
+@startuml
+left to right direction
+skinparam componentStyle uml2
+skinparam rectangle {
+    backgroundColor<<Container>> #0db7ed
+    backgroundColor<<Docker Compose>> #FFCC99
+}
+
+rectangle "Docker Compose" <<Docker Compose>> {
+    rectangle "Part 1" {
+        rectangle "zookeeper" <<Container>>{
+            [Zookeeper]
+            note right of [Zookeeper]
+            Simple Zookeeper
+            Ports: 2181
+            end note
+        }
+        rectangle "kafka" <<Container>>{
+            [Kafka Cluster]
+            note right of [Kafka Cluster]
+            Single node Kafka
+            Ports: 9092
+            end note
+        }
+        rectangle "kafkacli" <<Container>>{
+            [Kafka Cli]
+            note right of [Kafka Cli]
+            Kafka Cli utility 
+            "reading" the topic
+            end note
+        }
+        rectangle "core-aerospikedb" <<Container>>{
+            [Aerospike Cluster] as core
+            note right of core
+            Single node Aerospike cluster
+            CP mode
+            Ports: 3000-3003
+            end note
+        }
+        rectangle "edge-aerospikedb" <<Container>>{
+            [Aerospike Cluster] as edge
+            note right of edge
+            Single node Aerospike cluster
+            AP mode
+            Ports: 3010-3013
+            end note
+        }
+        rectangle "edge-exporter" <<Container>>{
+            [Aerospike Kafka Connector]
+            note right of [Aerospike Kafka Connector]
+            JVM application running in Jetty
+            Ports: 8080
+            end note
+
+        }
+        rectangle "data-initializer" <<Container>>{
+            [Data Initializer]
+            note right of [Data Initializer]
+            Node.js application
+            end note
+        }
+        rectangle "event-collector" <<Container>>{
+            [Event Collector]
+            note right of [Event Collector]
+            Node.js Express API service
+            Port 4000
+            end note
+        }
+        rectangle "publisher-simulator" <<Container>>{
+            [Publisher Simulator]
+            note right of [Publisher Simulator]
+            Node.js application
+            end note
+        }
+    }
+    rectangle "Part 2"{
+        rectangle "aggregator-reducer" <<Container>>{
+            [Aggregator Reducer]
+            note right of [Aggregator Reducer]
+            Node.js application
+            end note
+        }
+    }
+}
+
+
+@enduml

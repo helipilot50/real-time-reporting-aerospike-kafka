@@ -61,6 +61,24 @@ const createData = async (campaignCount, tagCount) => {
     console.log('Connection to Aerospike core cluster succeeded!')
 
     /*
+    Create index on campaign date
+    */
+    try {
+      var options = {
+        ns: config.namespace,
+        set: config.campaignSet,
+        bin: config.campaignDate,
+        index: 'campaign_date',
+        datatype: Aerospike.indexDataType.NUMERIC
+      }
+      await asClient.createIndex(options)
+    } catch (err) {
+      if (err.code != 200) {
+        throw err;
+      }
+    }
+
+    /*
     if data exists do nothing
     */
     let testKey = new Aerospike.Key(config.namespace, config.tagSet, 25);
@@ -74,7 +92,7 @@ const createData = async (campaignCount, tagCount) => {
 
     // create campaigns
     for (i = 0; i < campaignCount; i++) {
-      let campaignId = uuidv4();
+      let campaignId = i + 1;
       // write campaign
       let campaignKey = new Aerospike.Key(config.namespace, config.campaignSet, campaignId);
       let bins = {};
@@ -85,11 +103,12 @@ const createData = async (campaignCount, tagCount) => {
         visits: 0,
         conversions: 0,
       };
-      bins[config.campaignNameBin] = `Acme campaign ${i}`;
+      bins[config.campaignNameBin] = `Acme campaign ${campaignId}`;
+      bins[config.campaignDate] = Date.now();
 
       await asClient.put(campaignKey, bins);
 
-      console.log('created campaign', bins[config.campaignNameBin]);
+      console.log('created campaign', bins);
 
       // create tags for campaign
       for (j = 0; j < tagCount; j++) {

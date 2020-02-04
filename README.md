@@ -1,14 +1,17 @@
 # Near real-time Campaign reporting
 How to acheive new real-time campaign reporting using [Aerospike](www.aerospike.com) and [Kafka](https://kafka.apache.org/)
-Read the full article at [Medium](https://link.medium.com/)
+Read the articles at [Medium](https://link.medium.com/)
 
-![Component Diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/edge-component-detail.puml&fmt=svg)
+![Component Diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/complete-component-detail.puml&fmt=svg)
 
 Javascript and Node.js is used in each service although the same solution is possible in any language
 
 The solution consists of:
 * A Publisher Simulator - Node.js
 * An Event Collector service - Node.js
+* An Aggregator/Reducer servic - Node.js
+* A Campaign Service - Node.js
+* A Campaign UI - React and Material UI
 * Aerospike configurations enabling Kafka
 * Docker compose yml
 * Docker containers for:
@@ -20,6 +23,7 @@ The solution consists of:
 
 # Companion Code
 This example uses Docker and Docker Compose to create a simple solution for near real-time Ad Campaign reporting on a fixed set of campaign dimensions. The solution presented in this series relies on Kafka, Aerospike's edge-to-core data pipeline technology, and Apollo GraphQL
+
 
 ## Setup
 
@@ -50,4 +54,4 @@ $ docker-compose up
 ```
 
 ### Disclaimer
-These code samples and the proposed solution are entirely my own work and not endorsed by Aerospike. The code is available to anyone under the MIT License.
+The code and the example solution are entirely my own work and not endorsed by Aerospike, Confluent or Apollo. The code is PoC quality only and it is not production strength, and is available to anyone under the MIT License.

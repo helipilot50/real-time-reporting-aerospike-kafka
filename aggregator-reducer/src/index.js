@@ -1,98 +1,61 @@
-const config = require('config');
 const kafka = require('kafka-node');
 const Aerospike = require('aerospike');
 const sleep = require('sleep');
+const { EventReceiver } = require('./event-receiver');
 
 const asPort = parseInt(process.env.CORE_PORT);
 const asHost = process.env.CORE_HOST;
-
-const eventTopic = process.env.EVENT_TOPIC;
-
+const kafkaCluster = process.env.KAFKA_CLUSTER;
 const waitFor = parseInt(process.env.SLEEP);
 
 sleep.sleep(waitFor);
 
-const Consumer = kafka.Consumer;
-const kafkaClient = new kafka.KafkaClient();
-const kafkaConsumer = new Consumer(
-  kafkaClient,
-  [
-    { topic: eventTopic, partition: 0 }
-  ],
-  {
-    autoCommit: false
+const connectToKafka = () => {
+  try {
+    let kafkaClient = new kafka.KafkaClient({
+      autoConnect: true,
+      kafkaHost: kafkaCluster
+    });
+    console.log('Connected to Kafka', kafkaCluster);
+    return kafkaClient;
+  } catch (kafkaError) {
+    console.error(`Kafka error - retrying in 5 secs`, error);
+    setTimeout(connectToKafka, 5000);
   }
-);
+};
 
-let asClient;
-
-const aggregateEvent = async (type, body) => {
+const app = async () => {
   try {
 
-    if (!asClient) {
-      console.log('Attempting to connect to Aerospike cluster', asHost, asPort);
+    let asClient = await Aerospike.connect({
+      hosts: [
+        { addr: asHost, port: asPort }
+      ],
+      policies: {
+        read: new Aerospike.ReadPolicy({
+          totalTimeout: 1000
+        }),
+        write: new Aerospike.WritePolicy({
+          totalTimeout: 1000
+        }),
+      },
+      log: {
+        level: Aerospike.log.INFO
+      },
+      maxConnsPerNode: 1000
+    });
 
-      Aerospike.connect({
-        hosts: [
-          { addr: asHost, port: asPort }
-        ],
-        policies: {
-          read: new Aerospike.ReadPolicy({
-            totalTimeout: 100
-          }),
-          write: new Aerospike.WritePolicy({
-            totalTimeout: 100
-          }),
-        },
-        log: {
-          level: Aerospike.log.INFO
-        }
-      }).then(client => {
-        asClient = client;
-        console.log('Connected to aerospike', asHost, asPort);
-      }).catch(error => {
-        console.error('Cannot connect to aerospike', error);
-        throw error;
-      });
-    }
+    console.log('Connected to aerospike', asHost, asPort);
 
-    let clickKey = new Aerospike.Key(config.namespace, config.eventsSet, eventId);
-    let bins = {};
-    bins[config.eventIdBin] = eventId;
-    bins[config.eventBin] = body;
-    bins[config.tagBin] = body.tag;
-    switch (type) {
-      case 'click':
-        bins[config.sourceBin] = body.publisher;
-        break;
-      case 'impression':
-        bins[config.sourceBin] = body.publisher;
-        break;
-      case 'visit':
-        bins[config.sourceBin] = body.advertiser;
-        break;
-      case 'conversion':
-        bins[config.sourceBin] = body.vendor;
-        break;
-    }
-    bins[config.typeBin] = type;
-    await asClient.put(clickKey, bins);
-    console.log(`Processed ${type} event`, eventId);
+    let kafkaClient = connectToKafka();
+
+    const eventReceiver = new EventReceiver(kafkaClient, asClient);
+
   } catch (error) {
-    console.error(`${type} event processing error`, eventId);
+    console.error(`Aggregator-Reducer error`, error);
     throw error;
-  }
+  };
+
 }
 
-kafkaConsumer.on('message', function (message) {
-  console.log(message);
-  // aggregateEvent() here
-});
-
-kafkaConsumer.on('error', function (err) {
-  console.log(err);
-});
-
-kafkaConsumer.on('offsetOutOfRange', function (err) {
-  console.log(err);
-});
+app();

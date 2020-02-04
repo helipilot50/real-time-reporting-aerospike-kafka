@@ -1,4 +1,4 @@
-const request = require('request')
+const rp = require('request-promise')
 const uuidv4 = require('uuid/v4');
 const Aerospike = require('aerospike');
 const config = require('config');
@@ -11,6 +11,7 @@ const INTERVAL = parseInt(process.env.EVENT_INTERVAL);
 console.log('Aerospike cluster', asHost, asPort);
 
 const waitFor = parseInt(process.env.SLEEP);
+const tagRange = parseInt(process.env.TAG_RANGE || 10000);
 
 sleep.sleep(waitFor);
 
@@ -126,20 +127,42 @@ const randomGeo = () => {
   return geo[index];
 };
 
+const publishers = [
+  'Pesudo Random House',
+  'Padock and River',
+  'Stack Underflow',
+  'Weather Overground',
+  'The Redneck Gazette',
+  'The Round Earth Society',
+  'The Strawberry Pi Mag',
+  'Bland Recepies',
+  'Couch Potato Gamer',
+];
+
+const randomPublisher = () => {
+  let index = Math.floor(Math.random() * publishers.length);
+  return publishers[index];
+};
+
 const intervalFunc = async () => {
   try {
     let client = await asClient();
 
+    let tagCountKey = new Aerospike.Key(config.namespace, config.tagSet, 'tag-count');
+    let tagCountRecord = await client.get(tagCountKey);
+    let tagCount = tagCountRecord.bins['tag-count'];
+
     let event = randomEvent();
 
-    let index = Math.floor(Math.random() * 100000);
+    let index = Math.floor(Math.random() * Math.min(tagRange, tagCount));
     let tagKey = new Aerospike.Key(config.namespace, config.tagSet, index);
     let record = await client.get(tagKey);
     let tag = record.bins[config.tagIdBin];
 
-    let sourceId = uuidv4();
+    let sourceId = randomPublisher();
     let userAgent = randomUserAgent();
     let options = {
+      method: 'POST',
       uri: `http://event-collector:${PORT}/event/${event}`,
       headers: {
         'user-agent': userAgent,
@@ -168,7 +191,7 @@ const intervalFunc = async () => {
 
 
     console.log(`Event:`, options)
-    request.post(options);
+    rp(options);
   } catch (error) {
     console.error('send event error', error);
   }
