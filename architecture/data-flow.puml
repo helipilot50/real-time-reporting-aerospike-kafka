@@ -12,7 +12,7 @@ rectangle "Core" #LightBlue {
     object "Aggregator\nReducer" as aggReduce 
     database "Aerospike CP\nCampaign Datastore" as campaignStore #LigntPink
     queue "Kafka GraphQL\nsubscriptions" as KafkaSubscriptions
-    object "Canpaign service" as campaignService
+    object "Campaign service" as campaignService
 }
 actor "Campaign UI" as campaignUI #D5E8D4
 

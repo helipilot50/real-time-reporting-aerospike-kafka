@@ -13,7 +13,7 @@ box "Core" #LightBlue
     participant "Aggregator\nReducer" as aggReduce 
     database "Aerospike CP\nCampaign Datastore" as campaignStore #LigntPink
     queue "Kafka GraphQL\nsubscriptions" as KafkaSubscriptions
-    participant "Canpaign service" as campaignService
+    participant "Campaign service" as campaignService
 end box
 actor "Campaign UI" as campaignUI #D5E8D4
 == Part 1 ==
