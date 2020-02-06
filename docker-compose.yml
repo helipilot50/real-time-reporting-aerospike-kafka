@@ -176,7 +176,7 @@ services:
     volumes:
       - ./campaign-ui/src:/usr/src/app/src
     ports:
-      - 5000:5000
+      - 5000:3000
     links:
       - campaign-service
     depends_on:
