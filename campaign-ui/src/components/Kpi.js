@@ -28,15 +28,15 @@ export class Kpi extends Component {
 
   attention(something) {
     this.setState({ startAttention: true })
-    console.log('attention', something);
     setTimeout(() => this.setState({ startAttention: false }), 1000);
   }
 
   render() {
     const { startAttention } = this.state
+    const variant = startAttention ? 'H5' : 'inherit';
     const type = startAttention ? 'secondary' : 'inherit';
     return (
-      <Typography color={type}>
+      <Typography color={type} variant={variant}>
         <Subscription subscription={KPI_SUBSCRIPTION}
           variables={{ campaignId: this.state.campaignId, kpiName: this.state.kpiName }}
           shouldResubscribe={true} onSubscriptionData={this.attention}>

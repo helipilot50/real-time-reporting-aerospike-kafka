@@ -23,6 +23,14 @@ const useStyles = makeStyles(theme => ({
   table: {
     minWidth: 650,
   },
+  campaignColumn: {
+    minWidth: 200,
+    width: 200
+  },
+  kpiColumn: {
+    minWidth: 80,
+    width: 80
+  }
 }));
 
 
@@ -60,15 +68,15 @@ export const CampaignsWithoutData = ({ loading, campaigns, error }) => {
 
   return (
     <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table">
+      <Table className={classes.table} size="small" aria-label="dense table">
         <TableHead>
           <TableRow>
-            <TableCell>Id</TableCell>
-            <TableCell>Campaign Name</TableCell>
-            <TableCell>Impressions</TableCell>
-            <TableCell>Clicks</TableCell>
-            <TableCell>Visits</TableCell>
-            <TableCell>Conversions</TableCell>
+            <TableCell className={classes.kpiColumn} >Id</TableCell>
+            <TableCell className={classes.campaignColumn}>Campaign Name</TableCell>
+            <TableCell className={classes.kpiColumn} align="right">Impressions</TableCell>
+            <TableCell className={classes.kpiColumn} align="right">Clicks</TableCell>
+            <TableCell className={classes.kpiColumn} align="right">Visits</TableCell>
+            <TableCell className={classes.kpiColumn} align="right">Conversions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
