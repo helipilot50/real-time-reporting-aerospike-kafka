@@ -67,7 +67,6 @@ class CampaignDataSource {
       endDate.setMinutes(59);
       endDate.setSeconds(59);
       endDate.setMilliseconds(999);
-      console.log('Date range', startDate.getTime(), endDate.getTime());
 
       query.where(Aerospike.filter.range(config.campaignDate, startDate.getTime(), endDate.getTime()));
 
@@ -107,15 +106,21 @@ class CampaignDataSource {
       }
     }
   }
-
   async fetchCampaignsById(campaignIds) {
     try {
-
-      let result = Promise.all(campaignIds.map((id) => {
-        return this.fetchCampaign(id);
-      }));
-      console.log(`Fetched campaigns ${campaignIds}`);
-      return result;
+      let client = await asClient();
+      let keys = campaignIds.map((id) => {
+        return {
+          key: new Aerospike.Key(config.namespace, config.campaignSet, parseInt(id)),
+          read_all_bins: true
+        };
+      });
+      let records = await client.batchRead(keys);
+      records = records.filter(n => n.status == 0);
+      let campaigns = records.map((element) => {
+        return campaignFromRecord(element.record);
+      });
+      return campaigns;
     } catch (err) {
       console.error(`fetchCampaignsById: ${campaignIds}`, err);
       throw new ApolloError(`fetchCampaignsById: ${campaignIds}`, err);

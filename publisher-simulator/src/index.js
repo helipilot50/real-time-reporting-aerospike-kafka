@@ -191,7 +191,7 @@ const intervalFunc = async () => {
 
 
     console.log(`Event:`, options)
-    rp(options);
+    await rp(options);
   } catch (error) {
     console.error('send event error', error);
   }
