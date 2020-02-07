@@ -123,7 +123,7 @@ services:
       EVENT_INTERVAL: 1500
       SLEEP: 10
       TAG_RANGE: 10000
-     volumes:
+    volumes:
       - ./publisher-simulator/src:/usr/src/app/src
     links:
       - core-aerospikedb
