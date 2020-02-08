@@ -1,0 +1,30 @@
+@startuml
+
+skinparam componentStyle uml2
+!includeurl https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/edge-component-detail.puml!0
+!includeurl https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/core-component-detail.puml!0
+!includeurl https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/kafka-component-detail.puml!0
+
+
+together {
+  package "data initializer" {
+    component "Data Initializer" as dataInit
+    component "Aerospike Node client" as asNodeInit
+    dataInit -r(0- asNodeInit
+  }
+
+  package "Simulator" {
+    component "publisher-simulator" as simulator
+    component "Aerospike Node client" as asNodeSim
+    simulator -r(0- asNodeSim
+  }
+}
+
+package "Event Collector" {
+    () "4000" as ecSocket
+    component "Event Collector" as eventEUuk
+    ecSocket - eventEUuk
+    component "Aerospike Node client" as asNodeCollector
+    eventEUuk -r(0- asNodeCollector
+}
+@enduml
