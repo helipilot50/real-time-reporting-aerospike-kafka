@@ -6,6 +6,6 @@
 
 asNodeKafka .r.> kafClient: subscription message
 asNodeKafka <.r. kafClient: event message
-asNodeCore ..> ascSocket
+asNodeCore ..> ascSocket: TCP\nbinary\nprotocol
 
 @enduml

@@ -4,7 +4,7 @@
 !includeurl https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/kafka-component-detail.puml!0
 !includeurl https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/campaign-service-component-detail.puml!0
 
-campNodeCore ..> ascSocket
+campNodeCore ..> ascSocket: TCP\nbinary\nprotocol
 campNodeKafka <.r. kafClient: subscription message
 
 

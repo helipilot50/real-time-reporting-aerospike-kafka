@@ -69,7 +69,7 @@ Once up and running, after the services have stabilised, you will see the output
 
 ## How do the components interact?
 
-![Component Interaction](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/campaign-service-detail.puml&fmt=svg)
+![Component Interaction](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/part-3-component.puml&fmt=svg)
 
 *Component Interaction*
 
