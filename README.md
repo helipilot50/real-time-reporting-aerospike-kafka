@@ -10,11 +10,11 @@ The solution consists of:
 * A Publisher Simulator - Node.js
 * An Event Collector service - Node.js
 * An Aggregator/Reducer servic - Node.js
-* A Campaign Service - Node.js
-* A Campaign UI - React and Material UI
+* A Campaign Service - Node.js and Apollo Server
+* A Campaign UI - React, Material UI and Apollo Client
 * Aerospike configurations enabling Kafka
 * Docker compose yml
-* Docker containers for:
+* Docker containers from DockerHub for:
   * Aerospike Enterprise Edition (https://dockr.ly/2KZ6EUH)
   * Zookeeper (https://dockr.ly/2KZgaaw)
   * Kafka (https://dockr.ly/2L4NwVA)
@@ -26,7 +26,6 @@ This example uses Docker and Docker Compose to create a simple solution for near
 
 
 ## Setup
-
 Clone the GitHub repository with 
 ```bash
 $ git clone https://github.com/helipilot50/real-time-reporting-aerospike-kafka 
@@ -52,6 +51,12 @@ Then run
 ```bash
 $ docker-compose up
 ```
+## Reseting the data
+The data in the two Aerospike clusters and the two Kafka topics are stored locally on the host machine. The data can be reset (deleted) by running this bash script:
 
-### Disclaimer
+```bash
+$ ./delete-data.sh                                                                                                                         
+```
+
+## Disclaimer
 The code and the example solution are entirely my own work and not endorsed by Aerospike, Confluent or Apollo. The code is PoC quality only and it is not production strength, and is available to anyone under the MIT License.
