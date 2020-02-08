@@ -6,7 +6,7 @@ skinparam componentStyle uml2
 !includeurl https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/kafka-component-detail.puml!0
 
 
-together {
+
   package "data initializer" {
     component "Data Initializer" as dataInit
     component "Aerospike Node client" as asNodeInit
@@ -18,7 +18,7 @@ together {
     component "Aerospike Node client" as asNodeSim
     simulator -r(0- asNodeSim
   }
-}
+
 
 package "Event Collector" {
     () "4000" as ecSocket
@@ -27,4 +27,12 @@ package "Event Collector" {
     component "Aerospike Node client" as asNodeCollector
     eventEUuk -r(0- asNodeCollector
 }
+
+asNodeInit ..> ascSocket: TCP\nbinary\nprotocol
+asNodeSim <.. ascSocket: TCP\nbinary\nprotocol
+simulator ..> ecSocket
+asNodeCollector <..> aseSocket: TCP\nbinary\nprotocol
+asKafka .r.> kafClient: TCP\nbinary\nprotocol
+
+
 @enduml
