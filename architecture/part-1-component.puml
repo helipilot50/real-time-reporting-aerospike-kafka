@@ -1,0 +1,16 @@
+@startuml
+
+' title Complete  solution - component detail
+
+!includeurl https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/edge-component-detail.puml!0
+!includeurl https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/core-component-detail.puml!0
+!includeurl https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/kafka-component-detail.puml!0
+!includeurl https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/publisher-collector-component-detail.puml!0
+
+asNodeInit ..> ascSocket: TCP\nbinary\nprotocol
+asNodeSim <.. ascSocket: TCP\nbinary\nprotocol
+simulator ..> ecSocket
+asNodeCollector <..> aseSocket: TCP\nbinary\nprotocol
+asKafka .r.> kafClient: TCP\nbinary\nprotocol
+
+@enduml
