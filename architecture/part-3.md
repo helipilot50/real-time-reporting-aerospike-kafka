@@ -17,7 +17,6 @@ This is the second in a series of articles describing a simplified example of ne
 ![Data flow](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/data-flow.puml&fmt=svg)
 *Data flow*
 
-This article, the code samples, and the example solution are entirely my own work and not endorsed by Aerospike. The code is PoC quality only and it is not production strength, and is available to anyone under the MIT License.
 
 ## The use case — Part 2
 
@@ -35,7 +34,7 @@ The solution consists of:
 
 * All of the service and containers in [Part 1](part-1.md) and [Part 2](part-2.md).
 * Campaign service - Node.js and [Apollo Server](https://www.apollographql.com/docs/apollo-server/)
-* Campaign UI - [React](https://reactjs.org/) and [Material UI](https://material-ui.com/)
+* Campaign UI - [React](https://reactjs.org/), [Material UI](https://material-ui.com/) and [Apollo Client React](https://www.apollographql.com/docs/react/)
 
 Docker and Docker Compose simplify the setup to allow you to focus on the Aerospike specific code and configuration.
 
@@ -77,12 +76,11 @@ Once up and running, after the services have stabilised, you will see the output
 
 All of the services and containers of [Part 1](part-1.md) and [Part 2](part-2.md) with the addition of:
 
-**Campaign Service** `campaign-service` - A node.js service to 
+**Campaign Service** `campaign-service` - A node.js [Apollo Server](https://www.apollographql.com/docs/apollo-server/) GraphQL service
  
 Like the other Node services, the `campaign-service` uses the Aerospike Node.js client. On the first build, all the service containers that use Aerospike will download and compile the supporting C library. The `Dockerfile` for each container uses multi-stage builds to minimises the number of times the C library is compiled.
 
-**Campaign UI** `campaign-service` - A React and Material UI single-page web application to display Campaign KPIs 
-
+**Campaign UI** `campaign-ui` - A [React](https://material-ui.com/) and [Material UI]() single-page web application to display Campaign KPIs, it uses the [Apollo Client React](https://www.apollographql.com/docs/react/) GraphQL client.
 ### How is the solution deployed?
 
 Each container is deployed using `docker-compose` on your local machine.
@@ -102,3 +100,6 @@ Each container is deployed using `docker-compose` on your local machine.
 ## The whole story
 
 ![Impression sequence](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/event-sequence.puml&fmt=svg)
+
+## Disclaimer
+This article, the code samples, and the example solution are entirely my own work and not endorsed by Aerospike or Confluent. The code is PoC quality only and it is not production strength, and is available to anyone under the MIT License.
