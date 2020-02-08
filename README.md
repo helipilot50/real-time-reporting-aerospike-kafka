@@ -21,6 +21,7 @@ The solution consists of:
   * Kafka CLI (https://dockr.ly/2KXYEn4)
 
 
+
 # Companion Code
 This example uses Docker and Docker Compose to create a simple solution for near real-time Ad Campaign reporting on a fixed set of campaign dimensions. The solution presented in this series relies on Kafka, Aerospike's edge-to-core data pipeline technology, and Apollo GraphQL
 
