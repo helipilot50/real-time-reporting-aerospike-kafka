@@ -7,4 +7,24 @@ title Complete  solution - component detail
 !includeurl https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/publisher-collector-component-detail.puml!0
 !includeurl https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/aggregator-reducer-component-detail.puml!0
 !includeurl https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/campaign-service-component-detail.puml!0
+
+'part 1
+asNodeInit ..> ascSocket: TCP\nbinary\nprotocol
+asNodeSim <.. ascSocket: TCP\nbinary\nprotocol
+simulator ..> ecSocket
+asNodeCollector <..> aseSocket: TCP\nbinary\nprotocol
+asKafka .r.> kafClient: TCP\nbinary\nprotocol
+
+
+'part 2
+asNodeKafka .r.> kafClient: subscription message
+asNodeKafka <.r. kafClient: event message
+asNodeCore ..> ascSocket: TCP\nbinary\nprotocol
+
+'part 3
+campNodeCore ..> ascSocket: TCP\nbinary\nprotocol
+campNodeKafka <.r. kafClient: subscription message
+
+
+
 @enduml
