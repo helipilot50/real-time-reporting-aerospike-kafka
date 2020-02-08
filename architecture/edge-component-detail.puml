@@ -1,10 +1,6 @@
 @startuml
 skinparam componentStyle uml2
 
-title Event Collection - component interaction
-
-
-
 package "Edge Aerospike" {
     () "3010" as aseSocket
     component "Aerospike\nEnterprise\nEdition\n\nin AP mode" as asEdge
@@ -18,30 +14,7 @@ package "Edge Aerospike" {
     asEdge ..> asOutbound: HTTP(s)
 }
 
-package "Core Aerospike" {
-    () "3000" as ascSocket
-    component "Aerospike\nEnterprise\nEdition\n\nin CP mode" as asCore
-    ascSocket - asCore
-    database "Campaign Datastore\nAerospike CP" as core #LightPink
-    asCore -r(0- core
-}
 
-package "Kafka and Zookeeper" {
-    component [Kafka\nCli] as kafCli
-    () "9092" as kafClient
-    component [Kafka\nCluster] as kafCluster
-    kafClient - kafCluster
-
-    component [Zoo\nKeeper] as zookeeper
-}
-
-asNodeInit ..> ascSocket: TCP\nbinary\nprotocol
-asNodeSim <.. ascSocket: TCP\nbinary\nprotocol
-asNodeCollector <..> aseSocket: TCP\nbinary\nprotocol
-asKafka .r.> kafClient: TCP\nbinary\nprotocol
-zookeeper <..> kafCluster
-simulator ..> ecSocket
-kafCli <.. kafClient: TCP\nbinary\nprotocol
 
 
 
