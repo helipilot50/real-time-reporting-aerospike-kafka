@@ -1,8 +1,5 @@
 @startuml
 
-!includeurl https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/core-component-detail.puml!0
-!includeurl https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/kafka-component-detail.puml!0
-!includeurl https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/part-2-component-detail.puml!0
 
 skinparam componentStyle uml2
 package "Aggregator Reducer" {
