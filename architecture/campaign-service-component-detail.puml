@@ -1,22 +1,6 @@
 @startuml
 skinparam componentStyle uml2
 
-package "Core Aerospike" {
-    () "3000" as ascSocket
-    component "Aerospike\nEnterprise\nEdition\n\nin CP mode" as asCore
-    ascSocket - asCore
-    database "Campaign Datastore\nAerospike CP" as core #LightPink
-    asCore -r(0- core
-}
-
-package "Kafka and Zookeeper" {
-    () "9092" as kafClient
-    component [Kafka\nCluster] as kafCluster
-    kafClient - kafCluster
-
-    component [Zoo\nKeeper] as zookeeper
-}
-
 package "Campaign Service" {
     () "4050" as campaignSocket
     component "campaign Service" as campaignService
@@ -37,8 +21,6 @@ package "Campaitn UI" {
 
 }
 
-campNodeKafka <.r. kafClient: subscription message
-campNodeCore ..> ascSocket
 
 apolloClient ..> campaignSocket: GraphQL operations\nand subscriptions
 

@@ -1,10 +1,11 @@
 @startuml
+
 !includeurl https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/core-component-detail.puml!0
 !includeurl https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/kafka-component-detail.puml!0
+!includeurl https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/campaign-service-component-detail.puml!0
 
+campNodeCore ..> ascSocket
+campNodeKafka <.r. kafClient: subscription message
 
-asNodeKafka .r.> kafClient: subscription message
-asNodeKafka <.r. kafClient: event message
-asNodeCore ..> ascSocket
 
 @enduml
