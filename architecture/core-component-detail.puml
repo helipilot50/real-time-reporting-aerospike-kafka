@@ -1,7 +1,6 @@
 @startuml
 skinparam componentStyle uml2
 
-title Aggredation/Reduction - component interaction
 package "Aggregator Reducer" {
   component "Aerospike Node client" as asNodeCore
   component "Kafka Node client" as asNodeKafka
