@@ -38,8 +38,8 @@ package "Campaitn UI" {
 }
 
 campNodeKafka <.r. kafClient: subscription message
-campNodeCore --> ascSocket
+campNodeCore ..> ascSocket
 
-apolloClient --> campaignSocket: GraphQL operations\nand subscriptions
+apolloClient ..> campaignSocket: GraphQL operations\nand subscriptions
 
 @enduml
