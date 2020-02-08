@@ -1,0 +1,45 @@
+@startuml
+skinparam componentStyle uml2
+
+package "Core Aerospike" {
+    () "3000" as ascSocket
+    component "Aerospike\nEnterprise\nEdition\n\nin CP mode" as asCore
+    ascSocket - asCore
+    database "Campaign Datastore\nAerospike CP" as core #LightPink
+    asCore -r(0- core
+}
+
+package "Kafka and Zookeeper" {
+    () "9092" as kafClient
+    component [Kafka\nCluster] as kafCluster
+    kafClient - kafCluster
+
+    component [Zoo\nKeeper] as zookeeper
+}
+
+package "Campaign Service" {
+    () "4050" as campaignSocket
+    component "campaign Service" as campaignService
+    campaignSocket - campaignService
+    component "Aerospike Node client" as campNodeCore
+    campaignService -(0- campNodeCore
+    component "Kafka Node client" as campNodeKafka
+    campaignService -(0- campNodeKafka
+    component "Apollo Server" as campApolloServer
+    campaignService -(0- campApolloServer
+}
+package "Campaitn UI" {
+    () "5000" as campaignUISocket
+    component "campaign UI" as campaignUI
+    campaignUISocket - campaignUI
+    component "Apollo Client" as apolloClient
+    campaignUI -(0- apolloClient
+
+}
+
+campNodeKafka <.r. kafClient: subscription message
+campNodeCore --> ascSocket
+
+apolloClient --> campaignSocket: GraphQL operations\nand subscriptions
+
+@enduml
