@@ -1,0 +1,3 @@
+asNodeKafka .r.> kafClient: subscription message
+asNodeKafka <.r. kafClient: event message
+asNodeCore ..> ascSocket
