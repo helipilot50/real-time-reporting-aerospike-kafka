@@ -1,0 +1,12 @@
+@startuml
+skinparam componentStyle uml2
+package "Kafka and Zookeeper" {
+    () "9092" as kafClient
+    component [Kafka\nCluster] as kafCluster
+    kafClient - kafCluster
+
+    component [Zoo\nKeeper] as zookeeper
+
+    zookeeper <..> kafCluster
+}
+@enduml

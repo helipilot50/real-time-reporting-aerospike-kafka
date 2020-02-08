@@ -1,13 +1,6 @@
 @startuml
 skinparam componentStyle uml2
 
-package "Aggregator Reducer" {
-  component "Aerospike Node client" as asNodeCore
-  component "Kafka Node client" as asNodeKafka
-  component "Aggregator\nReducer" as aggReduce
-  aggReduce -d(0- asNodeCore
-   aggReduce -r(0- asNodeKafka
-}
 package "Core Aerospike" {
     () "3000" as ascSocket
     component "Aerospike\nEnterprise\nEdition\n\nin CP mode" as asCore
@@ -15,20 +8,5 @@ package "Core Aerospike" {
     database "Campaign Datastore\nAerospike CP" as core #LightPink
     asCore -r(0- core
 }
-
-package "Kafka and Zookeeper" {
-    () "9092" as kafClient
-    component [Kafka\nCluster] as kafCluster
-    kafClient - kafCluster
-
-    component [Zoo\nKeeper] as zookeeper
-}
-
-asNodeKafka .r.> kafClient: subscription message
-asNodeKafka <.r. kafClient: event message
-asNodeCore --> ascSocket
-zookeeper <..> kafCluster
-
-
 
 @enduml

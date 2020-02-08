@@ -1,0 +1,14 @@
+@startuml
+skinparam componentStyle uml2
+package "Aggregator Reducer" {
+  component "Aerospike Node client" as asNodeCore
+  component "Kafka Node client" as asNodeKafka
+  component "Aggregator\nReducer" as aggReduce
+  aggReduce -d(0- asNodeCore
+  aggReduce -r(0- asNodeKafka
+}
+
+asNodeKafka .r.> kafClient: subscription message
+asNodeKafka <.r. kafClient: event message
+asNodeCore --> ascSocket
+@enduml
