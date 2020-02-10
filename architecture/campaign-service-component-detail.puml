@@ -12,7 +12,7 @@ package "Campaign Service" {
     component "Apollo Server" as campApolloServer
     campaignService -(0- campApolloServer
 }
-package "Campaitn UI" {
+package "Campaign UI" {
     () "5000" as campaignUISocket
     component "campaign UI" as campaignUI
     campaignUISocket - campaignUI

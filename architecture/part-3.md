@@ -63,7 +63,7 @@ $ docker-compose logs -f publisher-simulator
 
 Once up and running, after the services have stabilised, you will see the output in the console similar to this:
 
-![Sample console output](https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/part-3-console.log.png)
+![Sample console output](https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/part-3-console-log.png)
 
 *Sample console output*
 
@@ -94,8 +94,11 @@ Each container is deployed using `docker-compose` on your local machine.
 
 ## How does the solution work?
 
+### Campaign service
 
-???????????
+
+### Campaign UI
+
 
 
 ## The whole story
