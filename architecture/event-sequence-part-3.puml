@@ -8,14 +8,14 @@ box "Core" #LightBlue
     participant "Campaign service" as campaignService
 end box
 actor "Campaign UI" as campaignUI #D5E8D4
-
+== On Page load ==
 campaignUI -> campaignService: GraphQL query: campaignKPIs
 activate campaignUI
 campaignService -> campaignStore: Aerospike CDT operations
 campaignService <-- campaignStore: record(s)
 campaignUI <-- campaignService: GraphQL payload
 deactivate campaignUI
-...
+== Real time KPI update ==
 campaignService -> KafkaSubscriptions: fetch message
 activate campaignService
 campaignService <-- KafkaSubscriptions: subscription\nmessag

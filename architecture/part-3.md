@@ -57,12 +57,13 @@ $ git checkout part-3
 **Step 2.** Then run
 
 ```bash
-$ docker-compose up
+$ docker-compose up -d
+$ docker-compose logs -f publisher-simulator
 ```
 
 Once up and running, after the services have stabilised, you will see the output in the console similar to this:
 
-![Sample console output](https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/???.png)
+![Sample console output](https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/part-3-console.log.png)
 
 *Sample console output*
 
