@@ -3,16 +3,23 @@ allow_mixing
 left to right direction
 actor "Publisher\nAdvertiser\nVendor" as publisher #D5E8D4
 rectangle "Edge" #LightGoldenRodYellow {
-    object "Event Collector" as eventCollector 
+    object "Event Collector" as eventCollector {
+        Node.js
+    }
     database "Aerospike AP\nEvent Datastore" as eventStore #LigntPink
     object "Kafka connector" as edgeKafkaCon #LightPink
 }
-queue "Kafka cluster" as Kafka
+queue "Kafka\nedge to core" as Kafka
 rectangle "Core" #LightBlue {
-    object "Aggregator\nReducer" as aggReduce 
+    object "Aggregator\nReducer" as aggReduce {
+        Node.js
+    }
     database "Aerospike CP\nCampaign Datastore" as campaignStore #LigntPink
-    queue "Kafka GraphQL\nsubscriptions" as KafkaSubscriptions
-    object "Campaign service" as campaignService
+    queue "Kafka\nGraphQL subscriptions" as KafkaSubscriptions
+    object "Campaign service" as campaignService {
+        Node.js
+        Apollo GraphQL
+    }
 }
 actor "Campaign UI" as campaignUI #D5E8D4
 
