@@ -1,11 +1,18 @@
 import React from 'react';
 import './App.css';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { Campaigns } from './components/CampaignList';
+import { Campaigns } from './components/campaign/CampaignList';
+import { Dashboard } from './components/dashboard/Dashboard';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -39,8 +46,9 @@ export const CampaignAppBar = () => {
 function App() {
   return (
     <div className="App">
-      <CampaignAppBar />
-      <Campaigns campaignIds={campaignIds} />
+      {/* <CampaignAppBar /> */}
+      {/* <Campaigns campaignIds={campaignIds} /> */}
+      <Dashboard campaignIds={campaignIds} />
     </div>
   );
 }
