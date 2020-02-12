@@ -44,7 +44,7 @@ class KpiEventReceiver {
   constructor(pubsub) {
     let kafkaClient = connectToKafka();
     this.pubsub = pubsub;
-    this.consumer = new Consumer(
+    let consumer = new Consumer(
       kafkaClient,
       [],
       {
@@ -53,7 +53,11 @@ class KpiEventReceiver {
       }
     );
 
+    this.consumer = consumer;
     addTopic(this.consumer, topic);
+
+    let offset = new kafka.Offset(kafkaClient);
+
 
     this.consumer.on('message', async function (eventMessage) {
 
