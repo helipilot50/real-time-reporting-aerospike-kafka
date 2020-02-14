@@ -17,12 +17,52 @@ This is the second in a series of articles describing a simplified example of ne
 ![Data flow](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/data-flow.puml&fmt=svg)
 *Data flow*
 
+### Summary of Part 1 and Part 2
+In part 1, we
+- used an ad event simulator for data creation
+- captured that data in the Aerospike “edge” database
+- pushed the results to a Kafka cluster via Aerospike’s Kafka Connector
 
-## The use case — Part 2
+In part 2, we 
+- consumed events from Kafka exported via Aerospike’s Kafka Connector
+- aggregated each event into Campaign KPIs on arrival
+- published a message in Kafka containing the new KPI value
 
-?????????????????????
+
+Parts 1 and 2 form the base for Part 3
+
+
+## The use case — Part 3
+
+The use case for Part 3 has two use cases:
+
+1. displaying Campaign details in a UI 
+2. updating Campaign KPIs in real-time 
+
+As mentioned in [Part 2](part-2), the KPIs in this example are very simple counters, but the same techniques could be applied to more sophisticated measurements such as histograms, moving averages, trends.
+
+The first use case reads the Campaign details, including the KPIs from Aerospike record.
+
+The second use case subscribes to a GraphQL subscription specific to a Campaign and KPI. A subscription message is sent from the `campaign-service` to the `campaign-ui` when the KPI has changed.
+
+To recap - the Aerospike record looks like this:
+
+| Bin | Type | Example value |
+| --- | ---- | ------------- |
+| c-id | long | 6 |
+| c-date | long | 1579373062016 |
+| c-name | string | Acme campaign 6 |
+| stats | map | {"visits":6, "impressions":78, "clicks":12, "conversions":3}|
+
+The Core Aerospike cluster is configured to prioritise consistency over availability to ensure that numbers are accurate and consistent. 
+
+This sequence diagram shows the use cases:
+
+- On page load
+- KPI update
 
 ![Impression sequence](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/event-sequence-part-3.puml&fmt=svg)
+*Campaign Service and UI scenarios*
 
 ## Companion code
 
@@ -33,8 +73,8 @@ Javascript and Node.js is used in each back-end service although the same soluti
 The solution consists of:
 
 * All of the service and containers in [Part 1](part-1.md) and [Part 2](part-2.md).
-* Campaign service - Node.js and [Apollo Server](https://www.apollographql.com/docs/apollo-server/)
-* Campaign UI - [React](https://reactjs.org/), [Material UI](https://material-ui.com/) and [Apollo Client React](https://www.apollographql.com/docs/react/)
+* Campaign service - Node.js and [Apollo GraphQL Server](https://www.apollographql.com/docs/apollo-server/)
+* Campaign UI - [React](https://reactjs.org/), [Material UI](https://material-ui.com/) and [Apollo GraphQL Client React](https://www.apollographql.com/docs/react/)
 
 Docker and Docker Compose simplify the setup to allow you to focus on the Aerospike specific code and configuration.
 
@@ -54,7 +94,13 @@ Follow the setup steps in [Part 1](part-1.md). Then
 $ git checkout part-3
 ```
 
-**Step 2.** Then run
+**Step 2.** Then run 
+This step deletes the Aerospike data and the Kafka topics data.
+
+```bash
+$ ./delete-data.sh 
+```
+**Step 3.** Finally run
 
 ```bash
 $ docker-compose up -d
