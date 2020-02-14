@@ -17,24 +17,64 @@ This is the second in a series of articles describing a simplified example of ne
 ![Data flow](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/data-flow.puml&fmt=svg)
 *Data flow*
 
+### Summary of Part 1 and Part 2
+In part 1, we
+- used an ad event simulator for data creation
+- captured that data in the Aerospike “edge” database
+- pushed the results to a Kafka cluster via Aerospike’s Kafka Connector
 
-## The use case — Part 2
+In part 2, we then
+- consumed events from Kafka exported via Aerospike’s Kafka Connector
+- aggregated each event into Campaign KPIs on arrival
+- published a message in Kafka containing the new KPI value
 
-?????????????????????
+
+Parts 1 and 2 form the base for Part 3
+
+
+## The use case — Part 3
+
+The use case for Part 3 has two use cases:
+
+1. displaying Campaign details in a UI 
+2. updating Campaign KPIs in real-time 
+
+As mentioned in [Part 2](part-2), the KPIs in this example are very simple counters, but the same techniques could be applied to more sophisticated measurements such as histograms, moving averages, trends.
+
+The first use case reads the Campaign details, including the KPIs from Aerospike record.
+
+The second use case subscribes to a GraphQL subscription specific to a Campaign and KPI. A subscription message is sent from the `campaign-service` to the `campaign-ui` when the KPI has changed.
+
+To recap - the Aerospike record looks like this:
+
+| Bin | Type | Example value |
+| --- | ---- | ------------- |
+| c-id | long | 6 |
+| c-date | long | 1579373062016 |
+| c-name | string | Acme campaign 6 |
+| stats | map | {"visits":6, "impressions":78, "clicks":12, "conversions":3}|
+
+The Core Aerospike cluster is configured to prioritise consistency over availability to ensure that numbers are accurate and consistent. 
+
+This sequence diagram shows the use cases:
+
+- On page load
+- KPI update
 
 ![Impression sequence](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/event-sequence-part-3.puml&fmt=svg)
+*Campaign Service and UI scenarios*
 
 ## Companion code
 
-The companion code is in [GitHub](https://github.com/helipilot50/real-time-reporting-aerospike-kafka). The complete solution is in the `master` branch. The code for this article is in the ‘part-3’ branch. 
+The companion code is in [GitHub](https://github.com/helipilot50/real-time-reporting-aerospike-kafka). The complete solution is in the `master` branch. The code for this article is in the ‘part-3’ branch.
 
-Javascript and Node.js is used in each back-end service although the same solution is possible in any language
+Javascript and Node.js is used in each back-end services, although the same solution is possible in any language
 
 The solution consists of:
 
 * All of the service and containers in [Part 1](part-1.md) and [Part 2](part-2.md).
-* Campaign service - Node.js and [Apollo Server](https://www.apollographql.com/docs/apollo-server/)
-* Campaign UI - [React](https://reactjs.org/), [Material UI](https://material-ui.com/) and [Apollo Client React](https://www.apollographql.com/docs/react/)
+* Campaign service - Node.js and [Apollo GraphQL Server](https://www.apollographql.com/docs/apollo-server/)
+* Campaign UI - [React](https://reactjs.org/), [Material UI](https://material-ui.com/) and [Apollo GraphQL Client React](https://www.apollographql.com/docs/react/)
 
 Docker and Docker Compose simplify the setup to allow you to focus on the Aerospike specific code and configuration.
 
@@ -44,7 +84,7 @@ All the perquisites are described in [Part 1](part-1.md)
 
 ### Setup steps
 
-To set up the solution, follow these steps. Because executable images are built by downloading resources, be aware that the time to download and build the software depends on your internet bandwidth and your computer.
+To set up the solution, follow these steps. The Docker images are built by downloading resources, be aware that the time to download and build the software depends on your internet bandwidth and your computer.
 
 Follow the setup steps in [Part 1](part-1.md). Then
 
@@ -54,7 +94,13 @@ Follow the setup steps in [Part 1](part-1.md). Then
 $ git checkout part-3
 ```
 
-**Step 2.** Then run
+**Step 2.** Then run 
+This step deletes the Aerospike data and the Kafka topics data.
+
+```bash
+$ ./delete-data.sh 
+```
+**Step 3.** Finally run
 
 ```bash
 $ docker-compose up -d
@@ -64,8 +110,22 @@ $ docker-compose logs -f publisher-simulator
 Once up and running, after the services have stabilised, you will see the output in the console similar to this:
 
 ![Sample console output](https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/part-3-console-log.png)
-
 *Sample console output*
+
+**Step 4.** The UI
+Open a browser to this URL:
+```
+http://localhost:5000/
+```
+to display the Campaign application
+
+![Web application](https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/real-time-kpis.gif)
+
+*Campaign KPI application*
+
+
+
+**Note:** you are now running 12 services on you local machine
 
 ## How do the components interact?
 
@@ -73,15 +133,17 @@ Once up and running, after the services have stabilised, you will see the output
 
 *Component Interaction*
 
-**Docker Compose** orchestrates the creation of several services in separate containers:
+**Docker Compose** orchestrates the creation of twelve services in separate containers:
 
 All of the services and containers of [Part 1](part-1.md) and [Part 2](part-2.md) with the addition of:
 
-**Campaign Service** `campaign-service` - A node.js [Apollo Server](https://www.apollographql.com/docs/apollo-server/) GraphQL service
+**Campaign Service** `campaign-service` - A node.js and [Apollo GraphQL Server](https://www.apollographql.com/docs/apollo-server/) service
  
-Like the other Node services, the `campaign-service` uses the Aerospike Node.js client. On the first build, all the service containers that use Aerospike will download and compile the supporting C library. The `Dockerfile` for each container uses multi-stage builds to minimises the number of times the C library is compiled.
+Like the services in [Part 1](part-1) and [Part 2](part-2), the `campaign-service` uses the Aerospike Node.js client. On the first build, all the service containers that use Aerospike will download and compile the supporting C library. 
 
-**Campaign UI** `campaign-ui` - A [React](https://material-ui.com/) and [Material UI]() single-page web application to display Campaign KPIs, it uses the [Apollo Client React](https://www.apollographql.com/docs/react/) GraphQL client.
+An as mentioned in [Part 1](part-1) and [Part 2](part-2), the `Dockerfile` for each container uses multi-stage builds to minimises the number of times the C library is compiled.
+
+**Campaign UI** `campaign-ui` - A [React](https://reactjs.org/) and [Material UI](https://material-ui.com/) single-page web application to display Campaign KPIs, it uses the [Apollo Client React](https://www.apollographql.com/docs/react/) GraphQL client.
 ### How is the solution deployed?
 
 Each container is deployed using `docker-compose` on your local machine.
@@ -95,6 +157,132 @@ Each container is deployed using `docker-compose` on your local machine.
 ## How does the solution work?
 
 ### Campaign service
+
+The `campaign-service` is a deliberately simple Apollo Server.
+
+`src/index.js`  contains:
+- a GraphQL server
+- a schema in Schema Definition Language
+- resolvers for the root operations
+
+**Note:** this is an example server only and is not structured for production.
+
+### CampaignDataSource.js
+`src/CampaignDataSource.js` is the connector to Aerospike, its job is to read aerospike Campaign records and transform them to the `type` described in the GraphQL schema.
+
+#### Fetching a single record by ID
+
+```javascript
+  async fetchCampaign(id) {
+    try {
+      let client = await asClient();
+      let key = new Aerospike.Key(config.namespace, config.campaignSet, parseInt(id));
+      let record = await client.get(key);
+      return campaignFromRecord(record);
+    } catch (err) {
+      if (err.code && err.code == 2) {
+        throw new ApolloError(`Campaign ${id} not found`);
+      } else {
+        console.error('Fetch campaign error:', err);
+        throw new ApolloError(`Fetch campaign by ID: ${id}`, err);
+      }
+    }
+  }
+
+```
+
+#### Fetching multiple record an array of IDs
+
+```javascript
+  async fetchCampaignsById(campaignIds) {
+    try {
+      let client = await asClient();
+      let keys = campaignIds.map((id) => {
+        return {
+          key: new Aerospike.Key(config.namespace, config.campaignSet, parseInt(id)),
+          read_all_bins: true
+        };
+      });
+      let records = await client.batchRead(keys);
+      records = records.filter(n => n.status == 0);
+      let campaigns = records.map((element) => {
+        return campaignFromRecord(element.record);
+      });
+      return campaigns;
+    } catch (err) {
+      console.error(`fetchCampaignsById: ${campaignIds}`, err);
+      throw new ApolloError(`fetchCampaignsById: ${campaignIds}`, err);
+    }
+  }
+```
+
+
+
+#### Fetching multiple records using a query
+
+
+```javascript
+  async listCampaigns() {
+    try {
+      let campaigns = [];
+
+      let client = await asClient();
+      let query = client.query(config.namespace, config.campaignSet);
+
+      // filter by campaign date for today -- demo only
+      let startDate = new Date();
+      startDate.setHours(0);
+      startDate.setMinutes(0);
+      startDate.setSeconds(0);
+      startDate.setMilliseconds(0);
+      let endDate = new Date(startDate);
+      endDate.setHours(23);
+      endDate.setMinutes(59);
+      endDate.setSeconds(59);
+      endDate.setMilliseconds(999);
+
+      query.where(Aerospike.filter.range(config.campaignDate, startDate.getTime(), endDate.getTime()));
+
+      let stream = query.foreach();
+
+      return new Promise((resolve, reject) => {
+        stream.on('data', (record) => {
+          let campaign = campaignFromRecord(record);
+          campaigns.push(campaign);
+        });
+        stream.on('error', (error) => {
+          console.error('Aerospike select error', error);
+          reject(error);
+        });
+        stream.on('end', () => {
+          resolve(campaigns);
+        });
+      });
+    } catch (err) {
+      console.error(`List campaigns error:`, err);
+      throw new ApolloError(`List campaigns error:`, err);
+    }
+  }
+
+
+```
+
+#### Transforming a record to Campaign
+
+```javascript
+const campaignFromRecord = (record) => {
+  let campaign = {
+    id: record.bins[config.campaignIdBin],
+    name: record.bins[config.campaignNameBin],
+    aggregateKPIs: record.bins[config.statsBin]
+  };
+  return campaign;
+};
+
+```
+| GraphQL types | Aerospike record |
+| ------------ | ---------------- |
+| <pre lang="json">  type Campaign {<br>    id: ID<br>    name: String<br>    aggregateKPIs: CampaignKPI<br>  }<br>  type CampaignKPI {<br>    clicks: Int<br>    impressions: Int<br>    visits: Int<br>    conversions: Int<br>  }</pre>|<pre lang="json">{<br>    "c-id": 10,<br>    "stats": {<br>      "visits": 0,<br>      "impressions": 0,<br>      "clicks": 0,<br>      "conversions": 0<br>    },<br>    "c-name": "Acme campaign 10",<br>    "c-date": 1581683864910<br>  }</pre>|
 
 
 ### Campaign UI

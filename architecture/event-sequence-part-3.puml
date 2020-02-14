@@ -1,6 +1,6 @@
 @startuml
 
-autonumber
+autonumber 1
 autoactivate on
 box "Core" #LightBlue
     database "Aerospike CP\nCampaign Datastore" as campaignStore #LigntPink
@@ -16,6 +16,7 @@ campaignService <-- campaignStore: record(s)
 campaignUI <-- campaignService: GraphQL payload
 deactivate campaignUI
 == Real time KPI update ==
+autonumber 1
 campaignService -> KafkaSubscriptions: fetch message
 activate campaignService
 campaignService <-- KafkaSubscriptions: subscription\nmessag
