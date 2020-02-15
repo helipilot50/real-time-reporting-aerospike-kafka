@@ -216,11 +216,67 @@ and Subscriptions of:
 ```
 *GraphQL schema*
 
+##### Resolvers
+Each field in GraphQL can have a resolver function defined to resolve the value of the field.
+
+In this schema we have defined resolvers for:
+* Query
+ * campaign(...)
+ * campaigns(...)
+* Subscription
+ * kpiUpdate(...)
+ 
+Query resolver function names match the field names of `campaign` and `campaigns` and they delegate to the campaign data source `CampaignDataSource.js`. 
+
+```javascript
+  Query: {
+    campaign: (_1, args, context, _2) => {
+      return context.campaignsDS.fetchCampaign(args.id);
+    },
+
+    campaigns: (_1, args, context, _3) => {
+      return context.campaignsDS.fetchCampaignsById(args.ids);
+    }
+  },
+```
+*Query resolvers*
+
+The single Subscription resolver `kpiUpdate` implements a filter allowing the front end to subscribe to a KPI for a specific campaign and KPI name. 
+
+```javascript
+  Subscription: {
+    kpiUpdate: {
+      subscribe: withFilter(
+        (parent, args, context, info) => pubsub.asyncIterator(['NEW_KPI']),
+        (payload, variables) => {
+          let isFiltered = (variables.campaignId == payload.campaignId.toString() &&
+            variables.kpiName == payload.kpi);
+          if (isFiltered)
+            console.log(`Subscribe: payload ${JSON.stringify(payload)}, variables ${JSON.stringify(variables)}`);
+          return isFiltered;
+        }),
+      resolve: (payload) => {
+        let event = {
+          campaignId: payload.campaignId,
+          name: payload.kpi,
+          value: payload.value
+        };
+        console.log(`kpiUpdate:`, event);
+        return event;
+      },
+    },
+  }
+```
+*Subscription resolver*
+
+It is a surprisingly small amount of code to implement a GraphQl Schema and Server.
 
 #### CampaignDataSource.js
 `src/CampaignDataSource.js` is the connector to Aerospike, its job is to read aerospike Campaign records and transform them to the `type` described in the GraphQL schema.
 
 ##### Fetching a single record by ID
+
+Fetching a single campaign is implemented using the Aerospike `get` operation. The whole Aerospike record is read using the primary key and transformed into the GraphQL type. (see Transforming a record to a Campaign)  
 
 ```javascript
   async fetchCampaign(id) {
@@ -241,7 +297,10 @@ and Subscriptions of:
 
 ```
 
-##### Fetching multiple record an array of IDs
+##### Fetching multiple records an array of IDs
+
+To fetch multiple Campaign records we use the Aerospike `batchRead` operation. The `batchRead` operation reads the requested records concurrently, this is very efficient in a multi-node cluster as records are evenly distributed across nodes and each node will do about the same amount of work to locate and return the requested records.
+
 
 ```javascript
   async fetchCampaignsById(campaignIds) {
@@ -318,13 +377,15 @@ This function is not actually used in the solution, but it does illustrate how t
 
 ```
 
-##### Transforming a record to Campaign
+##### Transforming a record to a Campaign
 
+A Campaign record is stored in a set of [Bins](https://www.aerospike.com/docs/architecture/data-model.html#bins), and these need to be transformed to the GraphQL type.
 
-| GraphQL types | Aerospike record |
+| Aerospike record | GraphQL types |
 | ------------ | ---------------- |
-| <pre lang="json">  type Campaign {<br>    id: ID<br>    name: String<br>    aggregateKPIs: CampaignKPI<br>  }<br>  type CampaignKPI {<br>    clicks: Int<br>    impressions: Int<br>    visits: Int<br>    conversions: Int<br>  }</pre>|<pre lang="json">  {<br>    "c-id": 10,<br>    "stats": {<br>      "visits": 0,<br>      "impressions": 0,<br>      "clicks": 0,<br>      "conversions": 0<br>    },<br>    "c-name": "Acme campaign 10",<br>    "c-date": 1581683864910<br>  }</pre>|
+|<pre lang="json">  {<br>    "c-id": 10,<br>    "stats": {<br>      "visits": 0,<br>      "impressions": 0,<br>      "clicks": 0,<br>      "conversions": 0<br>    },<br>    "c-name": "Acme campaign 10",<br>    "c-date": 1581683864910<br>  }</pre>| <pre lang="json">  type Campaign {<br>    id: ID<br>    name: String<br>    aggregateKPIs: CampaignKPI<br>  }<br>  type CampaignKPI {<br>    clicks: Int<br>    impressions: Int<br>    visits: Int<br>    conversions: Int<br>  }</pre>|
 
+The function takes the Aerosike record and returns a Campaign type:
 
 ```javascript
 const campaignFromRecord = (record) => {
@@ -335,12 +396,32 @@ const campaignFromRecord = (record) => {
   };
   return campaign;
 };
-
 ```
 
 #### KpiReceiver
+The `KpiReceiver` listens to the Kafka topic `subscription-events` and when a message is received, it is published as a GraphQL subscription. Using Kafka as the pubsub technology allows the `campaign-service` to scale without the KPI event being lost.
 
-
+Most of the work is done in this code:
+```javascript
+    this.consumer.on('message', async function (eventMessage) {
+      try {
+        let payload = JSON.parse(eventMessage.value);
+        pubsub.publish('NEW_KPI', payload);
+      } catch (error) {
+        console.error(error);
+      }
+    });
+```
+**Note:** `pubsub` (*line 4*) as part of the `apollo-server` npm package and does all the heavy lifting in implementing GraphQL subscriptions. The `pubsub` 
+ reference is passed into the constructor:
+ 
+```javascript
+ constructor(pubsub) {
+    ...
+    this.pubsub = pubsub;
+    ...
+  }
+```
 
 ### Campaign UI
 
