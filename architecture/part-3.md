@@ -583,7 +583,7 @@ subscription kpiUpdate($campaignId: ID!, $kpiName:String!){
 ```
 *GraphQL Subscription*
 
-The render method
+The component is rendered by including the GraphQL subscription to listen for KPI updates.
 
 ```javascript
   render() {
@@ -623,7 +623,13 @@ In order to highlight the change in a KPI value, the new value is turned red for
 
 ## The whole story
 
+???????
+
 ![Impression sequence](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/event-sequence.puml&fmt=svg)
 
+??????
+![Components](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/complete-component-detail.puml&fmt=svg)
+
+
 ## Disclaimer
-This article, the code samples, and the example solution are entirely my own work and not endorsed by Aerospike or Confluent. The code is PoC quality only and it is not production strength, and is available to anyone under the MIT License.
+This article, the code samples, and the example solution are entirely my own work and not endorsed by Aerospike, Confluent or Apollo. The code is PoC quality only and it is not production strength, and is available to anyone under the MIT License.
