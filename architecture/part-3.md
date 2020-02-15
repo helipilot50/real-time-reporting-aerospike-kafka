@@ -158,7 +158,9 @@ Each container is deployed using `docker-compose` on your local machine.
 
 ### Campaign service
 
-The `campaign-service` is a deliberately simple Apollo Server.
+The `campaign-service` is a deliberately simple Apollo Server providing a GraphQL schema and the resolvers for the root operations defined in that schema.
+
+#### index.js
 
 `src/index.js`  contains:
 - a GraphQL server
@@ -167,10 +169,114 @@ The `campaign-service` is a deliberately simple Apollo Server.
 
 **Note:** this is an example server only and is not structured for production.
 
-### CampaignDataSource.js
+##### Schema definition
+
+The schema defines the types of:
+- `Campaign` - Campain meta data
+- `CampaignKPI` - the set of KPIs for a Campaign
+- `KPI` - an single KPI e.g. `impressions`
+
+Queries of:
+- `campaign(id:ID!)` - returning a single Campaign
+- `campaigns(ids:[ID!]!)` - returning a set of campaigns matching the Ids passed
+
+and Subscriptions of:
+- `kpiUpdate(campaignId:ID!, kpiName:String)` - posts a KPI event when a KPI update occurs matching the `campaignId` and `kpiName`  
+
+
+
+```gql
+  type Campaign {
+    id: ID
+    name: String
+    aggregateKPIs: CampaignKPI
+  }
+
+  type CampaignKPI {
+    clicks: Int
+    impressions: Int
+    visits: Int
+    conversions: Int
+  }
+
+  type KPI {
+    campaignId: ID
+    name: String
+    value: Int
+  }
+  
+  type Query {
+    campaign(id:ID):Campaign
+    campaigns(ids: [ID!]!): [Campaign]
+  }
+
+  type Subscription {
+    kpiUpdate(campaignId:ID!, kpiName:String):KPI
+  }
+```
+*GraphQL schema*
+
+##### Resolvers
+Each field in GraphQL can have a resolver function defined to resolve the value of the field.
+
+In this schema we have defined resolvers for:
+* Query
+ * campaign(...)
+ * campaigns(...)
+* Subscription
+ * kpiUpdate(...)
+ 
+Query resolver function names match the field names of `campaign` and `campaigns` and they delegate to the campaign data source `CampaignDataSource.js`. 
+
+```javascript
+  Query: {
+    campaign: (_1, args, context, _2) => {
+      return context.campaignsDS.fetchCampaign(args.id);
+    },
+
+    campaigns: (_1, args, context, _3) => {
+      return context.campaignsDS.fetchCampaignsById(args.ids);
+    }
+  },
+```
+*Query resolvers*
+
+The single Subscription resolver `kpiUpdate` implements a filter allowing the front end to subscribe to a KPI for a specific campaign and KPI name. 
+
+```javascript
+  Subscription: {
+    kpiUpdate: {
+      subscribe: withFilter(
+        (parent, args, context, info) => pubsub.asyncIterator(['NEW_KPI']),
+        (payload, variables) => {
+          let isFiltered = (variables.campaignId == payload.campaignId.toString() &&
+            variables.kpiName == payload.kpi);
+          if (isFiltered)
+            console.log(`Subscribe: payload ${JSON.stringify(payload)}, variables ${JSON.stringify(variables)}`);
+          return isFiltered;
+        }),
+      resolve: (payload) => {
+        let event = {
+          campaignId: payload.campaignId,
+          name: payload.kpi,
+          value: payload.value
+        };
+        console.log(`kpiUpdate:`, event);
+        return event;
+      },
+    },
+  }
+```
+*Subscription resolver*
+
+It is a surprisingly small amount of code to implement a GraphQl Schema and Server.
+
+#### CampaignDataSource.js
 `src/CampaignDataSource.js` is the connector to Aerospike, its job is to read aerospike Campaign records and transform them to the `type` described in the GraphQL schema.
 
-#### Fetching a single record by ID
+##### Fetching a single record by ID
+
+Fetching a single campaign is implemented using the Aerospike `get` operation. The whole Aerospike record is read using the primary key and transformed into the GraphQL type. (see Transforming a record to a Campaign)  
 
 ```javascript
   async fetchCampaign(id) {
@@ -191,7 +297,10 @@ The `campaign-service` is a deliberately simple Apollo Server.
 
 ```
 
-#### Fetching multiple record an array of IDs
+##### Fetching multiple records an array of IDs
+
+To fetch multiple Campaign records we use the Aerospike `batchRead` operation. The `batchRead` operation reads the requested records concurrently, this is very efficient in a multi-node cluster as records are evenly distributed across nodes and each node will do about the same amount of work to locate and return the requested records.
+
 
 ```javascript
   async fetchCampaignsById(campaignIds) {
@@ -218,8 +327,9 @@ The `campaign-service` is a deliberately simple Apollo Server.
 
 
 
-#### Fetching multiple records using a query
+##### Fetching multiple records using a query
 
+This function is not actually used in the solution, but it does illustrate how to use Aerospike's query capability based on a secondary index and filters.
 
 ```javascript
   async listCampaigns() {
@@ -267,7 +377,15 @@ The `campaign-service` is a deliberately simple Apollo Server.
 
 ```
 
-#### Transforming a record to Campaign
+##### Transforming a record to a Campaign
+
+A Campaign record is stored in a set of [Bins](https://www.aerospike.com/docs/architecture/data-model.html#bins), and these need to be transformed to the GraphQL type.
+
+| Aerospike record | GraphQL types |
+| ------------ | ---------------- |
+|<pre lang="json">  {<br>    "c-id": 10,<br>    "stats": {<br>      "visits": 0,<br>      "impressions": 0,<br>      "clicks": 0,<br>      "conversions": 0<br>    },<br>    "c-name": "Acme campaign 10",<br>    "c-date": 1581683864910<br>  }</pre>| <pre lang="json">  type Campaign {<br>    id: ID<br>    name: String<br>    aggregateKPIs: CampaignKPI<br>  }<br>  type CampaignKPI {<br>    clicks: Int<br>    impressions: Int<br>    visits: Int<br>    conversions: Int<br>  }</pre>|
+
+The function takes the Aerosike record and returns a Campaign type:
 
 ```javascript
 const campaignFromRecord = (record) => {
@@ -278,14 +396,108 @@ const campaignFromRecord = (record) => {
   };
   return campaign;
 };
-
 ```
-| GraphQL types | Aerospike record |
-| ------------ | ---------------- |
-| <pre lang="json">  type Campaign {<br>    id: ID<br>    name: String<br>    aggregateKPIs: CampaignKPI<br>  }<br>  type CampaignKPI {<br>    clicks: Int<br>    impressions: Int<br>    visits: Int<br>    conversions: Int<br>  }</pre>|<pre lang="json">{<br>    "c-id": 10,<br>    "stats": {<br>      "visits": 0,<br>      "impressions": 0,<br>      "clicks": 0,<br>      "conversions": 0<br>    },<br>    "c-name": "Acme campaign 10",<br>    "c-date": 1581683864910<br>  }</pre>|
 
+#### KpiReceiver
+The `KpiReceiver` listens to the Kafka topic `subscription-events` and when a message is received, it is published as a GraphQL subscription. Using Kafka as the pubsub technology allows the `campaign-service` to scale without the KPI event being lost.
+
+Most of the work is done in this code:
+```javascript
+    this.consumer.on('message', async function (eventMessage) {
+      try {
+        let payload = JSON.parse(eventMessage.value);
+        pubsub.publish('NEW_KPI', payload);
+      } catch (error) {
+        console.error(error);
+      }
+    });
+```
+**Note:** `pubsub` (*line 4*) as part of the `apollo-server` npm package and does all the heavy lifting in implementing GraphQL subscriptions. The `pubsub` 
+ reference is passed into the constructor:
+ 
+```javascript
+ constructor(pubsub) {
+    ...
+    this.pubsub = pubsub;
+    ...
+  }
+```
 
 ### Campaign UI
+
+#### index.js
+
+Setting up a React application to use Apollo GraphQL is quite straight forward by following this [guide](https://www.apollographql.com/docs/react/get-started/).
+
+In our code we will use GraphQL Subscriptions implemented with [websockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket) and Apollo provides all the helper classes and functions to achieve this.
+
+
+First we create a link to our GraphQL server:
+
+```javascript
+const httpLink = new HttpLink({
+  uri: `http://${campaignServiceHost}:${campaignServicePort}`,
+});
+```
+then we create a web socket link:
+```javascript
+const wsLink = new WebSocketLink({
+  uri: `ws://${campaignServiceHost}:${campaignServiceWsPort}/graphql`,
+  options: {
+    reconnect: true,
+    lazy: true,
+  },
+});
+```
+we can optimise the communications paths to the server by splitting the link based on the operation type.
+```javascript
+const link = split(
+  // split based on operation type
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    );
+  },
+  wsLink,
+  httpLink,
+);
+```
+we also add a client side [cache](https://www.apollographql.com/docs/react/caching/cache-configuration) - not necessary in this example, but fun to add anyway.
+```javascript
+const cache = new InMemoryCache({
+  dataIdFromObject: defaultDataIdFromObject,
+});
+```
+finally we create an [ApolloClient](https://www.apollographql.com/docs/react/api/apollo-client/) instance
+```javascript
+const client = new ApolloClient({
+  link,
+  cache
+});
+```
+
+
+`ApolloProvider` is a HOC from Apollo that encapsulates the `App` component and passes down the `ApolloClient` instance as a property and is available to child components of `App`.
+ 
+```javascript
+const WrappedApp = (
+  <ApolloProvider client={client}>
+    <App />
+  </ApolloProvider>
+);
+
+```
+The React App is ready to interact with the `campaign-service`.
+
+#### CampaignList
+
+
+#### CampaignRow
+
+
+#### Kpi
 
 
 
