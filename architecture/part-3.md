@@ -424,6 +424,14 @@ Most of the work is done in this code:
 ```
 
 ### Campaign UI
+The `campaign-ui` is a single page web application implemented using [React](https://reactjs.org/), [Material UI](https://material-ui.com/) and [Apollo GraphQL Client React](https://www.apollographql.com/docs/react/).
+
+The application is implemented by composing the Components:
+* ApolloProvider
+	* App
+		* CampaignList
+			* CampaignRow
+				* Kpi
 
 #### index.js
 
@@ -493,11 +501,123 @@ The React App is ready to interact with the `campaign-service`.
 
 #### CampaignList
 
+`CampaignList.js` is a table using Material-UI components. An array of campaign Ids are passed in props. These Ids are use in the GraphQL query:
+
+```javascript
+const CAMPAIGN_LIST = gql`
+query campaigns($campaignIds: [ID!]!) {
+  campaigns(ids: $campaignIds) {
+    id
+    name
+    aggregateKPIs {
+      clicks
+      impressions
+      visits
+      conversions
+    }
+  }
+}
+`;
+```
+*Campaign query*
+
+The `render()` method creates a `TableContainer` with a `TableHeader`, each row in the table is `CampaignRow` component.
+
+```javascript
+  return (
+    <TableContainer component={Paper}>
+      <Table className={classes.table} size="small" aria-label="dense table">
+        <TableHead>
+          <TableRow>
+            <TableCell className={classes.kpiColumn} >Id</TableCell>
+            <TableCell className={classes.campaignColumn}>Campaign Name</TableCell>
+            <TableCell className={classes.kpiColumn} align="right">Impressions</TableCell>
+            <TableCell className={classes.kpiColumn} align="right">Clicks</TableCell>
+            <TableCell className={classes.kpiColumn} align="right">Visits</TableCell>
+            <TableCell className={classes.kpiColumn} align="right">Conversions</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {campaignList}
+        </TableBody>
+      </Table>
+    </TableContainer >
+  );
+```
+*render() method*
+
 
 #### CampaignRow
 
+The `CamaignRow` component receives the "campaign" via props. Each KPI column is implemented using the `Kpi` compinent
+
+```javascript
+export default function CampaignRow({ campaign }) {
+  return (
+    <TableRow key={campaign.id}>
+      <TableCell component="th" scope="row">{campaign.id}</TableCell>
+      <TableCell align="left" >{campaign.name}</TableCell>
+      <TableCell align="right"><Kpi campaignId={campaign.id} kpiName="impressions" initialValue={campaign.aggregateKPIs.impressions} /></TableCell>
+      <TableCell align="right"><Kpi campaignId={campaign.id} kpiName="clicks" initialValue={campaign.aggregateKPIs.clicks} /></TableCell>
+      <TableCell align="right"><Kpi campaignId={campaign.id} kpiName="visits" initialValue={campaign.aggregateKPIs.visits} /></TableCell>
+      <TableCell align="right"><Kpi campaignId={campaign.id} kpiName="conversions" initialValue={campaign.aggregateKPIs.conversions} /></TableCell>
+    </TableRow>
+  )
+}
+```
+*CampaignRow component*
 
 #### Kpi
+The `Kpi` component renders the KPI value and, more interestingly, subscribes to the defigned GraphQL subscription `kpiUpdate`.
+
+```javascript
+const KPI_SUBSCRIPTION = gql`
+subscription kpiUpdate($campaignId: ID!, $kpiName:String!){
+  kpiUpdate(campaignId: $campaignId, kpiName: $kpiName) {
+    campaignId
+    name
+    value
+  }
+}
+`;
+```
+*GraphQL Subscription*
+
+The render method
+
+```javascript
+  render() {
+    const { startAttention } = this.state
+    const variant = startAttention ? 'H5' : 'inherit';
+    const type = startAttention ? 'secondary' : 'inherit';
+    return (
+      <Typography color={type} variant={variant}>
+        <Subscription subscription={KPI_SUBSCRIPTION}
+          variables={{ campaignId: this.state.campaignId, kpiName: this.state.kpiName }}
+          shouldResubscribe={true} onSubscriptionData={this.attention}>
+          {
+            ({ data, loading }) => {
+              if (data) {
+                return (data.kpiUpdate.value);
+              }
+              return (this.state.initialValue);
+            }
+          }
+        </Subscription >
+      </Typography>
+    );
+  }
+```
+*render() method*
+
+In order to highlight the change in a KPI value, the new value is turned red for about 1 second.
+
+```javascript
+  attention(something) {
+    this.setState({ startAttention: true })
+    setTimeout(() => this.setState({ startAttention: false }), 1000);
+  }
+```
 
 
 
