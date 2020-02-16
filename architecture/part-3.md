@@ -124,7 +124,6 @@ to display the Campaign application
 *Campaign KPI application*
 
 
-
 **Note:** you are now running 12 services on you local machine
 
 ## How do the components interact?
@@ -623,12 +622,42 @@ In order to highlight the change in a KPI value, the new value is turned red for
 
 ## The whole story
 
-???????
+In this series we have used Aerospike and Kafka to build a simple edge-to-core solution to capture real-time ad events for Campaign Reporting.
+
+The "Edge" portion of the solution would be deployed geographically and the "Core" would be deploy centrally using a hub and spoke pattern.
+
+![](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/reporting-service-objects-data.puml&fmt=svg)
+
+*Geographical deployment*
+
+### Event sequence
+Users interact with ads on Publisher websites and the interaction events are sent to the local "edge" event collector and datastore.
+
+Event data is propagated to the "core" aggregator/reducer using Kafka. The aggregator/reducer takes each event and aggregates it with the designated KPI, in this example it the KPIs are simple atomic counters store in an Aerospike CDT.
+
+Using the Campaign UI, campaign specialists can monitor the KPIs in real time for campaign optimisation. KPIs are updated live, without costly page loads or polling, using GraphQL subscriptions.
+
 
 ![Impression sequence](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/event-sequence.puml&fmt=svg)
+*Event sequence*
 
-??????
+### The complete component interaction
+The complete component diagram shows all the components, their packages and their interaction with each other. The packages are *dockerized* for deployment, vastly reducing the risk of production failures due to a missing dependency. We have used `docker-compose` in this example, in a real-world environment Kubernetes is a great choice for container orchestration.
+
 ![Components](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/complete-component-detail.puml&fmt=svg)
+
+## Review
+
+[Part 1](part-1.md) of this series describes:
+* creating mock Campaign data
+* a publisher simulator
+* an event receiver
+* an edge database   
+* an edge exporter
+
+[Part 2](part-2.md describes the aggregation and reduction of Ad events into Campaign KPIs using Kafka as the messaging system and Aerospike as the consistent data store.
+
+Part 3(this article) describes the Campaign service and Campaign UI to for a user to view the Campaign KPIs in near real-time.
 
 
 ## Disclaimer
