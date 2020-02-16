@@ -1,0 +1,67 @@
+@startuml
+skinparam componentStyle uml2
+left to right direction
+title Geo distributed 
+node "Core" {
+    component "Campaign service" as campaignService
+    database "Campaign Datastore\nAerospike CP" as coreAS #LightPink
+    campaignService -right- coreAS
+}
+node "EU London" {
+    component "Event Collector" as eventEUuk
+    database "Event Datastore\nAerospike AP" as edgeEUuk #LightPink
+    eventEUuk -- edgeEUuk
+}
+node "EU Frankfurt" {
+    component "Event Collector" as eventEUde
+    database "Event Datastore\nAerospike AP" as edgeEUde #LightPink
+    eventEUde -- edgeEUde
+}
+together {
+node "CN Shanghai" {
+    component "Event Collector" as eventCNsh
+    database "Event Datastore\nAerospike AP" as edgeCNsh #LightPink
+    eventCNsh -l- edgeCNsh
+}
+node "CN Bejing" {
+    component "Event Collector" as eventCNbj
+    database "Event Datastore\nAerospike AP" as edgeCNbj #LightPink
+    eventCNbj -l- edgeCNbj
+}
+}
+node "EU Dublin" {
+    component "Event Collector" as eventEUis
+    database "Event Datastore\nAerospike AP" as edgeEUis #LightPink
+    eventEUis -- edgeEUis
+}
+node "RU Moscow" {
+    component "Event Collector" as eventRUmc
+    database "Event Datastore\nAerospike AP" as edgeRUmc #LightPink
+    eventRUmc -- edgeRUmc
+}
+
+node "AU Sydney" {
+    component "Event Collector" as eventAUsy
+    database "Event Datastore\nAerospike AP" as edgeAUsy #LightPink
+    eventAUsy -u- edgeAUsy
+}
+node "BR Sao Paulo" {
+    component "Event Collector" as eventBRsp
+    database "Event Datastore\nAerospike AP" as edgeBRsp #LightPink
+    eventBRsp -u- edgeBRsp
+}
+
+edgeCNsh .l.> coreAS
+edgeCNbj .l.> coreAS
+
+edgeEUis .d.> coreAS
+edgeEUde .d.> coreAS
+edgeEUuk .d.> coreAS
+
+
+edgeRUmc .d.> coreAS
+
+coreAS <.. edgeAUsy
+coreAS <.. edgeBRsp
+
+@enduml
