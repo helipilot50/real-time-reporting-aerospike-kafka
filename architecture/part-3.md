@@ -657,7 +657,7 @@ The complete component diagram shows all the components, their packages and thei
 
 [Part 2](part-2.md) describes the aggregation and reduction of Ad events into Campaign KPIs using Kafka as the messaging system and Aerospike as the consistent data store.
 
-Part 3(this article) describes the Campaign service and Campaign UI to for a user to view the Campaign KPIs in near real-time.
+Part 3 (this article) describes the Campaign service and Campaign UI to for a user to view the Campaign KPIs in near real-time.
 
 
 ## Disclaimer
