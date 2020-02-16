@@ -43,7 +43,7 @@ As mentioned in [Part 2](part-2), the KPIs in this example are very simple count
 
 The first use case reads the Campaign details, including the KPIs from Aerospike record.
 
-The second use case subscribes to a GraphQL subscription specific to a Campaign and KPI. A subscription message is sent from the `campaign-service` to the `campaign-ui` when the KPI has changed.
+The second use case subscribes to a GraphQL subscription specific to a Campaign and KPI. A subscription message with the new KPI value is sent from the `campaign-service` to the `campaign-ui` when the KPI has changed.
 
 To recap - the Aerospike record looks like this:
 
@@ -119,7 +119,7 @@ http://localhost:5000/
 ```
 to display the Campaign application
 
-![Web application](https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/real-time-kpis.gif)
+![Web application](https://raw.githubusercontent.com/helipilot50/real-time-reporting-aerospike-kafka/master/architecture/campaign-ui.gif)
 
 *Campaign KPI application*
 
