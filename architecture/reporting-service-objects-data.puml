@@ -1,7 +1,7 @@
 @startuml
 skinparam componentStyle uml2
 left to right direction
-title Geo distributed 
+
 node "Core" {
     component "Campaign service" as campaignService
     database "Campaign Datastore\nAerospike CP" as coreAS #LightPink
