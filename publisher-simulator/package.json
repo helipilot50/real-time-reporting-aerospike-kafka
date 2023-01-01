@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "aerospike": "^3.13.0",
-    "config": "^3.2.4",
+    "config": "^3.3.8",
     "nodemon": "^2.0.1",
     "request": "^2.88.0",
     "request-promise": "^4.2.5",
